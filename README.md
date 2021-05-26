@@ -1,4 +1,4 @@
-# CASM
+# MetAMDB
 
 My PhD thesis project.
 
@@ -17,7 +17,7 @@ My PhD thesis project.
 
 ## Authors
 
-- **Collin Starke** - _Initial work_ - [CollinStarke](https://github.com/CollinStarke)
+- **Collin Starke** - _Initial work_ - [CollinStarke](https://github.com/CollinStark)
 
 ## License
 
