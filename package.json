@@ -4,10 +4,9 @@
   "description": "My PhD thesis project.",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently -n 'server,client,docs' -c 'yellow,cyan,magenta' \"yarn run server\" \"yarn run client\" \"yarn run docs\"",
+    "start": "concurrently -n 'server,client' -c 'yellow,cyan' \"yarn run server\" \"yarn run client\"",
     "client": "cd client && yarn start",
     "server": "cd server && FLASK_APP=src FLASK_ENV=development PYTHONUNBUFFERED=1 flask run",
-    "docs": "cd docs && npm run start",
     "test": "cd client && yarn test"
   },
   "repository": {
