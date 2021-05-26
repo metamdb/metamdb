@@ -1,0 +1,5 @@
+{
+  "python.pythonPath": "/home/cst/.virtualenvs/casm/bin/python",
+  "python.analysis.extraPaths": ["server"],
+  "python.analysis.stubPath": "server/typings"
+}

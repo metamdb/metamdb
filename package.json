@@ -1,0 +1,26 @@
+{
+  "name": "casm",
+  "version": "1.0.0",
+  "description": "My PhD thesis project.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently -n 'server,client,docs' -c 'yellow,cyan,magenta' \"yarn run server\" \"yarn run client\" \"yarn run docs\"",
+    "client": "cd client && yarn start",
+    "server": "cd server && FLASK_APP=src FLASK_ENV=development PYTHONUNBUFFERED=1 flask run",
+    "docs": "cd docs && npm run start",
+    "test": "cd client && yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CollinStarke/casm.git"
+  },
+  "author": "Collin Starke <c.starke@tu-bs.de>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CollinStarke/casm/issues"
+  },
+  "homepage": "https://github.com/CollinStarke/casm#readme",
+  "devDependencies": {
+    "concurrently": "^5.2.0"
+  }
+}
