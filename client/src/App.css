@@ -144,11 +144,11 @@ img {
   line-height: 35px;
 }
 
-a {
+footer ul li a {
   color: rgba(255, 255, 255, 0.5);
 }
 
-a:hover {
+footer ul li a:hover {
   color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
 }
