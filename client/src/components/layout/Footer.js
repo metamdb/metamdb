@@ -34,10 +34,10 @@ const Footer = (props) => {
           <div className="col-md-4 box">
             <ul className="list-inline quick-links">
               <li className="list-inline-item">
-                <Link to="/datenschutz">Datenschutz</Link>
+                <Link to="/impressum">Impressum</Link>
               </li>
               <li className="list-inline-item">
-                <Link to="/impressum">Impressum</Link>
+                <Link to="/datenschutz">Datenschutz</Link>
               </li>
             </ul>
           </div>
