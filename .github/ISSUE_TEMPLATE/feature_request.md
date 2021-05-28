@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: 'Have an idea? Share it! :bulb:'
+about: 'Have an idea? Share it! 🔧'
 title: ''
 labels: ''
 assignees: ''
