@@ -327,11 +327,19 @@ function Datenschutz() {
             Cookies zu Zwecken des Onlinemarketings kann auch mittels einer
             Vielzahl von Diensten, vor allem im Fall des Trackings, über die
             Webseiten{" "}
-            <a href="https://optout.aboutads.info" target="_blank">
+            <a
+              href="https://optout.aboutads.info"
+              target="_blank"
+              rel="noreferrer"
+            >
               https://optout.aboutads.info
             </a>{" "}
             und{" "}
-            <a href="https://www.youronlinechoices.com/" target="_blank">
+            <a
+              href="https://www.youronlinechoices.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
               https://www.youronlinechoices.com/
             </a>{" "}
             erklärt werden. Daneben können Sie weitere Widerspruchshinweise im
@@ -481,11 +489,19 @@ function Datenschutz() {
               <strong>Font Awesome:</strong> Darstellung von Schriftarten und
               Symbolen; Dienstanbieter: Fonticons, Inc. ,6 Porter Road Apartment
               3R, Cambridge, MA 02140, USA; Website:{" "}
-              <a href="https://fontawesome.com/" target="_blank">
+              <a
+                href="https://fontawesome.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 https://fontawesome.com/
               </a>
               ; Datenschutzerklärung:{" "}
-              <a href="https://fontawesome.com/privacy" target="_blank">
+              <a
+                href="https://fontawesome.com/privacy"
+                target="_blank"
+                rel="noreferrer"
+              >
                 https://fontawesome.com/privacy
               </a>
               .
@@ -502,11 +518,19 @@ function Datenschutz() {
               Dienstanbieter: Google Ireland Limited, Gordon House, Barrow
               Street, Dublin 4, Irland, Mutterunternehmen: Google LLC, 1600
               Amphitheatre Parkway, Mountain View, CA 94043, USA; Website:{" "}
-              <a href="https://fonts.google.com/" target="_blank">
+              <a
+                href="https://fonts.google.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 https://fonts.google.com/
               </a>
               ; Datenschutzerklärung:{" "}
-              <a href="https://policies.google.com/privacy" target="_blank">
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noreferrer"
+              >
                 https://policies.google.com/privacy
               </a>
               .
