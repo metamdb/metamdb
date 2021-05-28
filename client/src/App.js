@@ -17,6 +17,8 @@ import DatabaseQuery from "./components/database-query/DatabaseQuery";
 import ReactionModel from "./components/upload/ReactionModel";
 
 import Contact from "./components/info/Contact";
+import Datenschutz from "./components/info/Datenschutz";
+import Impressum from "./components/info/Impressum";
 
 import ReactionContainer from "./components/download/Reaction";
 import MetaboliteContainer from "./components/download/Metabolite";
@@ -42,6 +44,8 @@ const App = (props) => {
               <Route exact path="/reaction-model" component={ReactionModel} />
 
               <Route exact path="/contact" component={Contact} />
+              <Route exact path="/datenschutz" component={Datenschutz} />
+              <Route exact path="/impressum" component={Impressum} />
 
               <ReactionContextProvider>
                 <Route

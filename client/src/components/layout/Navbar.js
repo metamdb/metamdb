@@ -31,7 +31,7 @@ const Navbar = (props) => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+      <nav className="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
         <div className="container">
           <Link className="navbar-brand" to="/">
             MetAMDB
@@ -64,8 +64,9 @@ const Navbar = (props) => {
               <li className="nav-item">
                 <a
                   target="_blank"
-                  href="https://collinstark.github.io/casm/"
+                  href="https://collinstark.github.io/metamdb-docs/"
                   className="nav-link"
+                  rel="noreferrer"
                 >
                   Help
                 </a>

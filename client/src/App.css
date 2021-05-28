@@ -144,18 +144,18 @@ img {
   line-height: 35px;
 }
 
-a {
-  color: #c0c0c0;
+footer ul li a {
+  color: rgba(255, 255, 255, 0.5);
 }
 
-a:hover {
-  color: #ffffff;
+footer ul li a:hover {
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
 }
 
 footer {
   padding: 2rem 0;
-  background-color: #212529;
+  background-color: #343a40;
 }
 
 .footer-column:not(:first-child) {
@@ -201,7 +201,7 @@ ul.social-buttons {
 ul.social-buttons li a:active,
 ul.social-buttons li a:focus,
 ul.social-buttons li a:hover {
-  background-color: #16aef5;
+  background-color: #050505;
 }
 
 ul.social-buttons li a {
@@ -216,7 +216,7 @@ ul.social-buttons li a {
   color: #fff;
   border-radius: 100%;
   outline: 0;
-  background-color: #1a1d20;
+  background-color: #343a40;
 }
 
 footer .quick-links {
