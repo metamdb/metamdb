@@ -1,12 +1,12 @@
 # MetAMDB
 
-My PhD thesis project.
+Metabolic Atom Mapping Database
 
 ## Description
 
-- a yawning fissure or deep cleft in the earth's surface; gorge.
-- a breach or wide fissure in a wall or other structure.
-- a marked interruption of continuity; gap.
+MetAMDB is a software/database for the analysis of metabolic models and specifically the work with atom mappings.
+
+Users can search/browse the database for curated atom mappings, as well as upload their own metabolic models for the generation of an atom mapping model.
 
 ## Built With
 
@@ -17,13 +17,12 @@ My PhD thesis project.
 
 ## Authors
 
-- **Collin Starke** - _Initial work_ - [CollinStarke](https://github.com/CollinStark)
+- **Collin Starke** - _Initial work_ - [CollinStark](https://github.com/CollinStark)
 
 ## License
 
-We dont have a license :)
+MIT
 
 ## Acknowledgments
 
-- My supervisor Andre for his awesome help
-- ChilledCow for the great music
+- My supervisor Dr. Andre Wegner for his awesome help
