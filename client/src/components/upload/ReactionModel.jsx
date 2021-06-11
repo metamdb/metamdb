@@ -290,6 +290,12 @@ const ReactionModel = () => {
             <div className="col-2">{metabolite.reactant}</div>
           </div>
         ));
+      } else if (reactions[row.index - 1].mappings.length === 0) {
+        aams = (
+          <div className="">
+            <h3>Sorry, sadly something went wrong! We're investigating :)</h3>
+          </div>
+        );
       } else {
         aams = reactions[row.index - 1].mappings[0].map((metabolite, index) => (
           <div key={index} className="row mb-1 mt-1">

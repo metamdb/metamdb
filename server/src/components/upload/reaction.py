@@ -9,7 +9,7 @@ from src.errors.exception import FluxModelIdentificationError, MissingAtomMappin
 
 from src.components.upload import element as ele
 from src.components.calculation.emu import Metabolite
-from src.errors import handler
+from src.errors import handler, loggers
 from src.models import casm
 from src.validation import flux_upload
 
@@ -410,6 +410,20 @@ class Reaction:
                     atom_mapping.set_database(metabolites, atom_transition)
 
         self.mappings = atom_mapping.mappings
+        if not self.mappings:
+            logging_reaction = {
+                'name': self.name,
+                'database_identifier': self.database_identifier,
+                'identifier': self.identifier,
+                'user_mapping': self.user_mapping,
+                'reversible': self.reversible,
+                'curated': self.curated,
+                'metabolites': self.metabolites,
+                'mappings': self.mappings
+            }
+            loggers.aam_logger.warning(
+                'No atom mapping was found for the reaction!',
+                extra={'reaction': logging_reaction})
 
     def set_flux(self, flux_type: str, first: str, second: str):
         """Identify and set fluxes.
