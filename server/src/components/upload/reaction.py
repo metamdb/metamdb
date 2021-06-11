@@ -1,5 +1,6 @@
 """This module implements functionality for reaction models"""
 import csv
+import logging
 import re
 from typing import Any, List, Optional, Tuple, Union, TYPE_CHECKING
 if TYPE_CHECKING:
@@ -80,9 +81,14 @@ class ReactionModel():
             if self.reactions[index].name == reaction:
                 self.reactions[index].set_flux(flux_type, row['first_flux'],
                                                row['second_flux'])
-            #TODO: Error message
             else:
-                print('FluxError: Cant fint reaction')
+                loggers.aam_logger.warning(
+                    'FluxError: Reaction name does not match reaction at index.',
+                    extra={
+                        'reaction': self.reactions,
+                        'reaction_index': index,
+                        'reaction_name': reaction
+                    })
 
     def init_first_row(self, first_header: str, second_header: str):
         first_header, second_header = first_header.strip().upper(
