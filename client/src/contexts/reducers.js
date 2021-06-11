@@ -1,4 +1,4 @@
-import update from 'immutability-helper';
+import update from "immutability-helper";
 
 export const mainReducer = (state, action) => {
   switch (action.type) {
@@ -9,7 +9,7 @@ export const mainReducer = (state, action) => {
         reactions: action.payload.data.reactions,
         metabolites: action.payload.data.metabolites,
         elements: action.payload.data.elements,
-        isFluxModel: action.payload.data.isFluxModel
+        isFluxModel: action.payload.data.isFluxModel,
       };
     case "UPLOAD_FLUX_MODEL":
       return {
@@ -54,11 +54,23 @@ export const mainReducer = (state, action) => {
         ...state,
         isReactionModel: false,
         elements: null,
-        metabolites: null, 
-        reactions: null
+        metabolites: null,
+        reactions: null,
       };
     case "UPDATE_ATOM_MAPPING":
-      return update(state, {reactions: {[action.payload.rowIndex]: {mappings : {[action.payload.index]: {[action.payload.key]: {$set: action.payload.value}}}}}})
+      return update(state, {
+        reactions: {
+          [action.payload.rowIndex]: {
+            mappings: {
+              [action.payload.currentMapping]: {
+                [action.payload.index]: {
+                  [action.payload.key]: { $set: action.payload.value },
+                },
+              },
+            },
+          },
+        },
+      });
     default:
       return state;
   }

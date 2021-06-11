@@ -241,6 +241,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -260,6 +261,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -279,6 +281,7 @@ const ReactionModel = () => {
                       key: "mapping",
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -304,6 +307,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -323,6 +327,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -342,6 +347,7 @@ const ReactionModel = () => {
                       key: "mapping",
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -383,7 +389,7 @@ const ReactionModel = () => {
     <>
       <div className="row">
         <div className="col-5">
-          <h1>Reaction Model</h1>
+          <h1>Atom Mapping Model</h1>
         </div>
 
         <div className="col-7">
