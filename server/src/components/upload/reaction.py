@@ -146,9 +146,10 @@ class ReactionModel():
                 reaction.identifier)
             try:
                 compounds = database_reaction.compounds
-            #TODO: Error message
             except AttributeError:
-                print('NO COMPOUNDS')
+                loggers.aam_logger.error(
+                    'NoCompoundsError: No database compounds for the reaction',
+                    extra={'reaction': reaction.__dict__})
             else:
                 compounds = {
                     compound.compound_id: compound.compound
