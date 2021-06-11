@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classnames from "classnames";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import qs from "qs";
+import { Link, useLocation, useParams } from "react-router-dom";
 import Alerts from "../common/Alerts";
 
 import BootstrapTable from "react-bootstrap-table-next";
@@ -93,6 +94,37 @@ const DatabaseQuery = (props) => {
   const [feed, setFeed] = useState(null);
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.search) {
+      console.log(location.search);
+      let query = qs.parse(location.search, { ignoreQueryPrefix: true });
+      let keys = Object.keys(query);
+
+      const reactionData = new FormData();
+      reactionData.append("query", query[keys[0]]);
+      reactionData.append("type", keys[0]);
+
+      setLoading(true);
+
+      axios
+        .post("/api/query", reactionData)
+        .then((res) => {
+          console.log(res.data);
+          setFeed(res.data);
+          setLoading(false);
+          setAlerts(null);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          setFeed(null);
+          setLoading(false);
+          setAlerts(err.response.data);
+        });
+    }
+  }, [location]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

@@ -43,6 +43,13 @@ def get_query(query_keyword, query_type):
         query_result = query.all()
         result = reaction_schema.dump(query_result)
 
+    elif query_type == 'metabolite_id':
+        query = Compound.query.get(query_keyword)
+        reactions = [reaction.reaction for reaction in query.reactions]
+
+        result = reaction_schema.dump(reactions)
+
+    # print(result)
     return result
 
 
