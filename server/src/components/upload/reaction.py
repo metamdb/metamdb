@@ -128,34 +128,60 @@ class ReactionModel():
         if reaction.identifier is None:
             metabolites = reaction.set_metabolites(substrates, products)
             reaction.set_atom_mapping(metabolites)
-            for compound in reaction.mappings[0]:
-                if compound['metabolite'] not in self.metabolites:
-                    met = Metabolite(compound['name'], compound['metabolite'])
-                    self.metabolites.setdefault(compound['metabolite'], met)
-                else:
-                    met = self.metabolites.get(compound['metabolite'])
+            if reaction.mappings:
+                for compound in reaction.mappings[0]:
+                    if compound['metabolite'] not in self.metabolites:
+                        met = Metabolite(compound['name'],
+                                         compound['metabolite'])
+                        self.metabolites.setdefault(compound['metabolite'],
+                                                    met)
+                    else:
+                        met = self.metabolites.get(compound['metabolite'])
 
-                if met is not None:
-                    reaction.add_compound(met, compound['reactant'])
-                    self.metabolites.get(compound['metabolite']).add_reaction(
-                        reaction, compound['reactant'])
+                    if met is not None:
+                        reaction.add_compound(met, compound['reactant'])
+                        self.metabolites.get(
+                            compound['metabolite']).add_reaction(
+                                reaction, compound['reactant'])
         else:
-            metabolites = reaction.set_metabolites(substrates, products)
-            reaction.set_atom_mapping(metabolites)
             database_reaction: CasmReaction = casm.Reaction.query.get(
                 reaction.identifier)
+            metabolites = reaction.set_metabolites(substrates, products)
+
             try:
-                compounds = database_reaction.compounds
+                compounds_base = database_reaction.compounds
             except AttributeError:
+
                 loggers.aam_logger.error(
                     'NoCompoundsError: No database compounds for the reaction',
                     extra={'reaction': reaction.__dict__})
             else:
+
                 compounds = {
                     compound.compound_id: compound.compound
-                    for compound in compounds
+                    for compound in compounds_base
                 }
+
                 for reactant in ['substrate', 'product']:
+                    if not metabolites['substrate'] and not metabolites[
+                            'product']:
+                        for compound in compounds_base:
+                            if compound.compound_id in self.metabolites:
+                                met = self.metabolites.get(
+                                    compound.compound_id)
+                                metabolite_name = met.name
+                            else:
+                                metabolite_name = compound.compound.name
+                            metabolites[compound.reactant].append({
+                                'identifier':
+                                compound.compound_id,
+                                'name':
+                                metabolite_name,
+                                'const':
+                                compound.quantity,
+                                'mapping':
+                                None
+                            })
                     metabos: "List[MetaboliteTyping]" = metabolites[reactant]
 
                     for metabo in metabos:
@@ -163,23 +189,10 @@ class ReactionModel():
                         if metabo_identifier is not None and metabo_identifier in compounds:
                             compound = compounds[metabo_identifier]
                             if compound.id not in self.metabolites:
-                                elements = []
-
-                                for element in compound.elements:
-                                    elements.append({
-                                        'name':
-                                        element.element.name,
-                                        'qty':
-                                        element.quantity,
-                                        'symbol':
-                                        element.element.symbol,
-                                        'identifier':
-                                        element.element.id
-                                    })
 
                                 met = Metabolite(metabo['name'],
-                                                 metabo_identifier, elements,
-                                                 metabo['const'])
+                                                 metabo_identifier,
+                                                 qty=metabo['const'])
                                 self.metabolites.setdefault(
                                     metabo_identifier, met)
                             else:
@@ -187,9 +200,9 @@ class ReactionModel():
 
                             if met is not None:
                                 reaction.add_compound(met, reactant)
-                                self.metabolites.get(
-                                    metabo_identifier).add_reaction(
-                                        reaction, reactant)
+                                # self.metabolites.get(
+                                #     metabo_identifier).add_reaction(
+                                #         reaction, reactant)
                             else:
                                 # TODO: Error message
                                 print('ERROR MET')
@@ -197,7 +210,7 @@ class ReactionModel():
                         else:
                             print('ERROR', reaction, metabo_identifier,
                                   compounds)
-
+            reaction.set_atom_mapping(metabolites)
         self.reactions.append(reaction)
 
     def initialize_reactions(self, file: str):
@@ -587,7 +600,8 @@ class AtomMapping:
                         compound['name'], compound['identifier'], reactant,
                         user_mapping, compound['const'])
                     mapping.append(compound_mapping)
-        self.mappings.append(mapping)
+        if mapping:
+            self.mappings.append(mapping)
 
     def set_compound_mapping(self, name: str, metabolite: Optional[Union[int,
                                                                          str]],

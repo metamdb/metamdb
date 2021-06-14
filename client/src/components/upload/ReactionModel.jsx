@@ -293,7 +293,7 @@ const ReactionModel = () => {
       } else if (reactions[row.index - 1].mappings.length === 0) {
         aams = (
           <div className="">
-            <h3>Sorry, sadly something went wrong! We're investigating :)</h3>
+            <h3>Sorry, sadly there is no atom mapping!</h3>
           </div>
         );
       } else {
