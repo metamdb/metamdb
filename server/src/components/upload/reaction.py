@@ -249,21 +249,21 @@ class ReactionModel():
         if AtomMapping.reaction_errors:
             raise MissingAtomMappingError(AtomMapping.reaction_errors)
 
-        self.elements = {}
-        for compound in self.metabolites.values():
-            for element in compound.elements:
-                if element['symbol'] not in self.elements:
-                    self.elements.setdefault(
-                        element['symbol'],
-                        ele.Element(element['identifier'], element['name'],
-                                    element['symbol']))
+        # self.elements = {}
+        # for compound in self.metabolites.values():
+        #     for element in compound.elements:
+        #         if element['symbol'] not in self.elements:
+        #             self.elements.setdefault(
+        #                 element['symbol'],
+        #                 ele.Element(element['identifier'], element['name'],
+        #                             element['symbol']))
 
-                self.elements.get(element['symbol']).add_compound(compound)
+        #         self.elements.get(element['symbol']).add_compound(compound)
 
-        if not self.elements:
-            self.elements.setdefault('C', ele.Element(None, 'Carbon', 'C'))
-            for compound in self.metabolites.values():
-                self.elements.get('C').add_compound(compound)
+        # if not self.elements:
+        #     self.elements.setdefault('C', ele.Element(None, 'Carbon', 'C'))
+        #     for compound in self.metabolites.values():
+        #         self.elements.get('C').add_compound(compound)
 
     def load(self, reactions):
         self.reactions = []

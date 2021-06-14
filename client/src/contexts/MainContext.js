@@ -3,16 +3,11 @@ import { mainReducer } from "./reducers";
 
 export const MainContext = createContext();
 
-const MainContextProvider = props => {
+const MainContextProvider = (props) => {
   const initialState = {
     isReactionModel: false,
-    isFluxModel: false,
-    elements: null,
-    metabolites: null,
     reactions: null,
-    labelingData: null,
-    atomMappingModel: null,
-    alerts: []
+    alerts: [],
   };
 
   const [contextState, dispatch] = useReducer(mainReducer, initialState, () => {
