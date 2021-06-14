@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer } from "react";
 import { mainReducer } from "./reducers";
 
 export const MainContext = createContext();
@@ -10,14 +10,7 @@ const MainContextProvider = (props) => {
     alerts: [],
   };
 
-  const [contextState, dispatch] = useReducer(mainReducer, initialState, () => {
-    const localData = localStorage.getItem("contextState");
-    return localData ? JSON.parse(localData) : initialState;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("contextState", JSON.stringify(contextState));
-  }, [contextState]);
+  const [contextState, dispatch] = useReducer(mainReducer, initialState);
 
   return (
     <MainContext.Provider value={{ contextState, dispatch }}>
