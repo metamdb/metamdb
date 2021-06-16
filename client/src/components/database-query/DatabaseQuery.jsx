@@ -54,7 +54,6 @@ const columns = [
   {
     dataField: "identifiers",
     text: "Name",
-    sort: true,
     headerStyle: (colum, colIndex) => {
       return { width: "20%" };
     },
@@ -79,7 +78,7 @@ const columns = [
   },
   {
     dataField: "updated",
-    text: "Updated",
+    text: "Curated",
     sort: true,
     headerStyle: (colum, colIndex) => {
       return { width: "12%" };
