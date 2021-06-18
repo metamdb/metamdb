@@ -6,7 +6,6 @@ import { MetaboliteContext } from "../../contexts/MetaboliteContext";
 
 import MetaboliteInfo from "./MetaboliteInfo";
 import MetaboliteIdentifiers from "./MetaboliteIdentifiers";
-import Elements from "./Elements";
 import Reactions from "./Reactions";
 
 const MetaboliteContainer = (props) => {
