@@ -154,12 +154,14 @@ const DatabaseQuery = (props) => {
         <div className="container">
           <h1>Database Query</h1>
           <p className="lead text-muted">
-            The database can be queried for reaction names as well as
-            metabolites. The type of query can be changed by clicking on the
-            dropdown menu. The search is performed with a fuzzy match algorithm,
-            meaning that approximate results are matched (Glucose{" "}
+            The database can be queried for reaction names as well as metabolite
+            names. The type of query can be changed by clicking on the dropdown
+            menu. The search is performed with a fuzzy match algorithm, meaning
+            that patterns are matched. For example Glucose not only matches
+            D-Glucose but also Glucose-6-phosphate (Glucose{" "}
             <i className="fas fa-long-arrow-alt-right"></i>{" "}
-            D-Glucose/Glucose-6-phosphate). Further information{" "}
+            D-Glucose/Glucose-6-phosphate). <br />
+            Further information{" "}
             <a
               href="https://collinstark.github.io/metamdb-docs/database-search"
               target="_blank"

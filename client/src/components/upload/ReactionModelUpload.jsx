@@ -13,20 +13,17 @@ const ReactionModelUpload = (props) => {
     <div className="reaction-file-upload">
       <h1>Upload - Reaction Model</h1>
       <p className="lead text-muted">
-        Reaction Models are user-uploaded models of multiple reactions.
-        Reactions and metabolites can be identified by specific database
-        identifiers to get accurate atom mapping data, while manual atom
-        mappings can be used for your custom or simplified reactions.{" "}
+        To get an atom mapping model you can upload your own metabolic model.{" "}
         <a
           href="https://collinstark.github.io/metamdb-docs/reaction-model"
           target="_blank"
           rel="noopener noreferrer"
         >
-          You can read about the specifications and more here!
+          You can read about the specifications for the model and more here!
         </a>
       </p>
       <p>
-        <a href="https://collinstark.github.io/metamdb-docs/assets/files/example_model-89c060de55622eeeb376a7111a2802ef.csv">
+        <a href="https://collinstark.github.io/metamdb-docs/assets/files/example_model-a423dac6169034c7325e93b30371611c.csv">
           Download the example model here!
         </a>
       </p>
