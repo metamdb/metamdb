@@ -13,35 +13,24 @@ const ReactionModelUpload = (props) => {
     <div className="reaction-file-upload">
       <h1>Upload - Reaction Model</h1>
       <p className="lead text-muted">
-        Reaction model upload for atom mapping network generation or labeling
-        simulation. Model must consist of identifiers from{" "}
+        To get an atom mapping model you can upload your own metabolic model.{" "}
         <a
-          href="https://www.brenda-enzymes.org/"
+          href="https://collinstark.github.io/metamdb-docs/reaction-model"
           target="_blank"
           rel="noopener noreferrer"
         >
-          BRENDA
+          You can read about the specifications for the model and more here!
         </a>
-        ,{" "}
-        <a
-          href="https://www.genome.jp/kegg/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          KEGG
-        </a>
-        , or{" "}
-        <a
-          href="https://metacyc.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          MetaCyc
-        </a>{" "}
-        in square brackets. Supported file formats include: csv.
       </p>
+      <p>
+        <a href="https://collinstark.github.io/metamdb-docs/assets/files/example_model-a423dac6169034c7325e93b30371611c.csv">
+          Download the example model here!
+        </a>
+      </p>
+
       <small className="text-muted">
-        e.g. v1 [10021], Glucose [1], -->, Glucose 6-phosphate [2]
+        e.g. v1 [10021], Glucose [1] (abcdef), -->, Glucose 6-phosphate [2]
+        (abcdef)
       </small>
       <FileUploadContainer {...initialState} />
     </div>

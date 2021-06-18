@@ -103,6 +103,7 @@ class Source(Casm):
     name = db.Column(db.String(45), unique=True, nullable=False)
 
     reaction = db.relationship('ReactionSource', back_populates='source')
+    compound = db.relationship('CompoundSource', back_populates='source')
 
 
 # ---------- Link Tables ---------- #
@@ -145,6 +146,7 @@ class CompoundSource(Casm):
     name = db.Column(TEXT)
 
     compound = db.relationship('Compound', back_populates='identifiers')
+    source = db.relationship('Source', back_populates='compound')
 
 
 class CompoundElement(Casm):

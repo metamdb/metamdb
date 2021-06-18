@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classnames from "classnames";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import qs from "qs";
+import { Link, useLocation } from "react-router-dom";
 import Alerts from "../common/Alerts";
 
 import BootstrapTable from "react-bootstrap-table-next";
@@ -53,7 +54,6 @@ const columns = [
   {
     dataField: "identifiers",
     text: "Name",
-    sort: true,
     headerStyle: (colum, colIndex) => {
       return { width: "20%" };
     },
@@ -78,7 +78,7 @@ const columns = [
   },
   {
     dataField: "updated",
-    text: "Updated",
+    text: "Curated",
     sort: true,
     headerStyle: (colum, colIndex) => {
       return { width: "12%" };
@@ -93,6 +93,37 @@ const DatabaseQuery = (props) => {
   const [feed, setFeed] = useState(null);
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.search) {
+      console.log(location.search);
+      let query = qs.parse(location.search, { ignoreQueryPrefix: true });
+      let keys = Object.keys(query);
+
+      const reactionData = new FormData();
+      reactionData.append("query", query[keys[0]]);
+      reactionData.append("type", keys[0]);
+
+      setLoading(true);
+
+      axios
+        .post("/api/query", reactionData)
+        .then((res) => {
+          console.log(res.data);
+          setFeed(res.data);
+          setLoading(false);
+          setAlerts(null);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          setFeed(null);
+          setLoading(false);
+          setAlerts(err.response.data);
+        });
+    }
+  }, [location]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -123,8 +154,21 @@ const DatabaseQuery = (props) => {
         <div className="container">
           <h1>Database Query</h1>
           <p className="lead text-muted">
-            Database reaction search for reaction names and reactions containing
-            specified metabolites.
+            The database can be queried for reaction names as well as metabolite
+            names. The type of query can be changed by clicking on the dropdown
+            menu. The search is performed with a fuzzy match algorithm, meaning
+            that patterns are matched. For example Glucose not only matches
+            D-Glucose but also Glucose-6-phosphate (Glucose{" "}
+            <i className="fas fa-long-arrow-alt-right"></i>{" "}
+            D-Glucose/Glucose-6-phosphate). <br />
+            Further information{" "}
+            <a
+              href="https://collinstark.github.io/metamdb-docs/database-search"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              can be found in the documentation.
+            </a>
           </p>
           <div className="reaction-form">
             <div className="form-row">

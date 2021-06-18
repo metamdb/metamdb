@@ -34,7 +34,7 @@ const columns = [
     sort: true,
     formatter: reactionLink,
     headerStyle: (colum, colIndex) => {
-      return { width: "6%" };
+      return { width: "8%" };
     },
   },
   {
@@ -42,7 +42,7 @@ const columns = [
     text: "Name",
     sort: true,
     headerStyle: (colum, colIndex) => {
-      return { width: "10%" };
+      return { width: "15%" };
     },
     formatter: (col, row) => {
       return (
@@ -121,6 +121,7 @@ const columns = [
     dataField: "curated",
     text: "Curated",
     sort: true,
+    editable: false,
     align: "center",
     headerStyle: (colum, colIndex) => {
       return { width: "9%" };
@@ -145,48 +146,6 @@ const columns = [
           }}
         >
           {content}
-        </span>
-      );
-    },
-  },
-  {
-    dataField: "forward",
-    text: "Forward",
-    headerStyle: (colum, colIndex) => {
-      return { width: "10%" };
-    },
-    formatter: (col, row) => {
-      return (
-        <span
-          style={{
-            display: "block",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {col}
-        </span>
-      );
-    },
-  },
-  {
-    dataField: "reverse",
-    text: "Reverse",
-    headerStyle: (colum, colIndex) => {
-      return { width: "10%" };
-    },
-    formatter: (col, row) => {
-      return (
-        <span
-          style={{
-            display: "block",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {col}
         </span>
       );
     },
@@ -282,6 +241,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -301,6 +261,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -320,6 +281,7 @@ const ReactionModel = () => {
                       key: "mapping",
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -328,6 +290,12 @@ const ReactionModel = () => {
             <div className="col-2">{metabolite.reactant}</div>
           </div>
         ));
+      } else if (reactions[row.index - 1].mappings.length === 0) {
+        aams = (
+          <div className="">
+            <h3>Sorry, sadly there is no atom mapping!</h3>
+          </div>
+        );
       } else {
         aams = reactions[row.index - 1].mappings[0].map((metabolite, index) => (
           <div key={index} className="row mb-1 mt-1">
@@ -345,6 +313,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -364,6 +333,7 @@ const ReactionModel = () => {
                       value: e.target.value,
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -383,6 +353,7 @@ const ReactionModel = () => {
                       key: "mapping",
                       rowIndex: row.index - 1,
                       index: index,
+                      currentMapping: currentPage[row.index - 1],
                     },
                   })
                 }
@@ -424,7 +395,7 @@ const ReactionModel = () => {
     <>
       <div className="row">
         <div className="col-5">
-          <h1>Reaction Model</h1>
+          <h1>Atom Mapping Model</h1>
         </div>
 
         <div className="col-7">

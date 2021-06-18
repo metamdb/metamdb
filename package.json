@@ -21,5 +21,8 @@
   "homepage": "https://github.com/CollinStarke/casm#readme",
   "devDependencies": {
     "concurrently": "^5.2.0"
+  },
+  "dependencies": {
+    "qs": "^6.10.1"
   }
 }
