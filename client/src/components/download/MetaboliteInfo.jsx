@@ -9,15 +9,15 @@ import { AuthContext } from "../../contexts/AuthContext";
 import useFileFormValidation from "../forms/useFileForm";
 import validateUpload from "../../validation/validateMol";
 
-import no_met from "../../shared/no_met.png";
+// import no_met from "../../shared/no_met.png";
 
 const StyledPopover = styled(Popover)`
   min-width: 600px;
 `;
 
-const StyledPopoverImage = styled(Popover)`
-  min-width: 1000px;
-`;
+// const StyledPopoverImage = styled(Popover)`
+//   min-width: 1000px;
+// `;
 
 const MetaboliteInfo = ({ id }) => {
   const { authState } = useContext(AuthContext);
@@ -27,7 +27,7 @@ const MetaboliteInfo = ({ id }) => {
   const [loading, setLoading] = useState(false);
   const [apiError] = useState(null);
 
-  const imageSource = `${process.env.PUBLIC_URL}/img/met/${id}.svg`;
+  // const imageSource = `${process.env.PUBLIC_URL}/img/met/${id}.svg`;
 
   const popover = (
     <StyledPopover id="popover">
@@ -38,24 +38,24 @@ const MetaboliteInfo = ({ id }) => {
     </StyledPopover>
   );
 
-  const popoverImage = (
-    <StyledPopoverImage id="popover">
-      <StyledPopoverImage.Title as="h3">
-        Metabolite Image
-      </StyledPopoverImage.Title>
-      <StyledPopoverImage.Content>
-        <img
-          src={imageSource}
-          onError={(e) => {
-            e.target.onError = null;
-            e.target.src = no_met;
-          }}
-          alt={`Structure Metabolite ${id}`}
-          style={{ width: "100%" }}
-        />
-      </StyledPopoverImage.Content>
-    </StyledPopoverImage>
-  );
+  // const popoverImage = (
+  //   <StyledPopoverImage id="popover">
+  //     <StyledPopoverImage.Title as="h3">
+  //       Metabolite Image
+  //     </StyledPopoverImage.Title>
+  //     <StyledPopoverImage.Content>
+  //       <img
+  //         src={imageSource}
+  //         onError={(e) => {
+  //           e.target.onError = null;
+  //           e.target.src = no_met;
+  //         }}
+  //         alt={`Structure Metabolite ${id}`}
+  //         style={{ width: "100%" }}
+  //       />
+  //     </StyledPopoverImage.Content>
+  //   </StyledPopoverImage>
+  // );
 
   const downloadMol = (e) => {
     e.preventDefault();
@@ -127,14 +127,14 @@ const MetaboliteInfo = ({ id }) => {
         <OverlayTrigger placement="right" trigger="click" overlay={popover}>
           <Button variant="link">Click</Button>
         </OverlayTrigger>
-        <strong>Image:</strong>
+        {/* <strong>Image:</strong>
         <OverlayTrigger
           placement="right"
           trigger="click"
           overlay={popoverImage}
         >
           <Button variant="link">Click</Button>
-        </OverlayTrigger>
+        </OverlayTrigger> */}
       </p>
       <div className="download mb-3">
         <button type="button" className="btn btn-success" onClick={downloadMol}>

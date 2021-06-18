@@ -51,7 +51,7 @@ const Reaction = ({ id, notFound, isReaction }) => {
                 <Tab eventKey="compounds" title="Compounds">
                   <Compounds />
                 </Tab>
-                <Tab eventKey="transitions" title="Atom Transitions">
+                <Tab eventKey="transitions" title="Atom Mappings">
                   <AtomTransitions />
                 </Tab>
               </Tabs>

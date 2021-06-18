@@ -192,7 +192,7 @@ def metaboliteId(id):
     identifiers = [{
         'name': identifier.name,
         'identifier': identifier.database_identifier,
-        'source': identifier.source_id
+        'source': identifier.source.name
     } for identifier in metabolite.identifiers]
     reactions = [{
         'reactant': reaction.reactant,

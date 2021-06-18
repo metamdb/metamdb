@@ -330,7 +330,7 @@ function Datenschutz() {
             <a
               href="https://optout.aboutads.info"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               https://optout.aboutads.info
             </a>{" "}
@@ -338,7 +338,7 @@ function Datenschutz() {
             <a
               href="https://www.youronlinechoices.com/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               https://www.youronlinechoices.com/
             </a>{" "}
@@ -492,7 +492,7 @@ function Datenschutz() {
               <a
                 href="https://fontawesome.com/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 https://fontawesome.com/
               </a>
@@ -500,7 +500,7 @@ function Datenschutz() {
               <a
                 href="https://fontawesome.com/privacy"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 https://fontawesome.com/privacy
               </a>
@@ -521,7 +521,7 @@ function Datenschutz() {
               <a
                 href="https://fonts.google.com/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 https://fonts.google.com/
               </a>
@@ -529,7 +529,7 @@ function Datenschutz() {
               <a
                 href="https://policies.google.com/privacy"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 https://policies.google.com/privacy
               </a>

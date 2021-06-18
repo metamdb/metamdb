@@ -24,7 +24,7 @@ const Footer = (props) => {
                 <a
                   href="https://github.com/CollinStark/metamdb"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   <i className="fab fa-github"></i>
                 </a>
