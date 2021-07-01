@@ -30,7 +30,7 @@ const MetaboliteInfo = ({ id }) => {
   // const imageSource = `${process.env.PUBLIC_URL}/img/met/${id}.svg`;
 
   const popover = (
-    <StyledPopover id="popover">
+    <StyledPopover id="popover" className="shadow">
       <StyledPopover.Title as="h3">Mol File</StyledPopover.Title>
       <StyledPopover.Content>
         <pre>{metabolite.file}</pre>
@@ -124,7 +124,7 @@ const MetaboliteInfo = ({ id }) => {
       </p>
       <p className="text-muted">
         <strong>Mol File:</strong>
-        <OverlayTrigger placement="right" trigger="click" overlay={popover}>
+        <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
           <Button variant="link">Click</Button>
         </OverlayTrigger>
         {/* <strong>Image:</strong>

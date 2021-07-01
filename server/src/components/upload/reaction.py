@@ -336,6 +336,7 @@ class Reaction:
 
         self.metabolites = {'substrate': [], 'product': []}
         self.mappings = []
+        self.conversion = {}
 
     def set_identifier(self, identifier: Union[str, int]) -> Optional[int]:
         if isinstance(identifier, str):
@@ -430,6 +431,7 @@ class Reaction:
                     atom_mapping.set_database(metabolites, atom_transition)
 
         self.mappings = atom_mapping.mappings
+        self.conversion = atom_mapping.conversion
         if not self.mappings:
             logging_reaction = {
                 'name': self.name,
