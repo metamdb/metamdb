@@ -25,9 +25,6 @@ const Styles = styled.div`
   overflow: auto;
 
   table {
-    border-spacing: 0;
-    border: 1px solid black;
-
     .thead {
       ${"" /* These styles are required for a scrollable body to align with the header properly */}
       overflow-y: auto;
@@ -38,7 +35,6 @@ const Styles = styled.div`
       ${"" /* These styles are required for a scrollable table body */}
       overflow-y: scroll;
       overflow-x: hidden;
-      height: 250px;
     }
 
     tr {
@@ -51,11 +47,6 @@ const Styles = styled.div`
 
     th,
     td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-
       ${"" /* In this example we use an absolutely position resizer,
         so this is required. */}
       position: relative;
@@ -108,6 +99,7 @@ function SelectColumnFilter({
 
   return (
     <select
+      className="custom-select"
       value={filterValue}
       onChange={(e) => {
         setFilter(e.target.value || undefined);
@@ -150,7 +142,11 @@ const ReactionModel = () => {
         // Make an expander cell
         Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
           <span {...getToggleAllRowsExpandedProps()}>
-            {isAllRowsExpanded ? "👇" : "👉"}
+            {isAllRowsExpanded ? (
+              <i class="fas fa-chevron-down"></i>
+            ) : (
+              <i class="fas fa-chevron-right"></i>
+            )}
           </span>
         ),
         id: "expander", // It needs an ID
@@ -162,7 +158,11 @@ const ReactionModel = () => {
           // We can use the getToggleRowExpandedProps prop-getter
           // to build the expander.
           <span {...row.getToggleRowExpandedProps()}>
-            {row.isExpanded ? "👇" : "👉"}
+            {row.isExpanded ? (
+              <i class="fas fa-chevron-down"></i>
+            ) : (
+              <i class="fas fa-chevron-right"></i>
+            )}
           </span>
         ),
       },
@@ -210,12 +210,14 @@ const ReactionModel = () => {
         accessor: (row) => row.identifier,
         Cell: mappingImage,
         width: 100,
+        disableSortBy: true,
       },
       {
-        Header: "Conversion",
+        Header: "Legend",
         accessor: "conversion",
         Cell: mappingConversion,
         width: 100,
+        disableSortBy: true,
       },
     ],
     []
@@ -479,10 +481,8 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    page,
+    rows,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -513,7 +513,10 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
 
   return (
     <>
-      <table {...getTableProps()}>
+      <table
+        className="table table-striped table-bordered"
+        {...getTableProps()}
+      >
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -524,12 +527,18 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
                   <div>
                     <span {...column.getSortByToggleProps()}>
                       {column.render("Header")}
-                      {/* Add a sort direction indicator */}
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? " 🔽"
-                          : " 🔼"
-                        : ""}
+                      {"  "}
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <i class="fas fa-sort-down"></i>
+                        ) : (
+                          <i class="fas fa-sort-up"></i>
+                        )
+                      ) : column.canSort ? (
+                        <i class="fas fa-sort"></i>
+                      ) : (
+                        ""
+                      )}
                       {column.canResize && (
                         <div
                           {...column.getResizerProps()}
@@ -581,54 +590,75 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
           })}
         </tbody>
       </table>
-      {/* 
-        Pagination can be built however you'd like. 
-        This is just a very basic UI implementation:
-      */}
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
+
+      <nav aria-label="atom mapping navigation">
+        <div className="row">
+          <div className="col-md-5">
+            <div className="mt-3">
+              <span>
+                Showing <strong>{pageIndex * pageSize + 1}</strong> to{" "}
+                <strong>{(pageIndex + 1) * pageSize}</strong> of{" "}
+                <strong>{rows.length}</strong> results
+              </span>
+            </div>
+          </div>
+          <div className="col-md-2">
+            <select
+              className="mt-3 custom-select"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-md-5">
+            <ul className="pagination float-right">
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => gotoPage(0)}
+                  disabled={!canPreviousPage}
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </button>
+              </li>
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                >
+                  &lt;
+                </button>
+              </li>
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                >
+                  &gt;
+                </button>
+              </li>
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => gotoPage(pageCount - 1)}
+                  disabled={!canNextPage}
+                >
+                  &raquo;
+                </button>{" "}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </>
   );
 };
