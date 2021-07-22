@@ -19,14 +19,20 @@ import { MainContext } from "../../contexts/MainContext";
 
 const Styles = styled.div`
   padding: 1rem;
-  ${"" /* These styles are suggested for the table fill all available space in its containing element */}
+  ${
+    "" /* These styles are suggested for the table fill all available space in its containing element */
+  }
   display: block;
-  ${"" /* These styles are required for a horizontaly scrollable table overflow */}
+  ${
+    "" /* These styles are required for a horizontaly scrollable table overflow */
+  }
   overflow: auto;
 
   table {
     .thead {
-      ${"" /* These styles are required for a scrollable body to align with the header properly */}
+      ${
+        "" /* These styles are required for a scrollable body to align with the header properly */
+      }
       overflow-y: auto;
       overflow-x: hidden;
     }
@@ -47,26 +53,32 @@ const Styles = styled.div`
 
     th,
     td {
-      ${"" /* In this example we use an absolutely position resizer,
-        so this is required. */}
+      ${
+        "" /* In this example we use an absolutely position resizer,
+        so this is required. */
+      }
       position: relative;
 
       :last-child {
         border-right: 0;
       }
       .resizer {
-        right: 0;
-        background: blue;
-        width: 10px;
+        display: inline-block;
+        background: #a6a6a600;
+        width: 15px;
         height: 100%;
         position: absolute;
+        right: 0;
         top: 0;
+        transform: translateX(50%);
         z-index: 1;
-        ${"" /* prevents from scrolling while dragging on touch devices */}
         touch-action :none;
 
-        &.isResizing {
-          background: red;
+
+      }
+     
+        
+
         }
       }
     }
@@ -240,187 +252,95 @@ const ReactionModel = () => {
     );
   };
 
-  const [currentPage, setPage] = useState({});
-  const setPagination = (index, number) => {
-    let currentPageObj = {};
-    currentPageObj[index] = number - 1;
-    setPage({ ...currentPage, ...currentPageObj });
-  };
-
   const renderRowSubComponent = React.useCallback(
     ({ row }) => {
-      let pagination;
       let aams;
-      console.log(reactions);
-      console.log(row);
-      if (reactions[row.index].mappings.length > 1) {
-        let items = [];
-        for (
-          let number = 1;
-          number <= reactions[row.index].mappings.length;
-          number++
-        ) {
-          items.push(
-            <Pagination.Item
-              key={number}
-              active={number === currentPage[row.index] + 1}
-              onClick={() => setPagination(row.index, number)}
-            >
-              {number}
-            </Pagination.Item>
-          );
-          pagination = <Pagination>{items}</Pagination>;
-        }
-        aams = reactions[row.index].mappings[currentPage[row.index]].map(
-          (metabolite, index) => (
-            <div key={index} className="row mb-1 mt-1">
-              <div className="col-2">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Name"
-                  value={metabolite.metabolite}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "UPDATE_ATOM_MAPPING",
-                      payload: {
-                        key: "metabolite",
-                        value: e.target.value,
-                        rowIndex: row.index,
-                        index: index,
-                        currentMapping: currentPage[row.index],
-                      },
-                    })
-                  }
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Name"
-                  value={metabolite.name}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "UPDATE_ATOM_MAPPING",
-                      payload: {
-                        key: "name",
-                        value: e.target.value,
-                        rowIndex: row.index,
-                        index: index,
-                        currentMapping: currentPage[row.index],
-                      },
-                    })
-                  }
-                />
-              </div>
-              <div className="col">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Atom mapping"
-                  value={metabolite.mapping}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "UPDATE_ATOM_MAPPING",
-                      payload: {
-                        value: e.target.value,
-                        key: "mapping",
-                        rowIndex: row.index,
-                        index: index,
-                        currentMapping: currentPage[row.index],
-                      },
-                    })
-                  }
-                />
-              </div>
-              <div className="col-2">{metabolite.reactant}</div>
-            </div>
-          )
-        );
-      } else if (reactions[row.index].mappings.length === 0) {
+
+      if (reactions[row.index].mappings.length === 0) {
         aams = (
           <div className="">
             <h3>Sorry, sadly there is no atom mapping!</h3>
           </div>
         );
       } else {
-        aams = reactions[row.index].mappings[0].map((metabolite, index) => (
-          <div key={index} className="row mb-1 mt-1">
-            <div className="col-2">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Name"
-                value={metabolite.metabolite}
-                onChange={(e) =>
-                  dispatch({
-                    type: "UPDATE_ATOM_MAPPING",
-                    payload: {
-                      key: "metabolite",
-                      value: e.target.value,
-                      rowIndex: row.index,
-                      index: index,
-                      currentMapping: currentPage[row.index],
-                    },
-                  })
-                }
-              />
+        aams = reactions[row.index].mappings.map((mapping, mapIndex) => {
+          return (
+            <div key={mapIndex}>
+              <h4>Mapping {mapIndex + 1}</h4>
+              {mapping.map((metabolite, index) => (
+                <div key={index} className="row mb-1 mt-1">
+                  <div className="col-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Name"
+                      value={metabolite.metabolite}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "UPDATE_ATOM_MAPPING",
+                          payload: {
+                            key: "metabolite",
+                            value: e.target.value,
+                            rowIndex: row.index,
+                            index: index,
+                            currentMapping: mapIndex,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="col">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Name"
+                      value={metabolite.name}
+                      onChange={(e) => {
+                        dispatch({
+                          type: "UPDATE_ATOM_MAPPING",
+                          payload: {
+                            key: "name",
+                            value: e.target.value,
+                            rowIndex: row.index,
+                            index: index,
+                            currentMapping: mapIndex,
+                          },
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="col">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Atom mapping"
+                      value={metabolite.mapping}
+                      onChange={(e) =>
+                        dispatch({
+                          type: "UPDATE_ATOM_MAPPING",
+                          payload: {
+                            value: e.target.value,
+                            key: "mapping",
+                            rowIndex: row.index,
+                            index: index,
+                            currentMapping: mapIndex,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="col-2">{metabolite.reactant}</div>
+                </div>
+              ))}
             </div>
-            <div className="col">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Name"
-                value={metabolite.name}
-                onChange={(e) =>
-                  dispatch({
-                    type: "UPDATE_ATOM_MAPPING",
-                    payload: {
-                      key: "name",
-                      value: e.target.value,
-                      rowIndex: row.index,
-                      index: index,
-                      currentMapping: currentPage[row.index],
-                    },
-                  })
-                }
-              />
-            </div>
-            <div className="col">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Atom mapping"
-                value={metabolite.mapping}
-                onChange={(e) =>
-                  dispatch({
-                    type: "UPDATE_ATOM_MAPPING",
-                    payload: {
-                      value: e.target.value,
-                      key: "mapping",
-                      rowIndex: row.index,
-                      index: index,
-                      currentMapping: currentPage[row.index],
-                    },
-                  })
-                }
-              />
-            </div>
-            <div className="col-2">{metabolite.reactant}</div>
-          </div>
-        ));
+          );
+        });
       }
 
-      return (
-        <div>
-          <div>{pagination}</div>
-          {aams}
-        </div>
-      );
+      return <div>{aams}</div>;
     },
 
-    []
+    [reactions]
   );
 
   return (
@@ -521,8 +441,6 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
                 <th {...column.getHeaderProps()}>
                   <div>
                     <span {...column.getSortByToggleProps()}>
@@ -539,15 +457,15 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
                       ) : (
                         ""
                       )}
-                      {column.canResize && (
-                        <div
-                          {...column.getResizerProps()}
-                          className={`resizer ${
-                            column.isResizing ? "isResizing" : ""
-                          }`}
-                        />
-                      )}
                     </span>
+                    {column.canResize && (
+                      <div
+                        {...column.getResizerProps()}
+                        className={`resizer ${
+                          column.isResizing ? "isResizing" : ""
+                        }`}
+                      />
+                    )}
                   </div>
                   <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
