@@ -88,7 +88,7 @@ const AtomTransitionData = ({
   }
 
   const popover = (
-    <StyledPopover id="popover">
+    <StyledPopover id="popover" className="shadow">
       <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
       <StyledPopover.Content>
         <pre>{file}</pre>
@@ -97,7 +97,7 @@ const AtomTransitionData = ({
   );
 
   const popoverImage = (
-    <StyledPopoverImage id="popover">
+    <StyledPopoverImage id="popover" className="shadow">
       <StyledPopoverImage.Title as="h3">
         Atom Transition Image
       </StyledPopoverImage.Title>
@@ -140,13 +140,13 @@ const AtomTransitionData = ({
       </p>
       <p className="text-muted">
         <strong>Atom Transition:</strong>
-        <OverlayTrigger placement="right" trigger="click" overlay={popover}>
+        <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
           <Button variant="link">Click</Button>
         </OverlayTrigger>
         <strong>Image:</strong>
         <OverlayTrigger
           placement="right"
-          trigger="click"
+          trigger="focus"
           overlay={popoverImage}
         >
           <Button variant="link">Click</Button>

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { MainContext } from "../../contexts/MainContext";
 
 import ReactionModelUpload from "../upload/ReactionModelUpload";
-import ReactionModel from "../upload/ReactionModel";
+import ReactionModel from "../upload/ReactionModelUpdated";
 
 const AtomMapping = (props) => {
   const { contextState } = useContext(MainContext);
