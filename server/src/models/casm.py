@@ -172,6 +172,7 @@ class ReactionSourceSchema(ma.SQLAlchemySchema):
         model = ReactionSource
 
     database_identifier = ma.auto_field()
+    source_id = ma.auto_field()
 
 
 class ReactionSchema(ma.SQLAlchemySchema):
@@ -182,3 +183,47 @@ class ReactionSchema(ma.SQLAlchemySchema):
     formula = ma.auto_field()
     updated = ma.auto_field()
     identifiers = Nested(ReactionSourceSchema, many=True)
+
+
+class ReactionJsonSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Reaction
+
+    id = ma.auto_field()
+    formula = ma.auto_field()
+    updated = ma.auto_field()
+    updated_on = ma.auto_field(data_key='updatedOn')
+    updated_by = ma.auto_field(data_key='updatedBy')
+
+    identifiers = Nested(ReactionSourceSchema, many=True)
+
+    href = ma.Method('get_href')
+    type = ma.Method('get_type')
+    external_urls = ma.Method('get_external_urls')
+
+    file = ma.auto_field(data_key='rxnFile')
+
+    def get_href(self, obj):
+        if obj.id is None:
+            return ''
+        return f'https://metamdb.tu-bs.de/api/reactions/{obj.id}'
+
+    def get_type(self, obj):
+        return 'reaction'
+
+    def get_external_urls(self, obj):
+        external_urls = {}
+
+        if obj.id is not None:
+            external_urls.setdefault(
+                'metamdb', f'https://metamdb.tu-bs.de/reaction/{obj.id}')
+        else:
+            external_urls.setdefault('metamdb', '')
+
+        if obj.img is not None:
+            external_urls.setdefault(
+                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.img}')
+        else:
+            external_urls.setdefault('img', '')
+
+        return external_urls

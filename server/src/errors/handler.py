@@ -62,6 +62,17 @@ class InvalidUser(InvalidUsage):
         super().__init__(self.status_code, self.payload)
 
 
+class InvalidId(InvalidUsage):
+    """InvalidId handler that returns a 400 error
+    with a invalid id error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'Invalid id'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
 def handle_invalid_usage(error: InvalidUsage) -> Response:
     """Handles and returns base exceptions.
 
