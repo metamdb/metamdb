@@ -53,4 +53,7 @@ def create_app():
     from src.routes.api.search import search_blueprint
     app.register_blueprint(search_blueprint)
 
+    from src.routes.api.pathways import pathways_blueprint
+    app.register_blueprint(pathways_blueprint)
+
     return app
