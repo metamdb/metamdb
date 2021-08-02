@@ -50,4 +50,7 @@ def create_app():
     from src.routes.api.reactions import reactions_blueprint
     app.register_blueprint(reactions_blueprint)
 
+    from src.routes.api.search import search_blueprint
+    app.register_blueprint(search_blueprint)
+
     return app
