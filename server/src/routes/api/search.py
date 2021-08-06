@@ -56,6 +56,7 @@ def get_search_items(query: str, query_type: str, limit: int, offset: int):
         'limit': limit
     }
 
+    items, total = None, None
     if query_type.lower() == 'reaction':
         items, total = get_reaction_items(query, limit, offset)
 
@@ -83,6 +84,7 @@ def get_search_items(query: str, query_type: str, limit: int, offset: int):
 
     search_items.setdefault('next', next)
 
+    search_results = None
     if query_type.lower() == 'reaction':
         search_results = {'reactions': search_items}
 
