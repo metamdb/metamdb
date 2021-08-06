@@ -13,7 +13,7 @@ pathways_blueprint.register_error_handler(handler.InvalidUsage,
 
 @pathways_blueprint.route('', methods=['GET'])
 def get_pathways():
-    pathway_ids: Optional[str] = request.values.get('ids')
+    pathway_ids: Optional[str] = request.args.get('ids')
     if not pathway_ids:
         raise handler.InvalidId()
 

@@ -13,7 +13,7 @@ reactions_blueprint.register_error_handler(handler.InvalidUsage,
 
 @reactions_blueprint.route('', methods=['GET'])
 def get_reactions():
-    reaction_ids: Optional[str] = request.values.get('ids')
+    reaction_ids: Optional[str] = request.args.get('ids')
     if not reaction_ids:
         raise handler.InvalidId()
 
