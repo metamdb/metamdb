@@ -26,13 +26,15 @@ def get_search():
         raise handler.BadSearchType(query_type.lower())
 
     limit: Optional[int] = request.args.get('limit')
-    if limit is not None:
+    if limit is None:
+        limit = 20
+    elif limit <= 0 or limit > 50:
+        limit = 20
+    else:
         try:
             limit = int(limit)
         except ValueError:
             limit = 20
-    else:
-        limit = 20
 
     offset: Optional[int] = request.args.get('offset')
     if offset is not None:
