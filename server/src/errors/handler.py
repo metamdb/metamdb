@@ -62,6 +62,50 @@ class InvalidUser(InvalidUsage):
         super().__init__(self.status_code, self.payload)
 
 
+class InvalidId(InvalidUsage):
+    """InvalidId handler that returns a 400 error
+    with a invalid id error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'Invalid id'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
+class MissingQuery(InvalidUsage):
+    """MissingQuery handler that returns a 400 error
+    with a missing query error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'No search query'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
+class MissingParameter(InvalidUsage):
+    """MissingParameter handler that returns a 400 error
+    with a missing parameter error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'Missing parameter type'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
+class BadSearchType(InvalidUsage):
+    """MissingParameter handler that returns a 400 error
+    with a missing parameter error message.
+    """
+    def __init__(self, type_query):
+        self.payload = {'message': f'Bad search type field {type_query}'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
 def handle_invalid_usage(error: InvalidUsage) -> Response:
     """Handles and returns base exceptions.
 

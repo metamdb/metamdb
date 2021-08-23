@@ -15,6 +15,19 @@ class Casm(db.Model):
     __bind_key__ = 'casm'
 
 
+class Pathway(Casm):
+    __tablename__ = 'pathway'
+
+    pw_id = db.Column(db.Integer, primary_key=True)
+    source_id = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(1000), nullable=False)
+    source = db.Column(db.String(100))
+
+    reactions = db.relationship('PathwayReaction',
+                                backref=db.backref('pathways'),
+                                lazy='dynamic')
+
+
 class Enzyme(Casm):
     __tablename__ = 'enzyme'
 
@@ -65,6 +78,22 @@ class ReactionCompound(Casm):
                                          back_populates='reactions')
 
 
+class PathwayReaction(Casm):
+    __tablename__ = 'pathway_reactions'
+
+    pathway_id: int = db.Column(db.Integer,
+                                db.ForeignKey('pathway.pw_id'),
+                                primary_key=True,
+                                autoincrement=False)
+    reaction_id: int = db.Column(db.Integer,
+                                 db.ForeignKey('reaction.id'),
+                                 primary_key=True,
+                                 autoincrement=False)
+
+    reaction = db.relationship('Reaction', back_populates='pathways')
+    pathway: Compound = db.relationship('Pathway', back_populates='reactions')
+
+
 class Reaction(Casm):
     __tablename__ = 'reaction'
 
@@ -84,6 +113,7 @@ class Reaction(Casm):
     identifiers = db.relationship('ReactionSource', back_populates='reaction')
     compounds: List[ReactionCompound] = db.relationship(
         'ReactionCompound', back_populates='reaction')
+    pathways = db.relationship('PathwayReaction', back_populates='reaction')
 
 
 class Element(Casm):
@@ -172,6 +202,7 @@ class ReactionSourceSchema(ma.SQLAlchemySchema):
         model = ReactionSource
 
     database_identifier = ma.auto_field()
+    source_id = ma.auto_field()
 
 
 class ReactionSchema(ma.SQLAlchemySchema):
@@ -182,3 +213,134 @@ class ReactionSchema(ma.SQLAlchemySchema):
     formula = ma.auto_field()
     updated = ma.auto_field()
     identifiers = Nested(ReactionSourceSchema, many=True)
+
+
+class ReactionJsonSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Reaction
+
+    id = ma.auto_field()
+    formula = ma.auto_field()
+    updated = ma.auto_field()
+    updated_on = ma.auto_field(data_key='updatedOn')
+    updated_by = ma.auto_field(data_key='updatedBy')
+
+    identifiers = Nested(ReactionSourceSchema, many=True)
+
+    href = ma.Method('get_href')
+    type = ma.Method('get_type')
+    external_urls = ma.Method('get_external_urls')
+
+    file = ma.auto_field(data_key='rxnFile')
+
+    def get_href(self, obj):
+        if obj.id is None:
+            return ''
+        return f'https://metamdb.tu-bs.de/api/reactions/{obj.id}'
+
+    def get_type(self, obj):
+        return 'reaction'
+
+    def get_external_urls(self, obj):
+        external_urls = {}
+
+        if obj.id is not None:
+            external_urls.setdefault(
+                'metamdb', f'https://metamdb.tu-bs.de/reaction/{obj.id}')
+        else:
+            external_urls.setdefault('metamdb', '')
+
+        if obj.img is not None:
+            external_urls.setdefault(
+                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.img}')
+        else:
+            external_urls.setdefault('img', '')
+
+        return external_urls
+
+
+class ReactionPathwaySchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Reaction
+
+    id = ma.auto_field()
+    formula = ma.auto_field()
+    updated = ma.auto_field()
+    updated_on = ma.auto_field(data_key='updatedOn')
+    updated_by = ma.auto_field(data_key='updatedBy')
+
+    identifiers = Nested(ReactionSourceSchema, many=True)
+
+    href = ma.Method('get_href')
+    type = ma.Method('get_type')
+
+    external_urls = ma.Method('get_external_urls')
+
+    # file = ma.auto_field(data_key='rxnFile')
+
+    def get_href(self, obj):
+        if obj.id is None:
+            return ''
+        return f'https://metamdb.tu-bs.de/api/reactions/{obj.id}'
+
+    def get_type(self, obj):
+        return 'reaction'
+
+    def get_external_urls(self, obj):
+        external_urls = {}
+
+        if obj.id is not None:
+            external_urls.setdefault(
+                'metamdb', f'https://metamdb.tu-bs.de/reaction/{obj.id}')
+        else:
+            external_urls.setdefault('metamdb', '')
+
+        if obj.img is not None:
+            external_urls.setdefault(
+                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.img}')
+        else:
+            external_urls.setdefault('img', '')
+
+        return external_urls
+
+
+class PathwayReactionsSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = PathwayReaction
+
+    reaction = Nested(ReactionPathwaySchema)
+
+
+class PathwayJsonSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Pathway
+
+    pw_id = ma.auto_field()
+    source_id = ma.auto_field()
+    name = ma.auto_field()
+    source = ma.auto_field()
+
+    href = ma.Method('get_href')
+    type = ma.Method('get_type')
+    external_urls = ma.Method('get_external_urls')
+
+    reactions = Nested(PathwayReactionsSchema, many=True)
+
+    def get_href(self, obj):
+        if obj.pw_id is None:
+            return ''
+        return f'https://metamdb.tu-bs.de/api/pathways/{obj.pw_id}'
+
+    def get_type(self, obj):
+        return 'pathway'
+
+    def get_external_urls(self, obj):
+        external_urls = {}
+
+        if obj.pw_id is not None:
+            external_urls.setdefault(
+                'metamdb', f'https://metamdb.tu-bs.de/pathway/{obj.pw_id}')
+        else:
+            external_urls.setdefault('metamdb', '')
+
+        return external_urls
