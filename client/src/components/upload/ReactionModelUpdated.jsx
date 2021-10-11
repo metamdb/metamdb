@@ -339,7 +339,7 @@ const ReactionModel = () => {
       return <div>{aams}</div>;
     },
 
-    [reactions]
+    [reactions, dispatch]
   );
 
   return (
