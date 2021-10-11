@@ -22,6 +22,24 @@ function reactionLink(cell, row) {
   );
 }
 
+function pathwayLink(cell, row) {
+  return (
+    <span
+      style={{
+        width: 50,
+      }}
+    >
+      <Link
+        className="text-primary"
+        to={`/pathway/${row.pw_id}`}
+        target="_blank"
+      >
+        {cell}
+      </Link>
+    </span>
+  );
+}
+
 function identifierFormatter(cell, row) {
   return (
     <span
@@ -50,7 +68,42 @@ function iconFormatter(cell, row) {
   );
 }
 
-const columns = [
+const columnsPathway = [
+  {
+    dataField: "name",
+    text: "Name",
+    headerStyle: (colum, colIndex) => {
+      return { width: "30%" };
+    },
+  },
+  {
+    dataField: "pw_id",
+    text: "Pathway ID",
+    sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "10%" };
+    },
+    formatter: pathwayLink,
+  },
+  {
+    dataField: "source_id",
+    text: "Identifier",
+    sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "10%" };
+    },
+  },
+  {
+    dataField: "source",
+    text: "Source",
+    sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "10%" };
+    },
+  },
+];
+
+const columnsReaction = [
   {
     dataField: "identifiers",
     text: "Name",
@@ -94,6 +147,12 @@ const DatabaseQuery = (props) => {
   const [loading, setLoading] = useState(false);
   const [alerts, setAlerts] = useState(null);
 
+  const searchPlaceholder = {
+    name: "Search Reaction...",
+    metabolite: "Search Metabolite...",
+    pathway: "Search Pathway...",
+  };
+
   const location = useLocation();
 
   useEffect(() => {
@@ -111,7 +170,6 @@ const DatabaseQuery = (props) => {
       axios
         .post("/api/query", reactionData)
         .then((res) => {
-          console.log(res.data);
           setFeed(res.data);
           setLoading(false);
           setAlerts(null);
@@ -125,6 +183,15 @@ const DatabaseQuery = (props) => {
     }
   }, [location]);
 
+  const columns = {
+    name: columnsReaction,
+    metabolite: columnsReaction,
+    pathway: columnsPathway,
+  };
+  useEffect(() => {
+    setFeed(null);
+  }, [type]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -137,6 +204,7 @@ const DatabaseQuery = (props) => {
     axios
       .post("/api/query", reactionData)
       .then((res) => {
+        console.log(columns);
         setFeed(res.data);
         setLoading(false);
         setAlerts(null);
@@ -180,9 +248,10 @@ const DatabaseQuery = (props) => {
                       onChange={(e) => setType(e.target.value)}
                     >
                       <option default value="name">
-                        Name
+                        Reaction
                       </option>
                       <option value="metabolite">Metabolite</option>
+                      <option value="pathway">Pathway</option>
                     </select>
                   </div>
                   <input
@@ -191,7 +260,7 @@ const DatabaseQuery = (props) => {
                     value={reaction}
                     onChange={(e) => setReaction(e.target.value)}
                     className={classnames("form-control")}
-                    placeholder="Search for Reaction..."
+                    placeholder={searchPlaceholder[type]}
                     aria-label="reaction"
                     aria-describedby="button-reaction"
                   />
@@ -210,7 +279,7 @@ const DatabaseQuery = (props) => {
                 <BootstrapTable
                   keyField="index"
                   data={feed}
-                  columns={columns}
+                  columns={columns[type]}
                   pagination={paginationFactory({
                     sizePerPageList: [
                       {

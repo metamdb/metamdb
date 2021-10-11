@@ -2,8 +2,26 @@
 """Marshmallow Schemas for json serialization."""
 
 from marshmallow import post_load
+from marshmallow.exceptions import ValidationError
 from src import ma
 from src.components.upload.reaction import ReactionModel
+from typing import List, Mapping, Any
+
+
+class KeyField(ma.Field):
+    def _deserialize(self, value, attr, data, **kwargs):
+        if isinstance(value, int) or isinstance(value, float):
+            return value
+        else:
+            raise ValidationError('Field should be int or float')
+
+
+class ValueField(ma.Field):
+    def _deserialize(self, value, attr, data, **kwargs):
+        if isinstance(value, int) or isinstance(value, list):
+            return value
+        else:
+            raise ValidationError('Field should be int or list')
 
 
 class AtomMappingSchema(ma.Schema):
@@ -22,9 +40,8 @@ class ReactionSchema(ma.Schema):
     index = ma.Int()
     identifier = ma.Int(allow_none=True)
 
-    forward = ma.Float(allow_none=True)
-    reverse = ma.Float(allow_none=True)
     reversible = ma.Boolean()
+    conversion = ma.Dict(keys=KeyField(), values=ValueField(), allow_none=True)
 
     metabolites = ma.Dict(keys=ma.Str(),
                           values=ma.List(
