@@ -3,8 +3,8 @@ import csv
 import logging
 import re
 from typing import Any, List, Optional, Tuple, Union, TYPE_CHECKING
+from src.models.casm import Reaction as CasmReaction
 if TYPE_CHECKING:
-    from src.models.casm import Reaction as CasmReaction
     from typings.casm.reaction import AtomBlockTyping, AtomTransitionTyping, MappingTyping, MetabolitesTyping, MetaboliteTyping
 from src.errors.exception import FluxModelIdentificationError, MissingAtomMappingError, NoFluxTypeError
 
@@ -213,6 +213,11 @@ class ReactionModel():
             reaction.set_atom_mapping(metabolites)
         self.reactions.append(reaction)
 
+    def initialize_from_identifiers(self, reactions):
+        for index, entry in enumerate(reactions):
+            reaction = CasmReaction.query.get(entry['reaction']['id'])
+            print(reaction.json)
+
     def initialize_reactions(self, file: str):
         self.reactions = []
         self.file = csv.DictReader(file.splitlines(),
@@ -260,6 +265,7 @@ class ReactionModel():
                                   flux_type)
 
         if AtomMapping.reaction_errors:
+            print(AtomMapping.reaction_errors)
             raise MissingAtomMappingError(AtomMapping.reaction_errors)
 
         # self.elements = {}

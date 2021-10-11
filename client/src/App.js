@@ -22,6 +22,7 @@ import Impressum from "./components/info/Impressum";
 
 import ReactionContainer from "./components/download/Reaction";
 import MetaboliteContainer from "./components/download/Metabolite";
+import PathwayContainer from "./components/download/Pathway";
 
 import Login from "./components/auth/Login";
 
@@ -61,6 +62,7 @@ const App = (props) => {
                   component={MetaboliteContainer}
                 />
               </MetaboliteContextProvider>
+              <Route exact path="/pathway/:id" component={PathwayContainer} />
 
               <Route exact path="/login" component={Login} />
               {/* <Route exact path="/register" component={Register} /> */}
