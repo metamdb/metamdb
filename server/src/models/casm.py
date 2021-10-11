@@ -215,6 +215,16 @@ class ReactionSchema(ma.SQLAlchemySchema):
     identifiers = Nested(ReactionSourceSchema, many=True)
 
 
+class PathwaySchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Pathway
+
+    pw_id = ma.auto_field()
+    source_id = ma.auto_field()
+    name = ma.auto_field()
+    source = ma.auto_field()
+
+
 class ReactionJsonSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Reaction
@@ -276,7 +286,8 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
 
     external_urls = ma.Method('get_external_urls')
 
-    # file = ma.auto_field(data_key='rxnFile')
+    file = ma.auto_field(data_key='rxnFile')
+    json = ma.auto_field(data_key='jsonFile')
 
     def get_href(self, obj):
         if obj.id is None:

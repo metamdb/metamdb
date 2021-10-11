@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src import db
-from src.models.casm import Compound, Reaction, ReactionSource, ReactionSchema
+from src.models.casm import Compound, Reaction, ReactionSource, ReactionSchema, Pathway, PathwaySchema
 from src.components.mapping.aam import (generate_batch_aam,
                                         generate_batch_metabolite,
                                         generate_image_for_atom_transition)
@@ -30,6 +30,7 @@ def reaction_query():
 def get_query(query_keyword, query_type):
     reaction_schema = ReactionSchema(many=True)
 
+    result = None
     if query_type == 'name':
         query = Reaction.query.join(Reaction.identifiers).filter(
             ReactionSource.database_identifier.like(f'%{query_keyword}%'))
@@ -49,7 +50,14 @@ def get_query(query_keyword, query_type):
 
         result = reaction_schema.dump(reactions)
 
-    # print(result)
+    elif query_type == 'pathway':
+        pathway_schema = PathwaySchema(many=True)
+        query = Pathway.query.filter(
+            Pathway.source_id.like(f'%{query_keyword}%'))
+        query_result = query.all()
+
+        result = pathway_schema.dump(query_result)
+
     return result
 
 
@@ -140,7 +148,7 @@ def reaction_id(id):
 
 @query_blueprint.route('/reaction/<string:id>/upload/<string:atomid>',
                        methods=['POST'])
-@jwt_required
+@jwt_required()
 def reactionUpload(id, atomid):
     user = get_jwt_identity()
 

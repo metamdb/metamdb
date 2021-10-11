@@ -42,3 +42,20 @@ def get_pathway(id):
     json_dump = json_schema.dump(pathway)
 
     return jsonify(json_dump)
+
+
+@pathways_blueprint.route('/<string:id>/reactions', methods=['GET'])
+def get_pathway_reactions(id):
+    pathway = Pathway.query.get(id)
+    if not pathway:
+        raise handler.InvalidId()
+
+    json_schema = PathwayJsonSchema()
+    json_dump = json_schema.dump(pathway)
+    reactions = []
+    for reaction in json_dump['reactions']:
+        reactions.append(reaction['reaction'])
+
+    json_dump['reactions'] = reactions
+
+    return jsonify(json_dump)
