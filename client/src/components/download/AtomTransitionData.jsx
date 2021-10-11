@@ -58,6 +58,19 @@ const AtomTransitionData = ({
     }, 0);
   };
 
+  const downloadSvg = (e) => {
+    e.preventDefault();
+
+    const element = document.createElement("a");
+    document.body.appendChild(element);
+    element.href = imageSource;
+    element.download = `AAM${reactionId}.svg`;
+    element.click();
+    setTimeout(() => {
+      document.body.removeChild(element);
+    }, 0);
+  };
+
   function uploadFile() {
     setLoading(true);
 
@@ -153,8 +166,15 @@ const AtomTransitionData = ({
         </OverlayTrigger>
       </p>
       <div className="download mb-3">
-        <button type="button" className="btn btn-success" onClick={downloadRxn}>
+        <button
+          type="button"
+          className="btn btn-success mr-2"
+          onClick={downloadRxn}
+        >
           <i className="fa fa-download" /> Download RXN
+        </button>
+        <button type="button" className="btn btn-info" onClick={downloadSvg}>
+          <i className="fa fa-download" /> Download SVG
         </button>
       </div>
       {isUser && (
