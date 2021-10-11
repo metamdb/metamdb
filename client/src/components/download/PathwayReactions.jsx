@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   useTable,
@@ -210,13 +210,11 @@ const Table = ({ columns, data }) => {
     rows,
     canPreviousPage,
     canNextPage,
-    pageOptions,
     pageCount,
     gotoPage,
     nextPage,
     previousPage,
     setPageSize,
-    visibleColumns,
     state: { pageIndex, pageSize },
   } = useTable(
     {

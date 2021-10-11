@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { CSVLink } from "react-csv";
 import { Link } from "react-router-dom";
 import {
@@ -12,7 +12,6 @@ import {
 } from "react-table";
 import styled from "styled-components";
 import { Popover, OverlayTrigger, Button } from "react-bootstrap";
-import Pagination from "react-bootstrap/Pagination";
 import no_aam from "../../shared/no_aam.png";
 
 import { MainContext } from "../../contexts/MainContext";
@@ -405,7 +404,6 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
     rows,
     canPreviousPage,
     canNextPage,
-    pageOptions,
     pageCount,
     gotoPage,
     nextPage,
