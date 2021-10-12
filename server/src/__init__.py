@@ -7,10 +7,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from authlib.integrations.flask_client import OAuth
 
 db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
+oauth = OAuth()
 
 
 def create_app():
@@ -23,6 +25,8 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
     bcrypt.init_app(app)
+    oauth.init_app(app)
+
     CORS(app, resources={r'/api/*': {'origins': app.config['WEBSERVER_URI']}})
     JWTManager(app)
 

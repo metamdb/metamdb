@@ -1,15 +1,26 @@
 """Routes for the registration and login of users."""
 
-from flask import Blueprint, Response, jsonify, request
+from flask import Blueprint, Response, jsonify, request, url_for
 from flask_jwt_extended import create_access_token
 
-from src import bcrypt, db
+from src import bcrypt, db, oauth
 from src.errors import handler
 from src.models import casm_user
 
 auth_blueprint = Blueprint('auth', __name__, url_prefix='/api/auth')
 auth_blueprint.register_error_handler(handler.InvalidUsage,
                                       handler.handle_invalid_usage)
+
+orcid = oauth.register(
+    name='orcid',
+    client_id='APP-DQ99FS5QEUJ7H6WV',
+    client_secret='7357276d-3724-4c5c-a41c-54ee615a12ba',
+    access_token_url='https://sandbox.orcid.org/oauth/token',
+    access_token_params=None,
+    authorize_url='https://sandbox.orcid.org/oauth/authorize',
+    authorize_params=None,
+    client_kwargs={'scope': '/read-limited /activities/update /person/update'},
+)
 
 
 @auth_blueprint.route('/register', methods=['POST'])
@@ -101,3 +112,23 @@ def login() -> Response:
         'name': user.name
     })
     return response
+
+
+@auth_blueprint.route('/login/orcid', methods=['GET'])
+def orcid_login():
+    orcid = oauth.create_client('orcid')
+    redirect_uri = url_for('auth.orcid_authorize', _external=True)
+
+    return orcid.authorize_redirect(redirect_uri)
+
+
+@auth_blueprint.route('/login/orcid/authorize', methods=['GET'])
+def orcid_authorize():
+    print('IM IN AUTHORIZE')
+    orcid = oauth.create_client('orcid')
+    token = orcid.authorize_access_token()
+    resp = orcid.get('account/verify_credentials.json')
+    resp.raise_for_status()
+    profile = resp.json()
+
+    return redirect('/')
