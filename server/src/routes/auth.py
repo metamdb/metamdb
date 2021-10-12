@@ -124,13 +124,11 @@ def orcid_login():
 
 @auth_blueprint.route('/login/orcid/authorize', methods=['GET'])
 def orcid_authorize():
-    print('IM IN AUTHORIZE', flush=True)
     orcid = oauth.create_client('orcid')
 
     token = orcid.authorize_access_token()
     print(token, flush=True)
-    resp = orcid.__dict__
-    print(resp, flush=True)
+
     # resp.raise_for_status()
     # profile = resp.json()
     # print(profile)
