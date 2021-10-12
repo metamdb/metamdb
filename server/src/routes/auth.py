@@ -126,9 +126,5 @@ def orcid_login():
 def orcid_authorize():
     print('IM IN AUTHORIZE')
     orcid = oauth.create_client('orcid')
-    token = orcid.authorize_access_token()
-    resp = orcid.get('account/verify_credentials.json')
-    resp.raise_for_status()
-    profile = resp.json()
 
-    return redirect('/')
+    return jsonify({'test': 'success'})
