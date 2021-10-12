@@ -20,7 +20,7 @@ const Login = (props) => {
 
   const continueWithOrcid = () => {
     axios
-      .get("/api/auth/login/orcid")
+      .get("/api/auth/orcid")
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   };

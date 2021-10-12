@@ -114,7 +114,7 @@ def login() -> Response:
     return response
 
 
-@auth_blueprint.route('/login/orcid', methods=['GET'])
+@auth_blueprint.route('/orcid', methods=['GET'])
 def orcid_login():
     print('IM HERE')
     orcid = oauth.create_client('orcid')
