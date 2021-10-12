@@ -21,7 +21,10 @@ const Login = (props) => {
   const continueWithOrcid = () => {
     axios
       .get("/api/auth/orcid")
-      .then((res) => console.log(res))
+      .then((res) => {
+        const url = new URL(res.data[2][1]);
+        window.open(url.href, "_blank");
+      })
       .catch((err) => console.log(err));
   };
 

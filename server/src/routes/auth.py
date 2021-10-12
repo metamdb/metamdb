@@ -116,12 +116,10 @@ def login() -> Response:
 
 @auth_blueprint.route('/orcid', methods=['GET'])
 def orcid_login():
-    print('IM HERE')
     orcid = oauth.create_client('orcid')
-    print(orcid)
     redirect_uri = url_for('auth.orcid_authorize', _external=True)
-    print(redirect_uri)
-    return orcid.authorize_redirect(redirect_uri)
+
+    return jsonify(orcid.authorize_redirect(redirect_uri).headers._list)
 
 
 @auth_blueprint.route('/login/orcid/authorize', methods=['GET'])
