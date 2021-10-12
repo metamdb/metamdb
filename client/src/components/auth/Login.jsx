@@ -18,6 +18,13 @@ const Login = (props) => {
   const { authDispatch } = useContext(AuthContext);
   const history = useHistory();
 
+  const continueWithOrcid = () => {
+    axios
+      .get("/api/auth/login/orcid")
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
   function loginUser() {
     axios
       .post("/api/auth/login", values)
@@ -115,6 +122,15 @@ const Login = (props) => {
                 Create one
               </Link>
             </p> */}
+            <div className="form-group">
+              <button
+                type="button"
+                className="btn btn-block btn-lg btn-light"
+                onClick={continueWithOrcid}
+              >
+                Continue with ORCID
+              </button>
+            </div>
           </form>
         </div>
       </div>
