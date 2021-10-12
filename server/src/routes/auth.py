@@ -1,6 +1,6 @@
 """Routes for the registration and login of users."""
 
-from flask import Blueprint, Response, jsonify, request, url_for
+from flask import Blueprint, Response, jsonify, request, url_for, redirect
 from flask_jwt_extended import create_access_token
 
 from src import bcrypt, db, oauth
@@ -127,4 +127,12 @@ def orcid_authorize():
     print('IM IN AUTHORIZE')
     orcid = oauth.create_client('orcid')
 
-    return jsonify({'test': 'success'})
+    token = orcid.authorize_access_token()
+    print(token)
+    resp = orcid.get('account/verify_credentials.json')
+    print(resp)
+    resp.raise_for_status()
+    profile = resp.json()
+    print(profile)
+    # do something with the token and profile
+    return redirect('/')
