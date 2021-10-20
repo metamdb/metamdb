@@ -26,8 +26,11 @@ def orcid_login():
 
 @auth_blueprint.route('/orcid/authorize', methods=['GET'])
 def orcid_authorize():
+    print('AUTHORIZING', flush=True)
     orcid = oauth.create_client('orcid')
+    print(orcid, flush=True)
     token = orcid.authorize_access_token()
+    print(token, flush=True)
     if not token:
         raise handler.InvalidToken()
 
