@@ -7,10 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+from authlib.integrations.flask_client import OAuth
 
 db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
+oauth = OAuth()
+jwt = JWTManager()
 
 
 def create_app():
@@ -23,8 +26,21 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
     bcrypt.init_app(app)
+    oauth.init_app(app)
+    jwt.init_app(app)
+
+    orcid = oauth.register(
+        name='orcid',
+        client_id=app.config["ORCID_CLIENT_ID"],
+        client_secret=app.config["ORCID_CLIENT_SECRET"],
+        access_token_url=app.config["ORCID_ACCESS_TOKEN_URL"],
+        access_token_params=None,
+        authorize_url=app.config["ORCID_AUTHORIZE_URL"],
+        authorize_params=None,
+        client_kwargs={'scope': '/authenticate'},
+    )
+
     CORS(app, resources={r'/api/*': {'origins': app.config['WEBSERVER_URI']}})
-    JWTManager(app)
 
     from src.routes.calculation import calculation_blueprint
     app.register_blueprint(calculation_blueprint)
@@ -55,5 +71,11 @@ def create_app():
 
     from src.routes.api.pathways import pathways_blueprint
     app.register_blueprint(pathways_blueprint)
+
+    from src.routes.api.user import user_blueprint
+    app.register_blueprint(user_blueprint)
+
+    from src.routes.review import review_blueprint
+    app.register_blueprint(review_blueprint)
 
     return app

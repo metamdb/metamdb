@@ -68,7 +68,29 @@ class InvalidId(InvalidUsage):
     """
     def __init__(self):
         self.payload = {'message': 'Invalid id'}
-        self.status_code = 400
+        self.status_code = 404
+
+        super().__init__(self.status_code, self.payload)
+
+
+class InvalidToken(InvalidUsage):
+    """InvalidToken handler that returns a 400 error
+    with a invalid token error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'Invalid token'}
+        self.status_code = 401
+
+        super().__init__(self.status_code, self.payload)
+
+
+class InvalidReviews(InvalidUsage):
+    """InvalidToken handler that returns a 400 error
+    with a invalid token error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'No reviews'}
+        self.status_code = 404
 
         super().__init__(self.status_code, self.payload)
 

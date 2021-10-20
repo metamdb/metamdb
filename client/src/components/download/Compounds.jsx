@@ -35,10 +35,10 @@ const Compounds = () => {
                     <Link
                       key={id}
                       className="btn-link mr-1 ml-1"
-                      to={{ pathname: `/metabolite/${metabolite.id}` }}
+                      to={{ pathname: `/metabolite/${metabolite.compound.id}` }}
                       target="_blank"
                     >
-                      {metabolite.name}
+                      {metabolite.compound.name}
                     </Link>
                   ))
                 : "No substrates"}
@@ -49,10 +49,10 @@ const Compounds = () => {
                     <Link
                       key={id}
                       className="btn-link mr-1 ml-1"
-                      to={{ pathname: `/metabolite/${metabolite.id}` }}
+                      to={{ pathname: `/metabolite/${metabolite.compound.id}` }}
                       target="_blank"
                     >
-                      {metabolite.name}
+                      {metabolite.compound.name}
                     </Link>
                   ))
                 : "No products"}

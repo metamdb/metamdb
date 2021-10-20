@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { CSVLink } from "react-csv";
 import { Link } from "react-router-dom";
 import {
@@ -12,7 +12,6 @@ import {
 } from "react-table";
 import styled from "styled-components";
 import { Popover, OverlayTrigger, Button } from "react-bootstrap";
-import Pagination from "react-bootstrap/Pagination";
 import no_aam from "../../shared/no_aam.png";
 
 import { MainContext } from "../../contexts/MainContext";
@@ -155,9 +154,9 @@ const ReactionModel = () => {
         Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
           <span {...getToggleAllRowsExpandedProps()}>
             {isAllRowsExpanded ? (
-              <i class="fas fa-chevron-down"></i>
+              <i className="fas fa-chevron-down"></i>
             ) : (
-              <i class="fas fa-chevron-right"></i>
+              <i className="fas fa-chevron-right"></i>
             )}
           </span>
         ),
@@ -171,9 +170,9 @@ const ReactionModel = () => {
           // to build the expander.
           <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? (
-              <i class="fas fa-chevron-down"></i>
+              <i className="fas fa-chevron-down"></i>
             ) : (
-              <i class="fas fa-chevron-right"></i>
+              <i className="fas fa-chevron-right"></i>
             )}
           </span>
         ),
@@ -340,7 +339,7 @@ const ReactionModel = () => {
       return <div>{aams}</div>;
     },
 
-    [reactions]
+    [reactions, dispatch]
   );
 
   return (
@@ -405,7 +404,6 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
     rows,
     canPreviousPage,
     canNextPage,
-    pageOptions,
     pageCount,
     gotoPage,
     nextPage,
@@ -448,12 +446,12 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
                       {"  "}
                       {column.isSorted ? (
                         column.isSortedDesc ? (
-                          <i class="fas fa-sort-down"></i>
+                          <i className="fas fa-sort-down"></i>
                         ) : (
-                          <i class="fas fa-sort-up"></i>
+                          <i className="fas fa-sort-up"></i>
                         )
                       ) : column.canSort ? (
-                        <i class="fas fa-sort"></i>
+                        <i className="fas fa-sort"></i>
                       ) : (
                         ""
                       )}

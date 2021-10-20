@@ -1,47 +1,9 @@
-import React, { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
-
-import { AuthContext } from "../../contexts/AuthContext";
-
-import useTextForm from "../forms/useTextForm";
-import { validateLogin } from "../../validation/validateAuth";
-
+import React from "react";
 import axios from "axios";
-import classnames from "classnames";
 
-const initialState = {
-  name: "",
-  password: "",
-};
+import ORCIDiD_iconvector from "../../shared/ORCIDiD_iconvector.svg";
 
 const Login = (props) => {
-  const { authDispatch } = useContext(AuthContext);
-  const history = useHistory();
-
-  function loginUser() {
-    axios
-      .post("/api/auth/login", values)
-      .then((res) => {
-        authDispatch({
-          type: "LOGIN",
-          payload: res.data,
-        });
-
-        history.goBack();
-      })
-      .catch((err) => setApiErrors(err.response.data));
-  }
-
-  const [apiErrors, setApiErrors] = useState({});
-
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useTextForm(initialState, validateLogin, loginUser);
-
   return (
     <div className="login">
       <div className="login-content">
@@ -49,73 +11,20 @@ const Login = (props) => {
           <h1 className="text-center">Sign In</h1>
         </div>
         <div className="body">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <div className="input-group">
-                <span className="input-group-addon">
-                  <i className="fa fa-user"></i>
-                </span>
-                <div className="name-group">
-                  <input
-                    type="name"
-                    className={classnames("form-control", {
-                      "is-invalid": errors.name || apiErrors.name,
-                    })}
-                    name="name"
-                    placeholder="Name"
-                    value={values.name}
-                    onChange={handleChange}
-                  />
-                  {errors.name && (
-                    <div className="invalid-feedback">{errors.name}</div>
-                  )}
-                  {apiErrors.name && (
-                    <div className="invalid-feedback">{apiErrors.name}</div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="form-group">
-              <div className="input-group">
-                <span className="input-group-addon">
-                  <i className="fa fa-lock"></i>
-                </span>
-                <div className="password-group">
-                  <input
-                    type="password"
-                    className={classnames("form-control", {
-                      "is-invalid": errors.password || apiErrors.password,
-                    })}
-                    name="password"
-                    placeholder="Password"
-                    value={values.password}
-                    onChange={handleChange}
-                  />
-                  {errors.password && (
-                    <div className="invalid-feedback">{errors.password}</div>
-                  )}
-                  {apiErrors.password && (
-                    <div className="invalid-feedback">{apiErrors.password}</div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="form-group">
-              <button
-                disabled={isSubmitting}
-                type="submit"
-                className="btn btn-primary btn-block btn-lg"
-              >
-                Sign In
-              </button>
-            </div>
-            {/* <p className="hint-text">
-              Don't have an account?{" "}
-              <Link className="text-primary" to="/register">
-                Create one
-              </Link>
-            </p> */}
-          </form>
+          {" "}
+          <div className="form-group">
+            <a
+              className="btn btn-block btn-lg btn-light"
+              href={`${axios.defaults.baseURL}/api/auth/orcid`}
+            >
+              <img
+                src={ORCIDiD_iconvector}
+                style={{ width: "8%" }}
+                alt="ORCID Icon"
+              />{" "}
+              Continue with ORCID
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -25,9 +25,12 @@ import MetaboliteContainer from "./components/download/Metabolite";
 import PathwayContainer from "./components/download/Pathway";
 
 import Login from "./components/auth/Login";
+import Profile from "./components/user/Profile";
+import PostLogin from "./components/auth/PostLogin";
 
 import "./App.css";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
+import User from "./components/user/User";
 
 const App = (props) => {
   return (
@@ -65,6 +68,9 @@ const App = (props) => {
               <Route exact path="/pathway/:id" component={PathwayContainer} />
 
               <Route exact path="/login" component={Login} />
+              <Route exact path="/me" component={Profile} />
+              <Route exact path="/postLogin" component={PostLogin} />
+              <Route exact path="/user/:id" component={User} />
               {/* <Route exact path="/register" component={Register} /> */}
             </div>
             <Footer />
