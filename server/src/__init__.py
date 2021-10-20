@@ -37,7 +37,7 @@ def create_app():
         access_token_params=None,
         authorize_url=app.config["ORCID_AUTHORIZE_URL"],
         authorize_params=None,
-        client_kwargs={'scope': '/read-limited'},
+        client_kwargs={'scope': '/authenticate'},
     )
 
     CORS(app, resources={r'/api/*': {'origins': app.config['WEBSERVER_URI']}})
