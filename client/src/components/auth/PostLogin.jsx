@@ -15,12 +15,15 @@ const PostLogin = (props) => {
     if (location.search) {
       const query = qs.parse(location.search, { ignoreQueryPrefix: true });
       const { jwt } = query;
-      const decoded_jwt = jwt_decode(jwt);
 
-      authDispatch({
-        type: "LOGIN",
-        payload: { ...decoded_jwt.sub, token: jwt },
-      });
+      if (jwt) {
+        const decoded_jwt = jwt_decode(jwt);
+
+        authDispatch({
+          type: "LOGIN",
+          payload: { ...decoded_jwt.sub, token: jwt },
+        });
+      }
     }
     history.push("/me");
   }, [location, authDispatch, history]);
