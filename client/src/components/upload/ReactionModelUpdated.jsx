@@ -154,9 +154,9 @@ const ReactionModel = () => {
         Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
           <span {...getToggleAllRowsExpandedProps()}>
             {isAllRowsExpanded ? (
-              <i class="fas fa-chevron-down"></i>
+              <i className="fas fa-chevron-down"></i>
             ) : (
-              <i class="fas fa-chevron-right"></i>
+              <i className="fas fa-chevron-right"></i>
             )}
           </span>
         ),
@@ -170,9 +170,9 @@ const ReactionModel = () => {
           // to build the expander.
           <span {...row.getToggleRowExpandedProps()}>
             {row.isExpanded ? (
-              <i class="fas fa-chevron-down"></i>
+              <i className="fas fa-chevron-down"></i>
             ) : (
-              <i class="fas fa-chevron-right"></i>
+              <i className="fas fa-chevron-right"></i>
             )}
           </span>
         ),
@@ -446,12 +446,12 @@ const Table = ({ columns, data, updateMyData, renderRowSubComponent }) => {
                       {"  "}
                       {column.isSorted ? (
                         column.isSortedDesc ? (
-                          <i class="fas fa-sort-down"></i>
+                          <i className="fas fa-sort-down"></i>
                         ) : (
-                          <i class="fas fa-sort-up"></i>
+                          <i className="fas fa-sort-up"></i>
                         )
                       ) : column.canSort ? (
-                        <i class="fas fa-sort"></i>
+                        <i className="fas fa-sort"></i>
                       ) : (
                         ""
                       )}

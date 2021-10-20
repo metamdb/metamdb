@@ -3,6 +3,7 @@ import { Popover, OverlayTrigger, Button } from "react-bootstrap";
 import axios from "axios";
 import classnames from "classnames";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import useFileFormValidation from "../forms/useFileForm";
 import validateUpload from "../../validation/validateRxn";
@@ -19,9 +20,9 @@ const StyledPopoverImage = styled(Popover)`
 
 const AtomTransitionData = ({
   id,
-  file,
+  rxnFile,
   updated,
-  updatedBy,
+  updated_by,
   updatedOn,
   reactionId,
   isUser,
@@ -29,6 +30,7 @@ const AtomTransitionData = ({
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [description, setDescription] = useState("");
+  const [alert, setAlert] = useState(null);
 
   const {
     values,
@@ -45,7 +47,7 @@ const AtomTransitionData = ({
 
     const element = document.createElement("a");
     document.body.appendChild(element);
-    const fileData = new Blob([file], {
+    const fileData = new Blob([rxnFile], {
       type: "text/plain",
     });
     const url = URL.createObjectURL(fileData);
@@ -91,7 +93,7 @@ const AtomTransitionData = ({
         config
       )
       .then((res) => {
-        // setAtomTransition({ ...atomTransition, ...res.data });
+        setAlert(res.data.message);
         setLoading(false);
       })
       .catch((err) => {
@@ -104,7 +106,7 @@ const AtomTransitionData = ({
     <StyledPopover id="popover" className="shadow">
       <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
       <StyledPopover.Content>
-        <pre>{file}</pre>
+        <pre>{rxnFile}</pre>
       </StyledPopover.Content>
     </StyledPopover>
   );
@@ -130,6 +132,22 @@ const AtomTransitionData = ({
 
   return (
     <div className="mt-3">
+      {alert && (
+        <div
+          className="alert alert-dismissible fade show alert-success"
+          role="alert"
+        >
+          <button
+            type="button"
+            className="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {alert}
+        </div>
+      )}
       <h2>Atom Transition {id}</h2>
       <p className="lead text-muted">
         <strong>Updated: </strong>
@@ -138,10 +156,16 @@ const AtomTransitionData = ({
         ) : (
           <i className="fas fa-times" />
         )}{" "}
-        {updatedBy && (
+        {updated_by && (
           <>
             <strong>By: </strong>
-            {updatedBy}
+            <Link
+              className="text-primary"
+              to={`/user/${updated_by.id}`}
+              target="_blank"
+            >
+              {updated_by.name}
+            </Link>
           </>
         )}{" "}
         {updatedOn && (

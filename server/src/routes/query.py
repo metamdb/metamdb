@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import jwt_required, current_user
+from werkzeug.exceptions import default_exceptions
 
 from src import db
-from src.models.casm import Compound, Reaction, ReactionSource, ReactionSchema, Pathway, PathwaySchema
+from src.models.casm import Compound, Reaction, ReactionHistory, ReactionJsonSchema, ReactionSource, ReactionSchema, Pathway, PathwaySchema, ReactionHistory
 from src.components.mapping.aam import (generate_batch_aam,
                                         generate_batch_metabolite,
                                         generate_image_for_atom_transition)
@@ -69,111 +70,46 @@ def reaction_id(id):
         errors = {'reaction': 'This reaction does not exist :('}
         raise handler.InvalidUsage(status_code=404, payload=errors)
 
-    reaction_id = reaction.id
-    formula = reaction.formula
-    atom_transitions = {
-        'file': reaction.file,
-        'updated': reaction.updated,
-        'updatedBy': reaction.updated_by,
-        'updatedOn': reaction.updated_on,
-        'id': reaction.id
-    }
-    identifiers = [{
-        'identifier': identifier.database_identifier,
-        'source': identifier.source.name
-    } for identifier in reaction.identifiers]
-    compounds = [{
-        'reactant': compound.reactant,
-        'name': compound.compound.name,
-        'id': compound.compound.id
-    } for compound in reaction.compounds]
-    reaction_payload = {
-        'id': reaction_id,
-        'formula': formula,
-        'atomTransitions': atom_transitions,
-        'identifiers': identifiers,
-        'compounds': compounds
-    }
+    reaction_schema = ReactionJsonSchema()
+    reaction_dump = reaction_schema.dump(reaction)
 
-    return jsonify(reaction_payload)
+    return jsonify(reaction_dump)
 
 
-# @query_blueprint.route('/reaction/<string:id>/generate', methods=['POST'])
-# def generate_atom_transition(id):
-#     reaction = Reaction.query.get(id)
-#     atom_transition = generate_atom_transition_for_reaction(reaction)
-
-#     result = {
-#         'file': atom_transition.file,
-#         'id': atom_transition.id,
-#         'updated': atom_transition.updated,
-#         'updated_by': atom_transition.updated_by,
-#         'updated_on': atom_transition.updated_on
-#     }
-
-#     return jsonify(result)
-
-# @query_blueprint.route('/reaction-batch', methods=['POST'])
-# def generate_batch():
-#     reactions = request.values.get('reactions')
-#     reactions = reactions.split(',')
-#     reactions = map(str.strip, reactions)
-#     reactions = list(reactions)
-
-#     reaction_ids = generate_batch_aam(reactions)
-
-#     return jsonify({
-#         'output': [{
-#             'name': reaction,
-#             'id': id
-#         } for reaction, id in zip(reactions, reaction_ids)]
-#     })
-
-# @query_blueprint.route('/metabolite-batch', methods=['POST'])
-# def generate_metabolite_batch():
-#     metabolites = request.values.get('metabolites')
-#     metabolites = metabolites.split(',')
-#     metabolites = map(str.strip, metabolites)
-#     metabolites = list(metabolites)
-
-#     metabolite_ids = generate_batch_metabolite(metabolites)
-
-#     return jsonify({
-#         'output': [{
-#             'name': metabolite,
-#             'id': id
-#         } for metabolite, id in zip(metabolites, metabolite_ids)]
-#     })
-
-
-@query_blueprint.route('/reaction/<string:id>/upload/<string:atomid>',
+@query_blueprint.route('/reaction/<string:id>/upload/<string:atom_id>',
                        methods=['POST'])
 @jwt_required()
-def reactionUpload(id, atomid):
-    user = get_jwt_identity()
-
-    rxnFile = request.files['rxnFile'].read().decode()
+def reactionUpload(id, atom_id):
+    user = current_user
+    rxn_file = request.files['rxnFile'].read().decode()
     desc = request.values.get('description')
-    rxn = Reaction.query.get(atomid)
 
-    rxn.file = rxnFile
-    rxn.updated = 1
-    rxn.updated_by = user['name']
-    rxn.desc = desc
+    history = ReactionHistory(reaction_id=atom_id,
+                              file=rxn_file,
+                              description=desc,
+                              updated_by_id=user.id)
+    db.session.add(history)
     db.session.commit()
+    # rxn = Reaction.query.get(atomid)
 
-    if desc != '':
-        generate_image_for_atom_transition(id, rxnFile)
+    # rxn.file = rxn_file
+    # rxn.updated = 1
+    # rxn.updated_by = user['name']
+    # rxn.desc = desc
+    # db.session.commit()
 
-    result = {
-        'file': rxn.file,
-        'updated': rxn.updated,
-        'updated_by': rxn.updated_by,
-        'updated_on': rxn.updated_on,
-        'desc': rxn.desc
-    }
+    # if desc != '':
+    #     generate_image_for_atom_transition(id, rxn_file)
 
-    return jsonify(result)
+    # result = {
+    #     'file': rxn.file,
+    #     'updated': rxn.updated,
+    #     'updated_by': rxn.updated_by,
+    #     'updated_on': rxn.updated_on,
+    #     'desc': rxn.desc
+    # }
+
+    return jsonify({'message': 'Your update has been sent for review!'})
 
 
 @query_blueprint.route('/metabolite/<string:id>', methods=['GET'])
@@ -224,12 +160,12 @@ def metaboliteId(id):
     return jsonify(result)
 
 
-@query_blueprint.route('/metabolite/<string:id>/upload', methods=['POST'])
-def metaboliteUpload(id):
-    mol_file = request.files['molfile'].read().decode()
-    compound = Compound.query.get(id)
+# @query_blueprint.route('/metabolite/<string:id>/upload', methods=['POST'])
+# def metaboliteUpload(id):
+#     mol_file = request.files['molfile'].read().decode()
+#     compound = Compound.query.get(id)
 
-    compound.file = mol_file
-    db.session.commit()
+#     compound.file = mol_file
+#     db.session.commit()
 
-    return jsonify({'file': compound.file})
+#     return jsonify({'file': compound.file})

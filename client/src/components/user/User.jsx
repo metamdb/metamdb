@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   useTable,
@@ -11,7 +12,100 @@ import {
 } from "react-table";
 import styled from "styled-components";
 import { Popover, OverlayTrigger, Button } from "react-bootstrap";
-import no_aam from "../../shared/no_aam.png";
+
+import ORCIDiD_iconvector from "../../shared/ORCIDiD_iconvector.svg";
+
+const User = (props) => {
+  const { id } = props.match.params;
+
+  const [user, setUser] = useState(null);
+  const [reactionHistory, setReactionHistory] = useState(null);
+  const data = React.useMemo(() => reactionHistory, [reactionHistory]);
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "reaction.id",
+        Cell: reactionLink,
+        width: 50,
+        maxwidth: 60,
+        minWidth: 40,
+      },
+      {
+        Header: "Formula",
+        accessor: "reaction.formula",
+        width: 400,
+      },
+      {
+        Header: "File",
+        accessor: "file",
+        Cell: fileDisplay,
+        width: 100,
+        disableSortBy: true,
+      },
+      {
+        Header: "Status",
+        accessor: "review_status.name",
+        Cell: reviewIcon,
+        Filter: SelectColumnFilter,
+        filter: "exactTextCase",
+        width: 60,
+        maxwidth: 60,
+      },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    axios
+      .get(`api/user/${id}`)
+      .then((res) => {
+        setUser(res.data.user);
+        setReactionHistory(res.data.history);
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
+
+  return (
+    <div className="user">
+      <div className="content">
+        <div className="container">
+          {user && (
+            <div className="user-content">
+              <h2>
+                {user.role.name} {user.name}
+                <sup>
+                  <a
+                    href={`https://orcid.org/${user.orcid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={ORCIDiD_iconvector}
+                      style={{ width: "1.8%" }}
+                      alt="ORCID Icon"
+                    />
+                  </a>
+                </sup>
+              </h2>
+              {reactionHistory && (
+                <div className="model">
+                  <Styles>
+                    <Table columns={columns} data={data} />
+                  </Styles>
+                </div>
+              )}
+            </div>
+          )}
+          {!user && <h2>No User for that ID!</h2>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default User;
 
 const Styles = styled.div`
   padding: 1rem;
@@ -116,12 +210,12 @@ function SelectColumnFilter({
       <option value="">All</option>
       {options.map((option, i) => {
         let content;
-        if (option === true) {
-          content = "Yes";
-        } else if (option === "user") {
-          content = "User";
+        if (option === "approved") {
+          content = "Approved";
+        } else if (option === "pending") {
+          content = "Pending";
         } else {
-          content = "No";
+          content = "Denied";
         }
 
         return (
@@ -133,58 +227,6 @@ function SelectColumnFilter({
     </select>
   );
 }
-
-const PathwayReactions = ({ reactions }) => {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "ID",
-        accessor: "id",
-        Cell: reactionLink,
-        width: 50,
-        maxwidth: 60,
-        minWidth: 40,
-      },
-      {
-        Header: "Formula",
-        accessor: "formula",
-        width: 400,
-      },
-      {
-        Header: "Curated",
-        accessor: "updated",
-        Cell: curatedIcon,
-        Filter: SelectColumnFilter,
-        filter: "exactTextCase",
-        width: 60,
-        maxwidth: 60,
-      },
-      {
-        Header: "Image",
-        accessor: (row) => row.id,
-        Cell: mappingImage,
-        width: 60,
-        maxwidth: 60,
-        disableSortBy: true,
-      },
-    ],
-    []
-  );
-
-  const data = React.useMemo(() => reactions, [reactions]);
-
-  return (
-    <>
-      <div className="model">
-        <Styles>
-          <Table columns={columns} data={data} />
-        </Styles>
-      </div>
-    </>
-  );
-};
-
-export default PathwayReactions;
 
 const Table = ({ columns, data }) => {
   const defaultColumn = React.useMemo(
@@ -361,14 +403,14 @@ const Table = ({ columns, data }) => {
   );
 };
 
-function curatedIcon({ value }) {
+function reviewIcon({ value }) {
   let content;
-  if (value === true) {
-    content = <i className="fas fa-check" />;
-  } else if (value === "user") {
-    content = <i className="fas fa-user" />;
+  if (value === "approved") {
+    content = <i className="fas fa-check" style={{ color: "#438945" }} />;
+  } else if (value === "pending") {
+    content = <i className="fas fa-clock" style={{ color: "#EBA63F" }} />;
   } else {
-    content = <i className="fas fa-times" />;
+    content = <i className="fas fa-times" style={{ color: "#E40C2B" }} />;
   }
 
   return (
@@ -386,49 +428,30 @@ function curatedIcon({ value }) {
   );
 }
 
-function mappingImage({ value }) {
-  const StyledPopoverImage = styled(Popover)`
-    min-width: 1000px;
-  `;
-
-  const imageSource = `${process.env.PUBLIC_URL}/img/aam/${value}.svg`;
-
-  const popoverImage = (
-    <StyledPopoverImage id="popover" className="shadow">
-      <StyledPopoverImage.Title as="h3">
-        Atom Transition Image {value}
-      </StyledPopoverImage.Title>
-      <StyledPopoverImage.Content>
-        <img
-          src={imageSource}
-          onError={(e) => {
-            e.target.onError = null;
-            e.target.src = no_aam;
-          }}
-          alt={`Structure Atom Mapping ${value}`}
-          style={{ width: "100%" }}
-        />
-      </StyledPopoverImage.Content>
-    </StyledPopoverImage>
-  );
-
-  return (
-    <>
-      <OverlayTrigger
-        placement="left"
-        trigger={["click"]}
-        overlay={popoverImage}
-      >
-        <Button variant="link">Click</Button>
-      </OverlayTrigger>
-    </>
-  );
-}
-
 function reactionLink({ value }) {
   return (
     <Link className="text-primary" to={`/reaction/${value}`} target="_blank">
       {value}
     </Link>
+  );
+}
+
+function fileDisplay({ value }) {
+  const StyledPopover = styled(Popover)`
+    min-width: 600px;
+  `;
+  const popover = (
+    <StyledPopover id="popover" className="shadow">
+      <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
+      <StyledPopover.Content>
+        <pre>{value}</pre>
+      </StyledPopover.Content>
+    </StyledPopover>
+  );
+
+  return (
+    <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
+      <Button variant="link">Click</Button>
+    </OverlayTrigger>
   );
 }

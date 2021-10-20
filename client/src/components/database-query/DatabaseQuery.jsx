@@ -49,7 +49,7 @@ function identifierFormatter(cell, row) {
     >
       {cell
         .map((entry) => {
-          return entry.database_identifier;
+          return entry.databaseIdentifier;
         })
         .join(" , ")}
     </span>
@@ -154,10 +154,8 @@ const DatabaseQuery = (props) => {
   };
 
   const location = useLocation();
-
   useEffect(() => {
     if (location.search) {
-      console.log(location.search);
       let query = qs.parse(location.search, { ignoreQueryPrefix: true });
       let keys = Object.keys(query);
 
@@ -204,7 +202,6 @@ const DatabaseQuery = (props) => {
     axios
       .post("/api/query", reactionData)
       .then((res) => {
-        console.log(columns);
         setFeed(res.data);
         setLoading(false);
         setAlerts(null);

@@ -4,20 +4,14 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Navbar = (props) => {
-  const { authState, authDispatch } = useContext(AuthContext);
-  const { isUser } = authState;
-
-  const handleLogout = () => {
-    authDispatch({
-      type: "LOGOUT",
-    });
-  };
+  const { authState } = useContext(AuthContext);
+  const { isUser, name } = authState;
 
   const authLinks = (
     <li className="nav-item">
-      <button onClick={handleLogout} className="btn btn-link nav-link">
-        Logout
-      </button>
+      <Link className="nav-link" to="/me">
+        {name}
+      </Link>
     </li>
   );
 

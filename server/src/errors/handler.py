@@ -73,6 +73,28 @@ class InvalidId(InvalidUsage):
         super().__init__(self.status_code, self.payload)
 
 
+class InvalidToken(InvalidUsage):
+    """InvalidToken handler that returns a 400 error
+    with a invalid token error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'Invalid token'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
+class InvalidReviews(InvalidUsage):
+    """InvalidToken handler that returns a 400 error
+    with a invalid token error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'No reviews'}
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
 class MissingQuery(InvalidUsage):
     """MissingQuery handler that returns a 400 error
     with a missing query error message.

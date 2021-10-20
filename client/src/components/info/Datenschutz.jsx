@@ -371,7 +371,7 @@ function Datenschutz() {
             Diensteanbieter) sowie dem Browser, System und verwendeten Endgerät
             gespeichert.
           </p>
-          <ul class="m-elements">
+          <ul className="m-elements">
             <li>
               <strong>Verarbeitete Datenarten:</strong> Nutzungsdaten (z.B.
               besuchte Webseiten, Interesse an Inhalten, Zugriffszeiten),
@@ -402,7 +402,7 @@ function Datenschutz() {
             Anfragen und im Übrigen auf Grundlage der berechtigten Interessen an
             der Beantwortung der Anfragen.
           </p>
-          <ul class="m-elements">
+          <ul className="m-elements">
             <li>
               <strong>Verarbeitete Datenarten:</strong> Bestandsdaten (z.B.
               Namen, Adressen), Kontaktdaten (z.B. E-Mail, Telefonnummern),
@@ -460,7 +460,7 @@ function Datenschutz() {
             In diesem Zusammenhang möchten wir Sie auch auf die Informationen
             zur Verwendung von Cookies in dieser Datenschutzerklärung hinweisen.
           </p>
-          <ul class="m-elements">
+          <ul className="m-elements">
             <li>
               <strong>Verarbeitete Datenarten:</strong> Nutzungsdaten (z.B.
               besuchte Webseiten, Interesse an Inhalten, Zugriffszeiten),
@@ -484,7 +484,7 @@ function Datenschutz() {
           <p>
             <strong>Eingesetzte Dienste und Diensteanbieter:</strong>
           </p>
-          <ul class="m-elements">
+          <ul className="m-elements">
             <li>
               <strong>Font Awesome:</strong> Darstellung von Schriftarten und
               Symbolen; Dienstanbieter: Fonticons, Inc. ,6 Porter Road Apartment
@@ -652,7 +652,7 @@ function Datenschutz() {
             nachfolgenden Erläuterungen sollen dagegen vor allem dem Verständnis
             dienen. Die Begriffe sind alphabetisch sortiert.
           </p>
-          <ul class="glossary">
+          <ul className="glossary">
             <li>
               <strong>Personenbezogene Daten:</strong> "Personenbezogene Daten“
               sind alle Informationen, die sich auf eine identifizierte oder

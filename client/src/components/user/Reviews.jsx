@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   useTable,
@@ -11,7 +11,205 @@ import {
 } from "react-table";
 import styled from "styled-components";
 import { Popover, OverlayTrigger, Button } from "react-bootstrap";
-import no_aam from "../../shared/no_aam.png";
+import axios from "axios";
+import classnames from "classnames";
+
+const Reviews = ({ reviews, setReviews }) => {
+  const data = React.useMemo(() => reviews, [reviews]);
+
+  let reviewedObject = reviews.map((review) => {
+    return { id: review.id, approved: null };
+  });
+
+  const [reviewed, setReviewed] = useState(reviewedObject);
+
+  const handleUpdateReview = (currentId, currentApproved) => {
+    let updateObject = reviewed.map((review, index) => {
+      return review.id === currentId
+        ? { id: currentId, approved: currentApproved }
+        : review;
+    });
+    setReviewed(updateObject);
+  };
+
+  function actionCell({ row }) {
+    return (
+      <div className="actions">
+        <div className="btn-group btn-group-toggle" data-toggle="buttons">
+          <label
+            className={classnames("btn btn-success", {
+              active: reviewed[row.id].approved,
+            })}
+            onClick={() => handleUpdateReview(reviewed[row.id].id, true)}
+          >
+            <input
+              type="radio"
+              name="options"
+              id="option1"
+              autoComplete="off"
+            />{" "}
+            Approve
+          </label>
+          <label
+            className={classnames("btn btn-danger", {
+              active: reviewed[row.id].approved === false,
+            })}
+            onClick={() => handleUpdateReview(reviewed[row.id].id, false)}
+          >
+            <input
+              type="radio"
+              name="options"
+              id="option2"
+              autoComplete="off"
+            />{" "}
+            Deny
+          </label>
+        </div>
+      </div>
+    );
+  }
+
+  const columns = [
+    {
+      Header: "ID",
+      accessor: "reaction.id",
+      Cell: reactionLink,
+      width: 50,
+      maxwidth: 60,
+      minWidth: 40,
+    },
+    {
+      Header: "File",
+      accessor: "file",
+      Cell: fileDisplay,
+      width: 100,
+      disableSortBy: true,
+    },
+    {
+      Header: "Desc.",
+      accessor: "description",
+      width: 200,
+      disableSortBy: true,
+    },
+    {
+      Header: "By",
+      accessor: "updated_by",
+      Cell: userLink,
+      width: 60,
+    },
+    {
+      Header: "Action",
+      accessor: "id",
+      Cell: actionCell,
+      width: 80,
+      maxwidth: 80,
+      minWidth: 80,
+      disableSortBy: true,
+    },
+  ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: { Authorization: "Bearer " + token },
+    };
+
+    axios
+      .post("api/review", reviewed, config)
+      .then((res) => {
+        setReviews(res.data.reviews);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  return (
+    <div className="model">
+      <Styles>
+        <Table columns={columns} data={data} />
+      </Styles>
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-toggle="modal"
+        data-target="#modalSubmit"
+      >
+        Save Changes
+      </button>
+
+      <div
+        className="modal fade"
+        id="modalSubmit"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="modalSubmitTitle"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">
+                Are you sure you want to save the following changes?
+              </h5>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="mb-3">
+                <p>
+                  Approved:{" "}
+                  {reviewed.map((review, index) =>
+                    review.approved ? (
+                      <Link
+                        key={index}
+                        className="text-primary mr-1 ml-1"
+                        to={`/reaction/${reviews[index].reaction.id}`}
+                        target="_blank"
+                      >
+                        {reviews[index].reaction.id}
+                      </Link>
+                    ) : null
+                  )}
+                </p>{" "}
+                <p>
+                  Denied:{" "}
+                  {reviewed.map((review, index) =>
+                    review.approved === false ? (
+                      <Link
+                        key={index}
+                        className="text-primary mr-1 ml-1"
+                        to={`/reaction/${reviews[index].reaction.id}`}
+                        target="_blank"
+                      >
+                        {reviews[index].reaction.id}
+                      </Link>
+                    ) : null
+                  )}
+                </p>{" "}
+              </div>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <button type="submit" className="btn btn-primary">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Reviews;
 
 const Styles = styled.div`
   padding: 1rem;
@@ -93,98 +291,6 @@ const Styles = styled.div`
     padding: 0.5rem;
   }
 `;
-
-function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) {
-  const options = React.useMemo(() => {
-    const options = new Set();
-    preFilteredRows.forEach((row) => {
-      options.add(row.values[id]);
-    });
-    return [...options.values()];
-  }, [id, preFilteredRows]);
-
-  return (
-    <select
-      className="custom-select"
-      value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    >
-      <option value="">All</option>
-      {options.map((option, i) => {
-        let content;
-        if (option === true) {
-          content = "Yes";
-        } else if (option === "user") {
-          content = "User";
-        } else {
-          content = "No";
-        }
-
-        return (
-          <option key={i} value={option}>
-            {content}
-          </option>
-        );
-      })}
-    </select>
-  );
-}
-
-const PathwayReactions = ({ reactions }) => {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "ID",
-        accessor: "id",
-        Cell: reactionLink,
-        width: 50,
-        maxwidth: 60,
-        minWidth: 40,
-      },
-      {
-        Header: "Formula",
-        accessor: "formula",
-        width: 400,
-      },
-      {
-        Header: "Curated",
-        accessor: "updated",
-        Cell: curatedIcon,
-        Filter: SelectColumnFilter,
-        filter: "exactTextCase",
-        width: 60,
-        maxwidth: 60,
-      },
-      {
-        Header: "Image",
-        accessor: (row) => row.id,
-        Cell: mappingImage,
-        width: 60,
-        maxwidth: 60,
-        disableSortBy: true,
-      },
-    ],
-    []
-  );
-
-  const data = React.useMemo(() => reactions, [reactions]);
-
-  return (
-    <>
-      <div className="model">
-        <Styles>
-          <Table columns={columns} data={data} />
-        </Styles>
-      </div>
-    </>
-  );
-};
-
-export default PathwayReactions;
 
 const Table = ({ columns, data }) => {
   const defaultColumn = React.useMemo(
@@ -361,74 +467,38 @@ const Table = ({ columns, data }) => {
   );
 };
 
-function curatedIcon({ value }) {
-  let content;
-  if (value === true) {
-    content = <i className="fas fa-check" />;
-  } else if (value === "user") {
-    content = <i className="fas fa-user" />;
-  } else {
-    content = <i className="fas fa-times" />;
-  }
-
-  return (
-    <span
-      style={{
-        display: "block",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        textAlign: "center",
-      }}
-    >
-      {content}
-    </span>
-  );
-}
-
-function mappingImage({ value }) {
-  const StyledPopoverImage = styled(Popover)`
-    min-width: 1000px;
-  `;
-
-  const imageSource = `${process.env.PUBLIC_URL}/img/aam/${value}.svg`;
-
-  const popoverImage = (
-    <StyledPopoverImage id="popover" className="shadow">
-      <StyledPopoverImage.Title as="h3">
-        Atom Transition Image {value}
-      </StyledPopoverImage.Title>
-      <StyledPopoverImage.Content>
-        <img
-          src={imageSource}
-          onError={(e) => {
-            e.target.onError = null;
-            e.target.src = no_aam;
-          }}
-          alt={`Structure Atom Mapping ${value}`}
-          style={{ width: "100%" }}
-        />
-      </StyledPopoverImage.Content>
-    </StyledPopoverImage>
-  );
-
-  return (
-    <>
-      <OverlayTrigger
-        placement="left"
-        trigger={["click"]}
-        overlay={popoverImage}
-      >
-        <Button variant="link">Click</Button>
-      </OverlayTrigger>
-    </>
-  );
-}
-
 function reactionLink({ value }) {
   return (
     <Link className="text-primary" to={`/reaction/${value}`} target="_blank">
       {value}
     </Link>
+  );
+}
+
+function userLink({ value }) {
+  return (
+    <Link className="text-primary" to={`/user/${value.id}`} target="_blank">
+      {value.name}
+    </Link>
+  );
+}
+
+function fileDisplay({ value }) {
+  const StyledPopover = styled(Popover)`
+    min-width: 600px;
+  `;
+  const popover = (
+    <StyledPopover id="popover" className="shadow">
+      <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
+      <StyledPopover.Content>
+        <pre>{value}</pre>
+      </StyledPopover.Content>
+    </StyledPopover>
+  );
+
+  return (
+    <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
+      <Button variant="link">Click</Button>
+    </OverlayTrigger>
   );
 }

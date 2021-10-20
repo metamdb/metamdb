@@ -40,6 +40,8 @@ export const authReducer = (state, action) => {
       return {
         id: action.payload.id,
         name: action.payload.name,
+        orcid: action.payload.orcid,
+        role: action.payload.role,
         isUser: true,
       };
     case "LOGOUT":
@@ -47,6 +49,8 @@ export const authReducer = (state, action) => {
       return {
         id: null,
         name: null,
+        orcid: null,
+        role: null,
         isUser: false,
       };
     default:

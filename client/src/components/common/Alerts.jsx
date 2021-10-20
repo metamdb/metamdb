@@ -7,8 +7,8 @@ const Alerts = ({ alerts }) => {
     INFO: "alert-info",
     WARNING: "alert-warning",
     ERROR: "alert-danger",
+    SUCCESS: "alert-success",
   };
-
   const alertClasses = classNames.bind(alertStyles);
 
   if (typeof alerts !== Array) {
@@ -16,26 +16,28 @@ const Alerts = ({ alerts }) => {
   }
   return (
     <div>
-      {alerts.map((alert) => (
-        <div
-          key={alert.message}
-          className={classnames(
-            "alert alert-dismissible fade show",
-            alertClasses(alert.level)
-          )}
-          role="alert"
-        >
-          <button
-            type="button"
-            className="close"
-            data-dismiss="alert"
-            aria-label="Close"
+      {alerts.map((alert, index) => {
+        return (
+          <div
+            key={index}
+            className={classnames(
+              "alert alert-dismissible fade show",
+              alertClasses(alert.level)
+            )}
+            role="alert"
           >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          {alert.message}
-        </div>
-      ))}
+            <button
+              type="button"
+              className="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {alert.message}
+          </div>
+        );
+      })}
     </div>
   );
 };

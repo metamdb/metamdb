@@ -15,6 +15,29 @@ class Casm(db.Model):
     __bind_key__ = 'casm'
 
 
+class Role(Casm):
+    __tablename__ = 'role'
+
+    id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name: str = db.Column(db.String(45), nullable=False, unique=True)
+
+
+class User(Casm):
+    __tablename__ = 'user'
+
+    id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name: str = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.DateTime(timezone=True),
+                     default=func.now(),
+                     nullable=False)
+    orcid: str = db.Column(db.String(100), nullable=False, unique=True)
+    role_id: int = db.Column(db.Integer,
+                             db.ForeignKey('role.id'),
+                             nullable=False)
+
+    role: str = db.relationship('Role')
+
+
 class Pathway(Casm):
     __tablename__ = 'pathway'
 
@@ -105,7 +128,10 @@ class Reaction(Casm):
     img: str = db.Column(db.String(100))
     description: str = db.Column(LONGTEXT)
     updated: bool = db.Column(db.Boolean)
-    updated_by: str = db.Column(db.String(100))
+    updated_by_id: int = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id'),
+    )
     updated_on: str = db.Column(db.DateTime(timezone=True),
                                 onupdate=func.now())
     symmetry: bool = db.Column(db.Boolean)
@@ -114,6 +140,8 @@ class Reaction(Casm):
     compounds: List[ReactionCompound] = db.relationship(
         'ReactionCompound', back_populates='reaction')
     pathways = db.relationship('PathwayReaction', back_populates='reaction')
+
+    updated_by = db.relationship('User')
 
 
 class Element(Casm):
@@ -134,6 +162,53 @@ class Source(Casm):
 
     reaction = db.relationship('ReactionSource', back_populates='source')
     compound = db.relationship('CompoundSource', back_populates='source')
+
+
+class Status(Casm):
+    __tablename__ = 'status'
+
+    id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name: str = db.Column(db.String(100), nullable=False, unique=True)
+
+
+class ReactionHistory(Casm):
+    __tablename__ = 'reaction_history'
+
+    id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    reaction_id: int = db.Column(db.Integer,
+                                 db.ForeignKey('reaction.id'),
+                                 nullable=False)
+    file: str = db.Column(LONGTEXT, nullable=False)
+    description: str = db.Column(LONGTEXT, nullable=False)
+    updated_by_id: int = db.Column(db.Integer,
+                                   db.ForeignKey('user.id'),
+                                   nullable=False)
+    updated_on: str = db.Column(db.DateTime(timezone=True),
+                                nullable=False,
+                                default=func.now())
+    review_status_id: int = db.Column(db.Integer,
+                                      db.ForeignKey('status.id'),
+                                      nullable=False,
+                                      default='1')
+    reviewed_by_id: int = db.Column(db.Integer, db.ForeignKey('user.id'))
+    reviewed_on: str = db.Column(db.DateTime(timezone=True),
+                                 onupdate=func.now())
+
+    review_status = db.relationship('Status')
+    updated_by = db.relationship('User', foreign_keys=[updated_by_id])
+    reviewed_by = db.relationship('User', foreign_keys=[reviewed_by_id])
+    reaction = db.relationship('Reaction')
+
+    @classmethod
+    def update_reaction(self, history):
+        reaction = Reaction.query.get(history.reaction_id)
+        reaction.file = history.file
+        reaction.description = history.description
+        reaction.updated = True
+        reaction.updated_by_id = history.updated_by_id
+
+        db.session.add(reaction)
+        db.session.commit()
 
 
 # ---------- Link Tables ---------- #
@@ -197,12 +272,38 @@ class CompoundElement(Casm):
 
 
 ############################# SCHEMAS #############################
+class RoleSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Role
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+
+
+class UserSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+    orcid = ma.auto_field()
+    role = Nested(RoleSchema)
+
+
+class SourceSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Source
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+
+
 class ReactionSourceSchema(ma.SQLAlchemySchema):
     class Meta:
         model = ReactionSource
 
-    database_identifier = ma.auto_field()
-    source_id = ma.auto_field()
+    database_identifier = ma.auto_field(data_key='databaseIdentifier')
+    source = Nested(SourceSchema)
 
 
 class ReactionSchema(ma.SQLAlchemySchema):
@@ -225,6 +326,24 @@ class PathwaySchema(ma.SQLAlchemySchema):
     source = ma.auto_field()
 
 
+class CompoundSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Compound
+
+    name = ma.auto_field()
+    id = ma.auto_field()
+
+
+class ReactionCompoundSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = ReactionCompound
+
+    compound = Nested(CompoundSchema)
+    position = ma.auto_field()
+    reactant = ma.auto_field()
+    quantity = ma.auto_field()
+
+
 class ReactionJsonSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Reaction
@@ -233,9 +352,10 @@ class ReactionJsonSchema(ma.SQLAlchemySchema):
     formula = ma.auto_field()
     updated = ma.auto_field()
     updated_on = ma.auto_field(data_key='updatedOn')
-    updated_by = ma.auto_field(data_key='updatedBy')
 
+    updated_by = Nested(UserSchema)
     identifiers = Nested(ReactionSourceSchema, many=True)
+    compounds = Nested(ReactionCompoundSchema, many=True)
 
     href = ma.Method('get_href')
     type = ma.Method('get_type')
@@ -355,3 +475,28 @@ class PathwayJsonSchema(ma.SQLAlchemySchema):
             external_urls.setdefault('metamdb', '')
 
         return external_urls
+
+
+class StatusSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Status
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+
+
+class ReactionHistorySchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = ReactionHistory
+
+    id = ma.auto_field()
+    file = ma.auto_field()
+    description = ma.auto_field()
+    updated_on = ma.auto_field()
+    reviewed_on = ma.auto_field()
+
+    reaction = Nested(ReactionSchema)
+    updated_by = Nested(UserSchema)
+    reviewed_by = Nested(UserSchema)
+
+    review_status = Nested(StatusSchema)
