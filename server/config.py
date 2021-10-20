@@ -34,7 +34,7 @@ class Config:
 
     WEBSERVER_PORT = environ.get('WEBSERVER_PORT')
     WEBSERVER_HOST = environ.get('WEBSERVER_HOST')
-    WEBSERVER_URI = '{0}:{1}'.format(WEBSERVER_HOST, WEBSERVER_PORT)
+    WEBSERVER_URI = environ.get('WEBSERVER_URI')
 
     ORCID_CLIENT_ID = environ.get('ORCID_CLIENT_ID')
     ORCID_CLIENT_SECRET = environ.get('ORCID_CLIENT_SECRET')
