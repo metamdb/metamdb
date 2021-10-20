@@ -33,7 +33,7 @@ def orcid_authorize():
     try:
         token = orcid.authorize_access_token()
     except BadRequestKeyError:
-        return redirect(f'{WEBSERVER_URI}/postLogin', 400)
+        return redirect(f'{WEBSERVER_URI}/postLogin?error=BadRequestKey')
     else:
         if not token:
             raise handler.InvalidToken()
