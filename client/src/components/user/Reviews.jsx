@@ -121,7 +121,7 @@ const Reviews = ({ reviews, setReviews }) => {
       .then((res) => {
         setReviews(res.data.reviews);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response.data));
   };
 
   return (

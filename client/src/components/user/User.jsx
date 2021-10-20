@@ -64,7 +64,7 @@ const User = (props) => {
         setUser(res.data.user);
         setReactionHistory(res.data.history);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response.data));
   }, [id]);
 
   return (
