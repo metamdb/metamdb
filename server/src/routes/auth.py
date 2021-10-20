@@ -1,7 +1,9 @@
 """Routes for the registration and login of users."""
 
+from os import stat
 from flask import Blueprint, jsonify, url_for, redirect, current_app
 from flask_jwt_extended import create_access_token, jwt_required, current_user
+from werkzeug.exceptions import BadRequestKeyError
 
 from src import db, oauth, jwt
 from src.errors import handler
@@ -26,13 +28,15 @@ def orcid_login():
 
 @auth_blueprint.route('/orcid/authorize', methods=['GET'])
 def orcid_authorize():
-    print('AUTHORIZING', flush=True)
+    WEBSERVER_URI = current_app.config["WEBSERVER_URI"]
     orcid = oauth.create_client('orcid')
-    print(orcid, flush=True)
-    token = orcid.authorize_access_token()
-    print(token, flush=True)
-    if not token:
-        raise handler.InvalidToken()
+    try:
+        token = orcid.authorize_access_token()
+    except BadRequestKeyError:
+        return redirect(f'{WEBSERVER_URI}/postLogin', 400)
+    else:
+        if not token:
+            raise handler.InvalidToken()
 
     token_name = token['name']
     token_orcid = token['orcid']
@@ -55,7 +59,6 @@ def orcid_authorize():
         },
         expires_delta=datetime.timedelta(days=1))
 
-    WEBSERVER_URI = current_app.config["WEBSERVER_URI"]
     return redirect(f'{WEBSERVER_URI}/postLogin?jwt={access_token}')
 
 
