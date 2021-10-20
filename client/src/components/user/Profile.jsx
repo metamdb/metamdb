@@ -29,7 +29,7 @@ const Profile = (props) => {
           setReactionHistory(res.data.history);
           setReviews(res.data.reviews);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err.response.data));
     }
   }, [authState, history]);
 
