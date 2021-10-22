@@ -29,11 +29,7 @@ function pathwayLink(cell, row) {
         width: 50,
       }}
     >
-      <Link
-        className="text-primary"
-        to={`/pathway/${row.pw_id}`}
-        target="_blank"
-      >
+      <Link className="text-primary" to={`/pathway/${cell}`} target="_blank">
         {cell}
       </Link>
     </span>
@@ -41,7 +37,7 @@ function pathwayLink(cell, row) {
 }
 
 function identifierFormatter(cell, row) {
-  return (
+  return cell ? (
     <span
       style={{
         width: 50,
@@ -53,7 +49,7 @@ function identifierFormatter(cell, row) {
         })
         .join(" , ")}
     </span>
-  );
+  ) : null;
 }
 
 function iconFormatter(cell, row) {

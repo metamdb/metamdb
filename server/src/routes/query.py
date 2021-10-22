@@ -1,12 +1,9 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, current_user
-from werkzeug.exceptions import default_exceptions
+from sqlalchemy import or_
 
 from src import db
 from src.models.casm import Compound, Reaction, ReactionHistory, ReactionJsonSchema, ReactionSource, ReactionSchema, Pathway, PathwaySchema, ReactionHistory
-from src.components.mapping.aam import (generate_batch_aam,
-                                        generate_batch_metabolite,
-                                        generate_image_for_atom_transition)
 from src.errors import handler
 
 query_blueprint = Blueprint('query', __name__, url_prefix='/api/query')
@@ -54,7 +51,8 @@ def get_query(query_keyword, query_type):
     elif query_type == 'pathway':
         pathway_schema = PathwaySchema(many=True)
         query = Pathway.query.filter(
-            Pathway.source_id.like(f'%{query_keyword}%'))
+            or_(Pathway.source_id.like(f'%{query_keyword}%'),
+                Pathway.name.like(f'%{query_keyword}%')))
         query_result = query.all()
 
         result = pathway_schema.dump(query_result)
@@ -90,24 +88,6 @@ def reactionUpload(id, atom_id):
                               updated_by_id=user.id)
     db.session.add(history)
     db.session.commit()
-    # rxn = Reaction.query.get(atomid)
-
-    # rxn.file = rxn_file
-    # rxn.updated = 1
-    # rxn.updated_by = user['name']
-    # rxn.desc = desc
-    # db.session.commit()
-
-    # if desc != '':
-    #     generate_image_for_atom_transition(id, rxn_file)
-
-    # result = {
-    #     'file': rxn.file,
-    #     'updated': rxn.updated,
-    #     'updated_by': rxn.updated_by,
-    #     'updated_on': rxn.updated_on,
-    #     'desc': rxn.desc
-    # }
 
     return jsonify({'message': 'Your update has been sent for review!'})
 
