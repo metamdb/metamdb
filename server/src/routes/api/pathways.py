@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import Blueprint, json, jsonify, request
 from src.errors import handler
-from src.models.casm import Pathway, PathwayJsonSchema
+from src.models.casm import Pathway, PathwayJsonSchema, PathwayAutoCompleteSchema
 
 pathways_blueprint = Blueprint('pathways',
                                __name__,
@@ -40,6 +40,16 @@ def get_pathway(id):
 
     json_schema = PathwayJsonSchema()
     json_dump = json_schema.dump(pathway)
+
+    return jsonify(json_dump)
+
+
+@pathways_blueprint.route('/all', methods=['GET'])
+def get_all_pathway():
+    pathways = Pathway.query.all()
+
+    json_schema = PathwayAutoCompleteSchema(many=True)
+    json_dump = json_schema.dump(pathways)
 
     return jsonify(json_dump)
 

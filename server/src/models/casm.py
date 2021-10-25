@@ -500,3 +500,12 @@ class ReactionHistorySchema(ma.SQLAlchemySchema):
     reviewed_by = Nested(UserSchema)
 
     review_status = Nested(StatusSchema)
+
+
+class PathwayAutoCompleteSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Pathway
+
+    pw_id = ma.auto_field(data_key='id')
+    source_id = ma.auto_field(data_key='sourceId')
+    name = ma.auto_field()
