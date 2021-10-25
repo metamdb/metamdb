@@ -231,10 +231,7 @@ const Table = ({ columns, data }) => {
 
   return (
     <>
-      <table
-        className="table table-striped table-bordered"
-        {...getTableProps()}
-      >
+      <table className="table table-striped" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
