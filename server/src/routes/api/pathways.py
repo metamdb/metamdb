@@ -44,16 +44,6 @@ def get_pathway(id):
     return jsonify(json_dump)
 
 
-@pathways_blueprint.route('/all', methods=['GET'])
-def get_all_pathway():
-    pathways = Pathway.query.all()
-
-    json_schema = PathwayAutoCompleteSchema(many=True)
-    json_dump = json_schema.dump(pathways)
-
-    return jsonify(json_dump)
-
-
 @pathways_blueprint.route('/<string:id>/reactions', methods=['GET'])
 def get_pathway_reactions(id):
     pathway = Pathway.query.get(id)
