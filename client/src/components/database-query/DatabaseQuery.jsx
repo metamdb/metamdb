@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import classnames from "classnames";
 import axios from "axios";
 import qs from "qs";
@@ -185,6 +185,7 @@ const DatabaseQuery = (props) => {
 
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionIndex, setSuggestionIndex] = useState(0);
+  const submitButtonRef = useRef();
 
   const onChangeSearch = (text) => {
     setReaction(text);
@@ -203,6 +204,7 @@ const DatabaseQuery = (props) => {
     setSuggestions([]);
     setReaction(e.target.id);
     setSuggestionIndex(0);
+    submitButtonRef.current.click();
   };
 
   const onKeyDown = (e) => {
@@ -279,74 +281,80 @@ const DatabaseQuery = (props) => {
             </a>
           </p>
           <div className="reaction-form">
-            <div className="form-row">
-              <form
-                onSubmit={handleSubmit}
-                className="form-group"
-                autoComplete="off"
-              >
-                <div className="input-group">
-                  <div className="input-group-append">
-                    <select
-                      className="form-select"
-                      onChange={(e) => setType(e.target.value)}
-                    >
-                      <option default value="name">
-                        Reaction
-                      </option>
-                      <option value="metabolite">Metabolite</option>
-                      <option value="pathway">Pathway</option>
-                    </select>
-                  </div>
-                  <input
-                    type="text"
-                    name="text"
-                    value={reaction}
-                    onChange={(e) => onChangeSearch(e.target.value)}
-                    onKeyDown={onKeyDown}
-                    className={classnames("form-control")}
-                    placeholder={searchPlaceholder[type]}
-                    aria-label="reaction"
-                    aria-describedby="button-reaction"
-                  />
-                  <div className="input-group-append">
-                    <button type="submit" className="btn btn-dark">
-                      <i className="fas fa-search" />
-                    </button>
+            <form
+              onSubmit={handleSubmit}
+              className="form-group"
+              autoComplete="off"
+            >
+              <div className="input-group">
+                <div className="input-group-append">
+                  <select
+                    className="form-select"
+                    onChange={(e) => setType(e.target.value)}
+                  >
+                    <option default value="name">
+                      Reaction
+                    </option>
+                    <option value="metabolite">Metabolite</option>
+                    <option value="pathway">Pathway</option>
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  name="text"
+                  value={reaction}
+                  onChange={(e) => onChangeSearch(e.target.value)}
+                  onKeyDown={onKeyDown}
+                  className={classnames("form-control")}
+                  placeholder={searchPlaceholder[type]}
+                  aria-label="reaction"
+                  aria-describedby="button-reaction"
+                />
+                <div className="input-group-append">
+                  <button
+                    ref={submitButtonRef}
+                    type="submit"
+                    className="btn btn-dark"
+                  >
+                    <i className="fas fa-search" />
+                  </button>
+                </div>
+              </div>
+              {suggestions.length ? (
+                <div className="card border-0 shadow">
+                  <div className="card-body">
+                    <ul className="list-group list-group-flush">
+                      {suggestions.map((item, index) => (
+                        <li
+                          key={index}
+                          onClick={onClick}
+                          id={
+                            type === "name"
+                              ? item.databaseIdentifier
+                              : item.name
+                          }
+                          className={classnames("list-group-item py-2", {
+                            active: index === suggestionIndex,
+                          })}
+                        >
+                          {type === "pathway" && (
+                            <>
+                              {item.name} ({item.sourceId})
+                            </>
+                          )}
+                          {type === "name" && (
+                            <>
+                              {item.databaseIdentifier} ({item.source.name})
+                            </>
+                          )}
+                          {type === "metabolite" && <>{item.name}</>}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-                {suggestions.length ? (
-                  <div className="card border-0 shadow">
-                    <div className="card-body">
-                      <ul className="list-group list-group-flush">
-                        {suggestions.map((item, index) => (
-                          <li
-                            key={index}
-                            onClick={onClick}
-                            id={item.name}
-                            className={classnames("list-group-item py-2", {
-                              active: index === suggestionIndex,
-                            })}
-                          >
-                            {type === "pathway" && (
-                              <>
-                                {item.name} ({item.sourceId})
-                              </>
-                            )}
-                            {type === "name" && (
-                              <>
-                                {item.databaseIdentifier} ({item.source.name})
-                              </>
-                            )}
-                            {type === "metabolite" && <>{item.name}</>}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ) : null}
-              </form>
-            </div>
+              ) : null}
+            </form>
             {alerts && <Alerts alerts={alerts} />}
             <div className="form-feed">
               {loading && <i className="fas fa-spinner fa-pulse" />}
