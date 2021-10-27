@@ -78,4 +78,7 @@ def create_app():
     from src.routes.review import review_blueprint
     app.register_blueprint(review_blueprint)
 
+    from src.routes.suggestions import suggestions_blueprint
+    app.register_blueprint(suggestions_blueprint)
+
     return app

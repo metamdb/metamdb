@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import Blueprint, json, jsonify, request
 from src.errors import handler
-from src.models.casm import Pathway, PathwayJsonSchema
+from src.models.casm import Pathway, PathwayJsonSchema, PathwayAutoCompleteSchema
 
 pathways_blueprint = Blueprint('pathways',
                                __name__,
