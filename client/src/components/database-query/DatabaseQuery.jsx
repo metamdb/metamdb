@@ -185,7 +185,6 @@ const DatabaseQuery = (props) => {
 
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionIndex, setSuggestionIndex] = useState(0);
-  const submitButtonRef = useRef();
 
   const onChangeSearch = (text) => {
     setReaction(text);
@@ -204,7 +203,7 @@ const DatabaseQuery = (props) => {
     setSuggestions([]);
     setReaction(e.target.id);
     setSuggestionIndex(0);
-    submitButtonRef.current.click();
+    handleSubmit(e, e.target.id);
   };
 
   const onKeyDown = (e) => {
@@ -235,11 +234,15 @@ const DatabaseQuery = (props) => {
     setSuggestionIndex(0);
   }, [type]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, queryData = null) => {
     event.preventDefault();
 
     const reactionData = new FormData();
-    reactionData.append("query", reaction);
+    if (queryData !== null) {
+      reactionData.append("query", queryData);
+    } else {
+      reactionData.append("query", reaction);
+    }
     reactionData.append("type", type);
     if (reaction) {
       setLoading(true);
@@ -311,11 +314,7 @@ const DatabaseQuery = (props) => {
                   aria-describedby="button-reaction"
                 />
                 <div className="input-group-append">
-                  <button
-                    ref={submitButtonRef}
-                    type="submit"
-                    className="btn btn-dark"
-                  >
+                  <button type="submit" className="btn btn-dark">
                     <i className="fas fa-search" />
                   </button>
                 </div>
