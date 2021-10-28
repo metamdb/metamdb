@@ -3,14 +3,18 @@ import { Tabs, Tab } from "react-bootstrap";
 import axios from "axios";
 
 import { ReactionContext } from "../../contexts/ReactionContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import ReactionInfo from "./ReactionInfo";
 import ReactionIdentifiers from "./ReactionIdentifiers";
 import Compounds from "./Compounds";
 import AtomTransitions from "./AtomTransitions";
+import ReviewPanel from "./ReviewPanel";
 
 const ReactionContainer = (props) => {
   const { id } = props.match.params;
   const { setReaction } = useContext(ReactionContext);
+  const { authState } = useContext(AuthContext);
+  const { isUser } = authState;
 
   useEffect(() => {
     axios
@@ -28,12 +32,19 @@ const ReactionContainer = (props) => {
   const [notFound, setNotFound] = useState(false);
   const [isReaction, setIsReaction] = useState(false);
 
-  return <Reaction id={id} notFound={notFound} isReaction={isReaction} />;
+  return (
+    <Reaction
+      id={id}
+      notFound={notFound}
+      isReaction={isReaction}
+      isUser={isUser}
+    />
+  );
 };
 
 export default ReactionContainer;
 
-const Reaction = ({ id, notFound, isReaction }) => {
+const Reaction = ({ id, notFound, isReaction, isUser }) => {
   return (
     <div className="reaction">
       <div className="content">
@@ -54,6 +65,11 @@ const Reaction = ({ id, notFound, isReaction }) => {
                 <Tab eventKey="transitions" title="Atom Mappings">
                   <AtomTransitions />
                 </Tab>
+                {isUser && (
+                  <Tab eventKey="review" title="Review Panel">
+                    <ReviewPanel />
+                  </Tab>
+                )}
               </Tabs>
             </>
           )}
