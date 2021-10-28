@@ -325,7 +325,7 @@ const DatabaseQuery = (props) => {
                   <div className="card-body">
                     <ul className="list-group list-group-flush">
                       {suggestions.map((item, index) => (
-                        <li
+                        <button
                           key={index}
                           onClick={onClick}
                           id={
@@ -333,9 +333,12 @@ const DatabaseQuery = (props) => {
                               ? item.databaseIdentifier
                               : item.name
                           }
-                          className={classnames("list-group-item py-2", {
-                            active: index === suggestionIndex,
-                          })}
+                          className={classnames(
+                            "list-group-item py-2 list-group-item-action",
+                            {
+                              active: index === suggestionIndex,
+                            }
+                          )}
                         >
                           {type === "pathway" && (
                             <>
@@ -348,7 +351,7 @@ const DatabaseQuery = (props) => {
                             </>
                           )}
                           {type === "metabolite" && <>{item.name}</>}
-                        </li>
+                        </button>
                       ))}
                     </ul>
                   </div>
