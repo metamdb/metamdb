@@ -184,10 +184,14 @@ const DatabaseQuery = (props) => {
   };
 
   const [suggestions, setSuggestions] = useState([]);
-  const [suggestionIndex, setSuggestionIndex] = useState(0);
+  const [suggestionIndex, setSuggestionIndex] = useState(-1);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [typedInput, setTypedInput] = useState("");
 
   const onChangeSearch = (text) => {
     setReaction(text);
+    setTypedInput(text);
+
     if (text.length && text.length > 1) {
       axios
         .get(`api/suggestions/${suggestionPaths[type]}?q=${text}`)
@@ -196,28 +200,52 @@ const DatabaseQuery = (props) => {
     } else {
       setSuggestions([]);
     }
-    setSuggestionIndex(0);
+    setSuggestionIndex(-1);
+    setShowSuggestions(true);
   };
 
   const onClick = (e) => {
     setSuggestions([]);
+    setShowSuggestions(false);
     setReaction(e.target.id);
-    setSuggestionIndex(0);
+    setSuggestionIndex(-1);
     handleSubmit(e, e.target.id);
+  };
+
+  const setInputOnKeyDown = (newSuggestionIndex) => {
+    if (newSuggestionIndex === -1) {
+      setReaction(typedInput);
+    } else {
+      if (type === "metabolite" || type === "pathway") {
+        setReaction(suggestions[newSuggestionIndex].name);
+      } else if (type === "name") {
+        setReaction(suggestions[newSuggestionIndex].databaseIdentifier);
+      }
+    }
   };
 
   const onKeyDown = (e) => {
     if (e.keyCode === 13) {
       setSuggestions([]);
-      setReaction(suggestions[suggestionIndex].name);
-      setSuggestionIndex(0);
+      setInputOnKeyDown(suggestionIndex);
+      setSuggestionIndex(-1);
+      setShowSuggestions(false);
     } else if (e.keyCode === 38) {
-      if (suggestionIndex !== 0) {
+      e.preventDefault();
+      if (suggestionIndex !== -1) {
         setSuggestionIndex(suggestionIndex - 1);
+        setInputOnKeyDown(suggestionIndex - 1);
+      } else if (suggestionIndex === -1) {
+        setSuggestionIndex(suggestions.length - 1);
+        setInputOnKeyDown(suggestions.length - 1);
       }
     } else if (e.keyCode === 40) {
       if (suggestionIndex !== suggestions.length - 1) {
         setSuggestionIndex(suggestionIndex + 1);
+        setInputOnKeyDown(suggestionIndex + 1);
+      } else if (suggestionIndex === suggestions.length - 1) {
+        setSuggestionIndex(-1);
+        setInputOnKeyDown(-1);
       }
     }
   };
@@ -231,11 +259,13 @@ const DatabaseQuery = (props) => {
     setFeed(null);
     setSuggestions([]);
     setReaction("");
-    setSuggestionIndex(0);
+    setSuggestionIndex(-1);
+    setShowSuggestions(false);
   }, [type]);
 
   const handleSubmit = (event, queryData = null) => {
     event.preventDefault();
+    setShowSuggestions(false);
 
     const reactionData = new FormData();
     if (queryData !== null) {
@@ -319,36 +349,38 @@ const DatabaseQuery = (props) => {
                   </button>
                 </div>
               </div>
-              {suggestions.length ? (
+              {showSuggestions && suggestions.length ? (
                 <div className="card border-0 shadow">
                   <div className="card-body">
                     <ul className="list-group list-group-flush">
-                      {suggestions.map((item, index) => (
-                        <li
-                          key={index}
-                          onClick={onClick}
-                          id={
-                            type === "name"
-                              ? item.databaseIdentifier
-                              : item.name
-                          }
-                          className={classnames("list-group-item py-2", {
-                            active: index === suggestionIndex,
-                          })}
-                        >
-                          {type === "pathway" && (
-                            <>
-                              {item.name} ({item.sourceId})
-                            </>
-                          )}
-                          {type === "name" && (
-                            <>
-                              {item.databaseIdentifier} ({item.source.name})
-                            </>
-                          )}
-                          {type === "metabolite" && <>{item.name}</>}
-                        </li>
-                      ))}
+                      {suggestions.length
+                        ? suggestions.map((item, index) => (
+                            <li
+                              key={index}
+                              onClick={onClick}
+                              id={
+                                type === "name"
+                                  ? item.databaseIdentifier
+                                  : item.name
+                              }
+                              className={classnames("list-group-item py-2", {
+                                active: index === suggestionIndex,
+                              })}
+                            >
+                              {type === "pathway" && (
+                                <>
+                                  {item.name} ({item.sourceId})
+                                </>
+                              )}
+                              {type === "name" && (
+                                <>
+                                  {item.databaseIdentifier} ({item.source.name})
+                                </>
+                              )}
+                              {type === "metabolite" && <>{item.name}</>}
+                            </li>
+                          ))
+                        : null}
                     </ul>
                   </div>
                 </div>
