@@ -51,7 +51,6 @@ def test_single_id_with_reactions(client):
                     'name': 'metacyc'
                 }
             }],
-            'jsonFile': {},
             'rxnFile':
             'LARGE RXN FILE',
             'type':
@@ -149,7 +148,6 @@ def test_multiple_ids(client):
                         'name': 'metacyc'
                     }
                 }],
-                'jsonFile': {},
                 'rxnFile':
                 'LARGE RXN FILE',
                 'type':
@@ -334,7 +332,6 @@ def test_reactions(client):
                     'name': 'metacyc'
                 }
             }],
-            'jsonFile': {},
             'rxnFile':
             'LARGE RXN FILE',
             'type':
