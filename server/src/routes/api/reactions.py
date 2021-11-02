@@ -14,8 +14,10 @@ reactions_blueprint.register_error_handler(handler.InvalidUsage,
 @reactions_blueprint.route('', methods=['GET'])
 def get_reactions():
     reaction_ids: Optional[str] = request.args.get('ids')
-    if not reaction_ids:
-        raise handler.InvalidId()
+    if reaction_ids is None:
+        raise handler.MissingRequiredQueryParameter(['ids'])
+    elif not reaction_ids:
+        raise handler.NoIdsGiven()
 
     split_ids = reaction_ids.split(',')
     reactions = []
