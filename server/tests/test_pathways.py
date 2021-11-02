@@ -3,7 +3,7 @@ def test_single_id_no_reactions(client):
     json_data = response.get_json()
 
     json_data_result = {
-        'external_urls': {
+        'externalUrls': {
             'metamdb': 'https://metamdb.tu-bs.de/pathway/1'
         },
         'href': 'https://metamdb.tu-bs.de/api/pathways/1',
@@ -24,7 +24,7 @@ def test_single_id_with_reactions(client):
     json_data = response.get_json()
 
     json_data_result = {
-        'external_urls': {
+        'externalUrls': {
             'metamdb': 'https://metamdb.tu-bs.de/pathway/2'
         },
         'href':
@@ -34,7 +34,7 @@ def test_single_id_with_reactions(client):
         'pw_id':
         2,
         'reactions': [{
-            'external_urls': {
+            'externalUrls': {
                 'img': 'https://metamdb.tu-bs.de/img/aam/1',
                 'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
             },
@@ -110,7 +110,7 @@ def test_multiple_ids(client):
 
     json_data_result = {
         'pathways': [{
-            'external_urls': {
+            'externalUrls': {
                 'metamdb': 'https://metamdb.tu-bs.de/pathway/1'
             },
             'href': 'https://metamdb.tu-bs.de/api/pathways/1',
@@ -121,7 +121,7 @@ def test_multiple_ids(client):
             'source_id': 'pw_gly',
             'type': 'pathway'
         }, {
-            'external_urls': {
+            'externalUrls': {
                 'metamdb': 'https://metamdb.tu-bs.de/pathway/2'
             },
             'href':
@@ -131,7 +131,7 @@ def test_multiple_ids(client):
             'pw_id':
             2,
             'reactions': [{
-                'external_urls': {
+                'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/1',
                     'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
                 },
@@ -178,7 +178,7 @@ def test_multiple_ids_one_wrong(client):
 
     json_data_result = {
         'pathways': [{
-            'external_urls': {
+            'externalUrls': {
                 'metamdb': 'https://metamdb.tu-bs.de/pathway/1'
             },
             'href': 'https://metamdb.tu-bs.de/api/pathways/1',
@@ -211,7 +211,7 @@ def test_multiple_ids_one_bad(client):
 
     json_data_result = {
         'pathways': [{
-            'external_urls': {
+            'externalUrls': {
                 'metamdb': 'https://metamdb.tu-bs.de/pathway/1'
             },
             'href': 'https://metamdb.tu-bs.de/api/pathways/1',
@@ -315,7 +315,7 @@ def test_reactions(client):
         'href':
         'https://metamdb.tu-bs.de/api/pathways/2/reactions',
         'reactions': [{
-            'external_urls': {
+            'externalUrls': {
                 'img': 'https://metamdb.tu-bs.de/img/aam/1',
                 'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
             },

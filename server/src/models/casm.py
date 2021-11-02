@@ -351,13 +351,13 @@ class ReactionJsonSchema(ma.SQLAlchemySchema):
     updated = ma.auto_field()
     updated_on = ma.auto_field(data_key='updatedOn')
 
-    updated_by = Nested(UserSchema)
+    updated_by = Nested(UserSchema, data_key='updatedBy')
     identifiers = Nested(ReactionSourceSchema, many=True)
     compounds = Nested(ReactionCompoundSchema, many=True)
 
     href = ma.Method('get_href')
     type = ma.Method('get_type')
-    external_urls = ma.Method('get_external_urls')
+    external_urls = ma.Method('get_external_urls', data_key='externalUrls')
 
     file = ma.auto_field(data_key='rxnFile')
 
@@ -402,7 +402,7 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
     href = ma.Method('get_href')
     type = ma.Method('get_type')
 
-    external_urls = ma.Method('get_external_urls')
+    external_urls = ma.Method('get_external_urls', data_key='externalUrls')
 
     file = ma.auto_field(data_key='rxnFile')
 
@@ -457,7 +457,7 @@ class PathwayJsonSchema(ma.SQLAlchemySchema):
 
     href = ma.Method('get_href')
     type = ma.Method('get_type')
-    external_urls = ma.Method('get_external_urls')
+    external_urls = ma.Method('get_external_urls', data_key='externalUrls')
 
     reactions = Nested(ReactionPathwaySchema, many=True)
 
