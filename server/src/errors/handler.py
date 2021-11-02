@@ -1,7 +1,6 @@
 """Handler module responsible for the handling of exceptions."""
 
-from typing import Any, List, Mapping
-
+from typing import List
 from flask import Response, jsonify
 
 
@@ -126,6 +125,43 @@ class BadSearchType(InvalidUsage):
         self.status_code = 400
 
         super().__init__(self.status_code, self.payload)
+
+
+class BadRequest(InvalidUsage):
+    """BadRequest handler that returns a 400 error
+    with a custom error message.
+    """
+    def __init__(self, payload=None):
+        if payload is None:
+            self.payload = {'message': 'Bad Request'}
+        else:
+            self.payload = payload
+        self.status_code = 400
+
+        super().__init__(self.status_code, self.payload)
+
+
+class NoIdsGiven(BadRequest):
+    """NoIdsGiven handler that returns a 400 error
+    with a no ids given error message.
+    """
+    def __init__(self):
+        self.payload = {'message': 'Ids are required but none were given'}
+
+        super().__init__(self.payload)
+
+
+class MissingRequiredQueryParameter(BadRequest):
+    """MissingRequiredQueryParameter handler that returns a 400 error
+    with a specific missing parameter error message.
+    """
+    def __init__(self, required_parameter: List[str]):
+        self.payload = {
+            'message':
+            f'The following query parameter/s are required but no given: {", ".join(required_parameter)}'
+        }
+
+        super().__init__(self.payload)
 
 
 def handle_invalid_usage(error: InvalidUsage) -> Response:
