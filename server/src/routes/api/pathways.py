@@ -52,12 +52,7 @@ def get_pathway_reactions(id):
     if not pathway:
         raise handler.InvalidId()
 
-    json_schema = PathwayJsonSchema()
+    json_schema = PathwayJsonSchema(only=['reactions'])
     json_dump = json_schema.dump(pathway)
-    reactions = []
-    for reaction in json_dump['reactions']:
-        reactions.append(reaction['reaction'])
-
-    json_dump['reactions'] = reactions
 
     return jsonify(json_dump)
