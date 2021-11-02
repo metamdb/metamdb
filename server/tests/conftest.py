@@ -78,7 +78,7 @@ def client():
                          orcid='0000-0000-1234-5678',
                          role_id=1)
             db.session.add(user1)
-            status1 = Status(id=1, name='Approved')
+            status1 = Status(id=2, name='Approved')
             db.session.add(status1)
             history1 = ReactionHistory(id=1,
                                        reaction_id=1,
@@ -86,7 +86,7 @@ def client():
                                        description='Changed to number 2',
                                        updated_by_id=1,
                                        updated_on=None,
-                                       review_status_id=1,
+                                       review_status_id=2,
                                        reviewed_by_id=1,
                                        reviewed_on=None)
             db.session.add(history1)

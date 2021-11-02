@@ -3,7 +3,30 @@ def test_single_id(client):
     json_data = response.get_json()
 
     json_data_result = {
-        'history': [],
+        'history': [{
+            'description': 'Changed to number 2',
+            'file': 'LARGE RXN FILE 2',
+            'id': 1,
+            'reaction': {
+                'formula':
+                'succinate <=> fumarate',
+                'id':
+                1,
+                'identifiers': [{
+                    'databaseIdentifier': 'SUC-FUM-OX-RXN',
+                    'source': {
+                        'id': 1,
+                        'name': 'metacyc'
+                    }
+                }],
+                'updated':
+                False
+            },
+            'status': {
+                'id': 2,
+                'name': 'Approved'
+            }
+        }],
         'user': {
             'id': 1,
             'name': 'Test Name',
