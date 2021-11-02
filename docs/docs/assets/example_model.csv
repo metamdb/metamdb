@@ -1,0 +1,74 @@
+reaction,substrates,arrow,products
+GLUCOKIN-RXN,Gluc [C00221],→,G6P [Glucose-6-phosphate]
+PGLUCISOM-RXN,G6P [Glucose-6-phosphate],↔,F6P [CPD-18719]
+6PFRUCTPHOS-RXN,F6P [CPD-18719],→,F16P [FRUCTOSE-16-DIPHOSPHATE]
+F16ALDOLASE-RXN,F16P [FRUCTOSE-16-DIPHOSPHATE],→,DHAP [136411] + GAP [GAP]
+TRIOSEPISOMERIZATION-RXN,DHAP [136411],↔,GAP [GAP]
+GAPOXNPHOSPHN-RXN,GAP [GAP],↔,3-phospho-D-glyceroyl_phosphate [DPG]
+PHOSGLYPHOS-RXN,3-phospho-D-glyceroyl_phosphate [DPG],↔,3PG [G3P]
+3PGAREARR-RXN,3PG [G3P],↔,2PG [2-PG]
+2PGADEHYDRAT-RXN,2PG [2-PG],↔,PEP [PHOSPHO-ENOL-PYRUVATE]
+PEPDEPHOS-RXN,PEP [PHOSPHO-ENOL-PYRUVATE],→,Pyr [PYRUVATE]
+GLU6PDEHYDROG-RXN,G6P [Glucose-6-phosphate],→,"D-glucono-1,5-lactone_6-phosphate [D-6-P-GLUCONO-DELTA-LACTONE]"
+6PGLUCONOLACT-RXN,"D-glucono-1,5-lactone_6-phosphate [D-6-P-GLUCONO-DELTA-LACTONE]",→,6-phospho-D-gluconate [CPD-2961]
+RXN-9952,6-phospho-D-gluconate [CPD-2961],→,P5P [RIBULOSE-5P] + CO2.ext [CARBON-DIOXIDE]
+RIBULP3EPIM-RXN,P5P [RIBULOSE-5P],↔,X5P [XYLULOSE-5-PHOSPHATE]
+RIB5PISOM-RXN,P5P [RIBULOSE-5P],↔,R5P [C00117]
+v11,X5P (abcde) [XYLULOSE-5-PHOSPHATE],↔,EC2 (ab) + GAP (cde) [GAP]
+v12,F6P (abcdef) [CPD-18719],↔,EC2 (ab) + E4P (cdef)
+v13,S7P (abcdefg),↔,EC2 (ab) + R5P (cdefg) [C00117]
+v14,F6P (abcdef) [CPD-18719],↔,EC3 (abc) + GAP (def) [GAP]
+v15,S7P (abcdefg),↔,EC3 (abc) + E4P (defg)
+L-LACTATE-DEHYDROGENASE-RXN,Pyr [PYRUVATE],↔,Lac [L-LACTATE]
+v17,Lac (abc) [L-LACTATE],↔,Lac.snk (abc)
+v18,Lac (abc) [L-LACTATE],→,Lac.ext (abc)
+PYRUVDEH-RXN,Pyr [PYRUVATE],→,AcCoA [ACETYL-COA]  + CO2.ext [CARBON-DIOXIDE]
+CITSYN-RXN,AcCoA [ACETYL-COA] + Oac [OXALACETIC_ACID],→,Cit [CIT]
+ACONITATEDEHYDR-RXN,Cit [CIT] ,→,cisaconitate [CIS-ACONITATE] 
+ACONITATEHYDR-RXN,cisaconitate [CIS-ACONITATE] ,→,isocitrate [C00311] 
+ISOCITRATE-DEHYDROGENASE-NAD+-RXN,isocitrate [C00311] ,→,Akg [2-KETOGLUTARATE] + CO2.ext [CARBON-DIOXIDE]
+2OXOGLUTARATEDEH-RXN,Akg [2-KETOGLUTARATE],→,Succinyl-CoA [SUC-COA] + CO2.ext [CARBON-DIOXIDE]
+SUCCCOASYN-RXN,Succinyl-CoA [SUC-COA],→,Suc [SUC]
+SUCC-FUM-OXRED-RXN,Suc [SUC],↔,Fum [FUM]
+FUMHYDR-RXN,Fum [FUM],↔,Mal [MAL]
+MALATE-DEH-RXN,Mal [MAL],↔,Oac [OXALACETIC_ACID]
+MALIC-NADP-RXN,Mal [MAL],→,Pyr [PYRUVATE] + CO2.ext [CARBON-DIOXIDE]
+PYRUVATE-CARBOXYLASE-RXN,Pyr [PYRUVATE] + HCO3.ext [HCO3],→,Oac [OXALACETIC_ACID]
+MALATE-DEH-RXN,Mal [MAL],↔,Oac [OXALACETIC_ACID]
+ATP-CITRATE-PRO-S--LYASE-RXN,Cit [CIT],→,AcCoA [ACETYL-COA] + Oac [OXALACETIC_ACID]
+v37,DHAP [136411] (abc),→,GLP (abc)
+v38,GLP.ext (abc),→,GLP (abc)
+v39,Ala (abc),↔,Pyr (abc) [PYRUVATE]
+v40,Ser (abc),→,Gly (ab) + C1 (c)
+v41,Ser (abc),→,Pyr (abc) [PYRUVATE]
+v42,Akg (abcde) [2-KETOGLUTARATE],↔,Glu (abcde)
+v43,Glu (abcde),→,Pro (abcde)
+v44,Gln (abcde),→,Glu (abcde)
+v45,Asp (abcd),↔,Oac (abcd) [OXALACETIC_ACID]
+v46,Asp (abcd),→,Asn (abcd)
+v47,Thr (abcd),→,AcCoA (cd) [ACETYL-COA] + Gly (ab)
+v48,Met (abcde) + CO2.ext (f) [CARBON-DIOXIDE],→,Suc (bcdf) [SUC] + CO2.ext (a) [CARBON-DIOXIDE] + C1 (e)
+v49,Val (abcde) + CO2.ext (f) [CARBON-DIOXIDE],→,Suc (dcef) [SUC] + CO2.ext (a) [CARBON-DIOXIDE] + CO2.ext (b) [CARBON-DIOXIDE]
+v50,Ile (abcdef) + CO2.ext (g) [CARBON-DIOXIDE],→,Suc (bcdg) [SUC] + AcCoA (ef) [ACETYL-COA] + CO2.ext (a) [CARBON-DIOXIDE]
+v51,Phe (abcdefghi),→,Fum (defg) [FUM] + AcCoA (bc) [ACETYL-COA] + AcCoA (hi) [ACETYL-COA] + CO2.ext (a) [CARBON-DIOXIDE]
+v52,Tyr (abcdefghi),→,Fum (defg) [FUM] + AcCoA (bc) [ACETYL-COA] + AcCoA (hi) [ACETYL-COA] + CO2.ext (a) [CARBON-DIOXIDE]
+v53,Leu (abcdef) + CO2.ext (g) [CARBON-DIOXIDE],→,AcCoA (bc) [ACETYL-COA] + AcCoA (de) [ACETYL-COA] + AcCoA (gf) [ACETYL-COA] + CO2.ext (a) [CARBON-DIOXIDE]
+v54,Ala (abc),→,Ala.ext (abc)
+v55,Gly (ab),→,Gly.ext (ab)
+v56,Pro.ext (abcde),→,Pro (abcde)
+v57,Glu (abcde),→,Glu.ext (abcde)
+v58,Asp.ext (abcd),→,Asp (abcd)
+v59,Gln.ext (abcde),→,Gln (abcde)
+v60,Ile.ext (abcdef),→,Ile (abcdef)
+v61,Leu.ext (abcdef),→,Leu (abcdef)
+v62,Met.ext (abcde),→,Met (abcde)
+v63,Phe.ext (abcdefghi),→,Phe (abcdefghi)
+v64,Ser.ext (abc),→,Ser (abc)
+v65,Tyr.ext (abcdefghi),→,Tyr (abcdefghi)
+v66,Val.ext (abcde),→,Val (abcde)
+v67,Thr.ext (abcd),→,Thr (abcd)
+v68,Arg.ext (abcdef),→,Arg (abcdef)
+v69,Cys.ext (abc),→,Cys (abc)
+v70,His.ext (abcdef),→,His (abcdef)
+v71,Lys.ext (abcdef),→,Lys (abcdef)
+v72,Trp.ext (abcdefghijk),→,Trp (abcdefghijk)
