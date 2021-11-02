@@ -496,14 +496,14 @@ class ReactionHistorySchema(ma.SQLAlchemySchema):
     id = ma.auto_field()
     file = ma.auto_field()
     description = ma.auto_field()
-    updated_on = ma.auto_field()
-    reviewed_on = ma.auto_field()
+    updated_on = ma.auto_field(data_key='updatedOn')
+    reviewed_on = ma.auto_field(data_key='reviewedOn')
 
     reaction = Nested(ReactionSchema)
-    updated_by = Nested(UserSchema)
-    reviewed_by = Nested(UserSchema)
+    updated_by = Nested(UserSchema, data_key='updatedBy')
+    reviewed_by = Nested(UserSchema, data_key='reviewedBy')
 
-    review_status = Nested(StatusSchema)
+    review_status = Nested(StatusSchema, data_key='status')
 
 
 class PathwayAutoCompleteSchema(ma.SQLAlchemySchema):
