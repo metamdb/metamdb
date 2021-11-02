@@ -250,5 +250,16 @@ def test_multiple_ids_no_ids(client):
 
     json_data_result = {'pathways': [None, None]}
 
-    assert response.status_code == 400
-    assert json_data == json_data_result
+
+def test_multiple_ids_no_ids2(client):
+    response = client.get('/api/pathways?abc=abc')
+    json_data = response.get_json()
+
+    json_data_result = {'pathways': [None, None]}
+
+
+def test_multiple_ids_no_ids3(client):
+    response = client.get('/api/pathways')
+    json_data = response.get_json()
+
+    json_data_result = {'pathways': [None, None]}
