@@ -248,7 +248,10 @@ def test_multiple_ids_no_ids(client):
     response = client.get('/api/pathways?ids=')
     json_data = response.get_json()
 
-    json_data_result = {'pathways': [None, None]}
+    json_data_result = {'message': 'Ids are required but none were given'}
+
+    assert response.status_code == 400
+    assert json_data == json_data_result
 
 
 def test_multiple_ids_no_ids2(client):
