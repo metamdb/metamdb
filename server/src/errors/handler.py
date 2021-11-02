@@ -158,7 +158,7 @@ class MissingRequiredQueryParameter(BadRequest):
     def __init__(self, required_parameter: List[str]):
         self.payload = {
             'message':
-            f'The following query parameter/s are required but no given: {", ".join(required_parameter)}'
+            f'The following query parameter/s are required but were not given: [{", ".join(required_parameter)}]'
         }
 
         super().__init__(self.payload)
