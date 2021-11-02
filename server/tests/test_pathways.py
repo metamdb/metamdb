@@ -8,10 +8,10 @@ def test_single_id_no_reactions(client):
         },
         'href': 'https://metamdb.tu-bs.de/api/pathways/1',
         'name': 'glycolysis',
-        'pw_id': 1,
+        'id': 1,
         'reactions': [],
         'source': 'brenda',
-        'source_id': 'pw_gly',
+        'sourceId': 'pw_gly',
         'type': 'pathway'
     }
 
@@ -31,7 +31,7 @@ def test_single_id_with_reactions(client):
         'https://metamdb.tu-bs.de/api/pathways/2',
         'name':
         'Citric acid cycle',
-        'pw_id':
+        'id':
         2,
         'reactions': [{
             'externalUrls': {
@@ -64,7 +64,7 @@ def test_single_id_with_reactions(client):
         }],
         'source':
         'metacyc',
-        'source_id':
+        'sourceId':
         'TCA-CYCLE',
         'type':
         'pathway'
@@ -115,10 +115,10 @@ def test_multiple_ids(client):
             },
             'href': 'https://metamdb.tu-bs.de/api/pathways/1',
             'name': 'glycolysis',
-            'pw_id': 1,
+            'id': 1,
             'reactions': [],
             'source': 'brenda',
-            'source_id': 'pw_gly',
+            'sourceId': 'pw_gly',
             'type': 'pathway'
         }, {
             'externalUrls': {
@@ -128,7 +128,7 @@ def test_multiple_ids(client):
             'https://metamdb.tu-bs.de/api/pathways/2',
             'name':
             'Citric acid cycle',
-            'pw_id':
+            'id':
             2,
             'reactions': [{
                 'externalUrls': {
@@ -161,7 +161,7 @@ def test_multiple_ids(client):
             }],
             'source':
             'metacyc',
-            'source_id':
+            'sourceId':
             'TCA-CYCLE',
             'type':
             'pathway'
@@ -183,10 +183,10 @@ def test_multiple_ids_one_wrong(client):
             },
             'href': 'https://metamdb.tu-bs.de/api/pathways/1',
             'name': 'glycolysis',
-            'pw_id': 1,
+            'id': 1,
             'reactions': [],
             'source': 'brenda',
-            'source_id': 'pw_gly',
+            'sourceId': 'pw_gly',
             'type': 'pathway'
         }, None]
     }
@@ -216,10 +216,10 @@ def test_multiple_ids_one_bad(client):
             },
             'href': 'https://metamdb.tu-bs.de/api/pathways/1',
             'name': 'glycolysis',
-            'pw_id': 1,
+            'id': 1,
             'reactions': [],
             'source': 'brenda',
-            'source_id': 'pw_gly',
+            'sourceId': 'pw_gly',
             'type': 'pathway'
         }, None]
     }

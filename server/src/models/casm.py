@@ -450,8 +450,8 @@ class PathwayJsonSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Pathway
 
-    pw_id = ma.auto_field()
-    source_id = ma.auto_field()
+    pw_id = ma.auto_field(data_key='id')
+    source_id = ma.auto_field(data_key='sourceId')
     name = ma.auto_field()
     source = ma.auto_field()
 
