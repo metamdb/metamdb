@@ -24,14 +24,6 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://{0}:{1}@{2}:{3}/{4}?auth_plugin=mysql_native_password'.format(
         USER, PASSWD, HOST, DB_PORT, DB)
 
-    USER_DATABASE_URI = 'mysql+mysqlconnector://{0}:{1}@{2}:{3}/{4}?auth_plugin=mysql_native_password'.format(
-        USER, PASSWD, HOST, DB_PORT, USER_DB)
-
-    SQLALCHEMY_BINDS = {
-        'casm': SQLALCHEMY_DATABASE_URI,
-        'casm_user': USER_DATABASE_URI
-    }
-
     WEBSERVER_PORT = environ.get('WEBSERVER_PORT')
     WEBSERVER_HOST = environ.get('WEBSERVER_HOST')
     WEBSERVER_URI = environ.get('WEBSERVER_URI')
@@ -52,3 +44,11 @@ class DevConfig(Config):
     FLASK_ENV = 'development'
     DEBUG = True
     TESTING = True
+
+
+class TestConfig(Config):
+    FLASK_ENV = 'development'
+    DEBUG = True
+    TESTING = True
+
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'

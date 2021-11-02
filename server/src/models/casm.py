@@ -10,19 +10,14 @@ from sqlalchemy.dialects.mysql import LONGTEXT, TEXT
 from src import db, ma
 
 
-class Casm(db.Model):
-    __abstract__ = True
-    __bind_key__ = 'casm'
-
-
-class Role(Casm):
+class Role(db.Model):
     __tablename__ = 'role'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name: str = db.Column(db.String(45), nullable=False, unique=True)
 
 
-class User(Casm):
+class User(db.Model):
     __tablename__ = 'user'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -38,7 +33,7 @@ class User(Casm):
     role: str = db.relationship('Role')
 
 
-class Pathway(Casm):
+class Pathway(db.Model):
     __tablename__ = 'pathway'
 
     pw_id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +46,7 @@ class Pathway(Casm):
                                 lazy='dynamic')
 
 
-class Enzyme(Casm):
+class Enzyme(db.Model):
     __tablename__ = 'enzyme'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +54,7 @@ class Enzyme(Casm):
     name = db.Column(db.String(255), nullable=False)
 
 
-class Compound(Casm):
+class Compound(db.Model):
     __tablename__ = 'compound'
 
     id: int = db.Column(db.Integer, primary_key=True)
@@ -68,7 +63,7 @@ class Compound(Casm):
     inchi_short: str = db.Column(TEXT)
     inchi_key: str = db.Column(db.String(100))
     formula: str = db.Column(TEXT)
-    file: str = db.Column(LONGTEXT)
+    file: str = db.Column(TEXT)
 
     elements = db.relationship('CompoundElement', back_populates='compound')
     reactions = db.relationship('ReactionCompound',
@@ -77,7 +72,7 @@ class Compound(Casm):
     identifiers = db.relationship('CompoundSource', back_populates='compound')
 
 
-class ReactionCompound(Casm):
+class ReactionCompound(db.Model):
     __tablename__ = 'reaction_compounds'
 
     reaction_id: int = db.Column(db.Integer,
@@ -101,7 +96,7 @@ class ReactionCompound(Casm):
                                          back_populates='reactions')
 
 
-class PathwayReaction(Casm):
+class PathwayReaction(db.Model):
     __tablename__ = 'pathway_reactions'
 
     pathway_id: int = db.Column(db.Integer,
@@ -117,16 +112,16 @@ class PathwayReaction(Casm):
     pathway: Compound = db.relationship('Pathway', back_populates='reactions')
 
 
-class Reaction(Casm):
+class Reaction(db.Model):
     __tablename__ = 'reaction'
 
     id: int = db.Column(db.Integer, primary_key=True)
     formula: str = db.Column(TEXT, nullable=False)
     natural_substrates: bool = db.Column(db.Boolean)
-    file: str = db.Column(LONGTEXT)
+    file: str = db.Column(TEXT)
     json: "AtomTransitionTyping" = db.Column(db.JSON)
     img: str = db.Column(db.String(100))
-    description: str = db.Column(LONGTEXT)
+    description: str = db.Column(TEXT)
     updated: bool = db.Column(db.Boolean)
     updated_by_id: int = db.Column(
         db.Integer,
@@ -144,7 +139,7 @@ class Reaction(Casm):
     updated_by = db.relationship('User')
 
 
-class Element(Casm):
+class Element(db.Model):
     __tablename__ = 'element'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -154,7 +149,7 @@ class Element(Casm):
     compounds = db.relationship('CompoundElement', back_populates='element')
 
 
-class Source(Casm):
+class Source(db.Model):
     __tablename__ = 'source'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -164,22 +159,22 @@ class Source(Casm):
     compound = db.relationship('CompoundSource', back_populates='source')
 
 
-class Status(Casm):
+class Status(db.Model):
     __tablename__ = 'status'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name: str = db.Column(db.String(100), nullable=False, unique=True)
 
 
-class ReactionHistory(Casm):
+class ReactionHistory(db.Model):
     __tablename__ = 'reaction_history'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
     reaction_id: int = db.Column(db.Integer,
                                  db.ForeignKey('reaction.id'),
                                  nullable=False)
-    file: str = db.Column(LONGTEXT, nullable=False)
-    description: str = db.Column(LONGTEXT, nullable=False)
+    file: str = db.Column(TEXT, nullable=False)
+    description: str = db.Column(TEXT, nullable=False)
     updated_by_id: int = db.Column(db.Integer,
                                    db.ForeignKey('user.id'),
                                    nullable=False)
@@ -212,7 +207,7 @@ class ReactionHistory(Casm):
 
 
 # ---------- Link Tables ---------- #
-class EnzymeReaction(Casm):
+class EnzymeReaction(db.Model):
     __tablename__ = 'enzyme_reactions'
 
     enzyme_id = db.Column(db.Integer,
@@ -225,7 +220,7 @@ class EnzymeReaction(Casm):
                             autoincrement=False)
 
 
-class ReactionSource(Casm):
+class ReactionSource(db.Model):
     __tablename__ = 'reaction_source'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -239,7 +234,7 @@ class ReactionSource(Casm):
     source = db.relationship('Source', back_populates='reaction')
 
 
-class CompoundSource(Casm):
+class CompoundSource(db.Model):
     __tablename__ = 'compound_source'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -254,7 +249,7 @@ class CompoundSource(Casm):
     source = db.relationship('Source', back_populates='compound')
 
 
-class CompoundElement(Casm):
+class CompoundElement(db.Model):
     __tablename__ = 'compound_elements'
 
     compound_id = db.Column(db.Integer,

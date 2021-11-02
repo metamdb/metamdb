@@ -16,12 +16,15 @@ oauth = OAuth()
 jwt = JWTManager()
 
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
 
-    flask_config = os.getenv('FLASK_CONFIG')
-    if flask_config:
-        app.config.from_object('config.' + flask_config)
+    if test_config is not None:
+        app.config.from_object('config.' + test_config)
+    else:
+        flask_config = os.getenv('FLASK_CONFIG')
+        if flask_config:
+            app.config.from_object('config.' + flask_config)
 
     db.init_app(app)
     ma.init_app(app)
