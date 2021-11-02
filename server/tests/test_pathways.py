@@ -34,36 +34,34 @@ def test_single_id_with_reactions(client):
         'pw_id':
         2,
         'reactions': [{
-            'reaction': {
-                'external_urls': {
-                    'img': 'https://metamdb.tu-bs.de/img/aam/1',
-                    'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
-                },
-                'formula':
-                'succinate <=> fumarate',
-                'href':
-                'https://metamdb.tu-bs.de/api/reactions/1',
-                'id':
-                1,
-                'identifiers': [{
-                    'databaseIdentifier': 'SUC-FUM-OX-RXN',
-                    'source': {
-                        'id': 1,
-                        'name': 'metacyc'
-                    }
-                }],
-                'jsonFile': {},
-                'rxnFile':
-                'LARGE RXN FILE',
-                'type':
-                'reaction',
-                'updated':
-                False,
-                'updatedBy':
-                None,
-                'updatedOn':
-                None
-            }
+            'external_urls': {
+                'img': 'https://metamdb.tu-bs.de/img/aam/1',
+                'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
+            },
+            'formula':
+            'succinate <=> fumarate',
+            'href':
+            'https://metamdb.tu-bs.de/api/reactions/1',
+            'id':
+            1,
+            'identifiers': [{
+                'databaseIdentifier': 'SUC-FUM-OX-RXN',
+                'source': {
+                    'id': 1,
+                    'name': 'metacyc'
+                }
+            }],
+            'jsonFile': {},
+            'rxnFile':
+            'LARGE RXN FILE',
+            'type':
+            'reaction',
+            'updated':
+            False,
+            'updatedBy':
+            None,
+            'updatedOn':
+            None
         }],
         'source':
         'metacyc',
@@ -134,36 +132,34 @@ def test_multiple_ids(client):
             'pw_id':
             2,
             'reactions': [{
-                'reaction': {
-                    'external_urls': {
-                        'img': 'https://metamdb.tu-bs.de/img/aam/1',
-                        'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
-                    },
-                    'formula':
-                    'succinate <=> fumarate',
-                    'href':
-                    'https://metamdb.tu-bs.de/api/reactions/1',
-                    'id':
-                    1,
-                    'identifiers': [{
-                        'databaseIdentifier': 'SUC-FUM-OX-RXN',
-                        'source': {
-                            'id': 1,
-                            'name': 'metacyc'
-                        }
-                    }],
-                    'jsonFile': {},
-                    'rxnFile':
-                    'LARGE RXN FILE',
-                    'type':
-                    'reaction',
-                    'updated':
-                    False,
-                    'updatedBy':
-                    None,
-                    'updatedOn':
-                    None
-                }
+                'external_urls': {
+                    'img': 'https://metamdb.tu-bs.de/img/aam/1',
+                    'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
+                },
+                'formula':
+                'succinate <=> fumarate',
+                'href':
+                'https://metamdb.tu-bs.de/api/reactions/1',
+                'id':
+                1,
+                'identifiers': [{
+                    'databaseIdentifier': 'SUC-FUM-OX-RXN',
+                    'source': {
+                        'id': 1,
+                        'name': 'metacyc'
+                    }
+                }],
+                'jsonFile': {},
+                'rxnFile':
+                'LARGE RXN FILE',
+                'type':
+                'reaction',
+                'updated':
+                False,
+                'updatedBy':
+                None,
+                'updatedOn':
+                None
             }],
             'source':
             'metacyc',
@@ -277,4 +273,80 @@ def test_multiple_ids_no_ids3(client):
     }
 
     assert response.status_code == 400
+    assert json_data == json_data_result
+
+
+def test_reactions_wrong_id(client):
+    response = client.get('/api/pathways/3/reactions')
+    json_data = response.get_json()
+
+    json_data_result = {'message': 'Invalid id'}
+
+    assert response.status_code == 404
+    assert json_data == json_data_result
+
+
+def test_reactions_bad_id(client):
+    response = client.get('/api/pathways/abc/reactions')
+    json_data = response.get_json()
+
+    json_data_result = {'message': 'Invalid id'}
+
+    assert response.status_code == 404
+    assert json_data == json_data_result
+
+
+def test_reactions_no_reactions(client):
+    response = client.get('/api/pathways/1/reactions')
+    json_data = response.get_json()
+
+    json_data_result = {
+        'href': 'https://metamdb.tu-bs.de/api/pathways/1/reactions',
+        'reactions': []
+    }
+
+    assert response.status_code == 200
+    assert json_data == json_data_result
+
+
+def test_reactions(client):
+    response = client.get('/api/pathways/2/reactions')
+    json_data = response.get_json()
+
+    json_data_result = {
+        'href':
+        'https://metamdb.tu-bs.de/api/pathways/2/reactions',
+        'reactions': [{
+            'external_urls': {
+                'img': 'https://metamdb.tu-bs.de/img/aam/1',
+                'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
+            },
+            'formula':
+            'succinate <=> fumarate',
+            'href':
+            'https://metamdb.tu-bs.de/api/reactions/1',
+            'id':
+            1,
+            'identifiers': [{
+                'databaseIdentifier': 'SUC-FUM-OX-RXN',
+                'source': {
+                    'id': 1,
+                    'name': 'metacyc'
+                }
+            }],
+            'jsonFile': {},
+            'rxnFile':
+            'LARGE RXN FILE',
+            'type':
+            'reaction',
+            'updated':
+            False,
+            'updatedBy':
+            None,
+            'updatedOn':
+            None
+        }]
+    }
+
+    assert response.status_code == 200
     assert json_data == json_data_result

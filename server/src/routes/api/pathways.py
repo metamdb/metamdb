@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import Blueprint, json, jsonify, request
 from src.errors import handler
-from src.models.casm import Pathway, PathwayJsonSchema, PathwayAutoCompleteSchema
+from src.models.casm import Pathway, PathwayJsonSchema, PathwayReactionsSchema
 
 pathways_blueprint = Blueprint('pathways',
                                __name__,
@@ -52,7 +52,7 @@ def get_pathway_reactions(id):
     if not pathway:
         raise handler.InvalidId()
 
-    json_schema = PathwayJsonSchema(only=['reactions'])
+    json_schema = PathwayReactionsSchema()
     json_dump = json_schema.dump(pathway)
 
     return jsonify(json_dump)

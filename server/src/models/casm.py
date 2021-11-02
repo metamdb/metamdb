@@ -41,9 +41,9 @@ class Pathway(db.Model):
     name = db.Column(db.String(1000), nullable=False)
     source = db.Column(db.String(100))
 
-    reactions = db.relationship('PathwayReaction',
-                                backref=db.backref('pathways'),
-                                lazy='dynamic')
+    # reactions = db.relationship('PathwayReaction',
+    #                             backref=db.backref('pathways'),
+    #                             lazy='dynamic')
 
 
 class Enzyme(db.Model):
@@ -108,8 +108,8 @@ class PathwayReaction(db.Model):
                                  primary_key=True,
                                  autoincrement=False)
 
-    reaction = db.relationship('Reaction', back_populates='pathways')
-    pathway: Compound = db.relationship('Pathway', back_populates='reactions')
+    # reaction = db.relationship('Reaction', back_populates='pathways')
+    # pathway: Compound = db.relationship('Pathway', back_populates='reactions')
 
 
 class Reaction(db.Model):
@@ -134,7 +134,10 @@ class Reaction(db.Model):
     identifiers = db.relationship('ReactionSource', back_populates='reaction')
     compounds: List[ReactionCompound] = db.relationship(
         'ReactionCompound', back_populates='reaction')
-    pathways = db.relationship('PathwayReaction', back_populates='reaction')
+    pathways = db.relationship('Pathway',
+                               secondary="pathway_reactions",
+                               backref='reactions',
+                               lazy="joined")
 
     updated_by = db.relationship('User')
 
@@ -432,9 +435,16 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
 
 class PathwayReactionsSchema(ma.SQLAlchemySchema):
     class Meta:
-        model = PathwayReaction
+        model = Pathway
 
-    reaction = Nested(ReactionPathwaySchema)
+    href = ma.Method('get_href')
+
+    reactions = Nested(ReactionPathwaySchema, many=True)
+
+    def get_href(self, obj):
+        if obj.pw_id is None:
+            return ''
+        return f'https://metamdb.tu-bs.de/api/pathways/{obj.pw_id}/reactions'
 
 
 class PathwayJsonSchema(ma.SQLAlchemySchema):
@@ -450,7 +460,7 @@ class PathwayJsonSchema(ma.SQLAlchemySchema):
     type = ma.Method('get_type')
     external_urls = ma.Method('get_external_urls')
 
-    reactions = Nested(PathwayReactionsSchema, many=True)
+    reactions = Nested(ReactionPathwaySchema, many=True)
 
     def get_href(self, obj):
         if obj.pw_id is None:
