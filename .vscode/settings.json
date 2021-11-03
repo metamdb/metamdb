@@ -1,5 +1,8 @@
 {
   "python.pythonPath": "/home/cst/.virtualenvs/casm/bin/python",
   "python.analysis.extraPaths": ["server"],
-  "python.analysis.stubPath": "server/typings"
+  "python.analysis.stubPath": "server/typings",
+  "python.testing.pytestArgs": ["server"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }
