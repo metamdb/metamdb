@@ -128,10 +128,11 @@ def get_pathway_items(
     else:
         if name is not None and source is not None:
             name = [f'%{element}%' for element in name]
+
             sql_query = Pathway.query.filter(
                 and_(
                     or_(*[Pathway.source_id.like(element)
-                          for element in name]), Source.name.in_(source)))
+                          for element in name]), Pathway.source.in_(source)))
 
         elif name is not None:
             name = [f'%{element}%' for element in name]
