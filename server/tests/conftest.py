@@ -21,6 +21,66 @@ def client():
                                name='Citric acid cycle',
                                source='metacyc')
             db.session.add(pathway2)
+            pathway3 = Pathway(pw_id=3,
+                               source_id='pw_cit',
+                               name='cit',
+                               source='brenda')
+            db.session.add(pathway3)
+            pathway4 = Pathway(pw_id=4,
+                               source_id='rxn-gly',
+                               name='gly',
+                               source='metacyc')
+            db.session.add(pathway4)
+            pathway5 = Pathway(pw_id=5,
+                               source_id='pw_ala',
+                               name='alanine',
+                               source='brenda')
+            db.session.add(pathway5)
+            pathway6 = Pathway(pw_id=6,
+                               source_id='rxn-ala',
+                               name='alanine',
+                               source='metacyc')
+            db.session.add(pathway6)
+            pathway7 = Pathway(pw_id=7,
+                               source_id='pw_leu',
+                               name='leucine',
+                               source='brenda')
+            db.session.add(pathway7)
+            pathway8 = Pathway(pw_id=8,
+                               source_id='rxn-leu',
+                               name='leucine',
+                               source='metacyc')
+            db.session.add(pathway8)
+            pathway9 = Pathway(pw_id=9,
+                               source_id='pw_iso',
+                               name='iso',
+                               source='brenda')
+            db.session.add(pathway9)
+            pathway10 = Pathway(pw_id=10,
+                                source_id='rxn-iso',
+                                name='iso',
+                                source='metacyc')
+            db.session.add(pathway10)
+            pathway11 = Pathway(pw_id=11,
+                                source_id='pw_met',
+                                name='met',
+                                source='brenda')
+            db.session.add(pathway11)
+            pathway12 = Pathway(pw_id=12,
+                                source_id='rxn-met',
+                                name='met',
+                                source='metacyc')
+            db.session.add(pathway12)
+            pathway13 = Pathway(pw_id=13,
+                                source_id='pw_cas',
+                                name='cas',
+                                source='brenda')
+            db.session.add(pathway13)
+            pathway14 = Pathway(pw_id=14,
+                                source_id='rxn-cas',
+                                name='cas',
+                                source='metacyc')
+            db.session.add(pathway14)
             reaction1 = Reaction(id=1,
                                  formula='succinate <=> fumarate',
                                  natural_substrates=1,
