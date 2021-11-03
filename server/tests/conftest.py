@@ -111,6 +111,11 @@ def client():
                 source_id=1,
                 database_identifier='SUC-FUM-OX-RXN')
             db.session.add(reaction_souce1)
+            reaction_souce2 = ReactionSource(id=2,
+                                             reaction_id=2,
+                                             source_id=1,
+                                             database_identifier='RXN-0543')
+            db.session.add(reaction_souce2)
             pathway_reaction1 = PathwayReaction(pathway_id=2, reaction_id=1)
             db.session.add(pathway_reaction1)
             compound1 = Compound(
