@@ -55,13 +55,25 @@ def test_single_id2(client):
             'img': 'https://metamdb.tu-bs.de/img/aam/2',
             'metamdb': 'https://metamdb.tu-bs.de/reaction/2'
         },
-        'formula': 'malate <=> fumarate',
-        'href': 'https://metamdb.tu-bs.de/api/reactions/2',
-        'id': 2,
-        'identifiers': [],
-        'rxnFile': 'LARGE RXN FILE',
-        'type': 'reaction',
-        'updated': True,
+        'formula':
+        'malate <=> fumarate',
+        'href':
+        'https://metamdb.tu-bs.de/api/reactions/2',
+        'id':
+        2,
+        'identifiers': [{
+            'databaseIdentifier': 'RXN-0543',
+            'source': {
+                'id': 1,
+                'name': 'metacyc'
+            }
+        }],
+        'rxnFile':
+        'LARGE RXN FILE',
+        'type':
+        'reaction',
+        'updated':
+        True,
         'updatedBy': {
             'id': 1,
             'name': 'Test Name',
@@ -71,7 +83,8 @@ def test_single_id2(client):
                 'name': 'Reviewer'
             }
         },
-        'updatedOn': None
+        'updatedOn':
+        None
     }
 
     assert response.status_code == 200
@@ -156,13 +169,25 @@ def test_multiple_ids(client):
                 'img': 'https://metamdb.tu-bs.de/img/aam/2',
                 'metamdb': 'https://metamdb.tu-bs.de/reaction/2'
             },
-            'formula': 'malate <=> fumarate',
-            'href': 'https://metamdb.tu-bs.de/api/reactions/2',
-            'id': 2,
-            'identifiers': [],
-            'rxnFile': 'LARGE RXN FILE',
-            'type': 'reaction',
-            'updated': True,
+            'formula':
+            'malate <=> fumarate',
+            'href':
+            'https://metamdb.tu-bs.de/api/reactions/2',
+            'id':
+            2,
+            'identifiers': [{
+                'databaseIdentifier': 'RXN-0543',
+                'source': {
+                    'id': 1,
+                    'name': 'metacyc'
+                }
+            }],
+            'rxnFile':
+            'LARGE RXN FILE',
+            'type':
+            'reaction',
+            'updated':
+            True,
             'updatedBy': {
                 'id': 1,
                 'name': 'Test Name',
@@ -172,7 +197,8 @@ def test_multiple_ids(client):
                     'name': 'Reviewer'
                 }
             },
-            'updatedOn': None
+            'updatedOn':
+            None
         }]
     }
 

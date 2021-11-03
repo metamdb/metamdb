@@ -75,7 +75,7 @@ def test_single_id_with_reactions(client):
 
 
 def test_single_wrong_id(client):
-    response = client.get('/api/pathways/3')
+    response = client.get('/api/pathways/20')
     json_data = response.get_json()
 
     json_data_result = {'message': 'Invalid id'}
@@ -173,7 +173,7 @@ def test_multiple_ids(client):
 
 
 def test_multiple_ids_one_wrong(client):
-    response = client.get('/api/pathways?ids=1,3')
+    response = client.get('/api/pathways?ids=1,20')
     json_data = response.get_json()
 
     json_data_result = {
@@ -196,7 +196,7 @@ def test_multiple_ids_one_wrong(client):
 
 
 def test_multiple_ids_all_wrong(client):
-    response = client.get('/api/pathways?ids=4,3')
+    response = client.get('/api/pathways?ids=20, 21')
     json_data = response.get_json()
 
     json_data_result = {'pathways': [None, None]}
@@ -275,7 +275,7 @@ def test_multiple_ids_no_ids3(client):
 
 
 def test_reactions_wrong_id(client):
-    response = client.get('/api/pathways/3/reactions')
+    response = client.get('/api/pathways/20/reactions')
     json_data = response.get_json()
 
     json_data_result = {'message': 'Invalid id'}
