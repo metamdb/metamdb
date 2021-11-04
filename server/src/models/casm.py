@@ -423,9 +423,9 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
         else:
             external_urls.setdefault('metamdb', '')
 
-        if obj.img is not None:
+        if obj.id is not None:
             external_urls.setdefault(
-                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.img}')
+                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.id}')
         else:
             external_urls.setdefault('img', '')
 
