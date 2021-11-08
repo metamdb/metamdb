@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import useTextForm from "../forms/useTextForm";
 import { validateRegister } from "../../validation/validateAuth";
@@ -15,7 +15,7 @@ const initialState = {
 };
 
 const Register = (props) => {
-  let history = useHistory();
+  let history = useNavigate();
 
   function registerUser() {
     axios
@@ -28,13 +28,8 @@ const Register = (props) => {
 
   const [apiErrors, setApiErrors] = useState({});
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useTextForm(initialState, validateRegister, registerUser);
+  const { values, errors, isSubmitting, handleChange, handleSubmit } =
+    useTextForm(initialState, validateRegister, registerUser);
 
   return (
     <div className="login">
