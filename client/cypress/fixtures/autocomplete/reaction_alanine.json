@@ -1,0 +1,92 @@
+[
+  {
+    "databaseIdentifier": "ALADEHYDCHLORO-RXN",
+    "id": 31367,
+    "reactionId": 14865,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANINE--GLYOXYLATE-AMINOTRANSFERASE-RXN",
+    "id": 6033,
+    "reactionId": 1825,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANINE--OXO-ACID-AMINOTRANSFERASE-RXN",
+    "id": 5489,
+    "reactionId": 1665,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANINE--TRNA-LIGASE-RXN",
+    "id": 31368,
+    "reactionId": 14866,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANINE-AMINOTRANSFERASE-RXN",
+    "id": 5523,
+    "reactionId": 1676,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANINE-CARBOXYPEPTIDASE-RXN",
+    "id": 31369,
+    "reactionId": 14867,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANINE-DEHYDROGENASE-RXN",
+    "id": 2918,
+    "reactionId": 874,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANOPINE-DEHYDROGENASE-RXN",
+    "id": 344,
+    "reactionId": 99,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALANYLPHOSPHATIDYLGLYCEROL-SYNTHASE-RXN",
+    "id": 31370,
+    "reactionId": 14868,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  },
+  {
+    "databaseIdentifier": "ALARACECAT-RXN",
+    "id": 19379,
+    "reactionId": 6484,
+    "source": {
+      "id": 3,
+      "name": "MetaCyc"
+    }
+  }
+]
