@@ -5,6 +5,7 @@ import classnames from "classnames";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Tabs, Tab } from "react-bootstrap";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import useFileFormValidation from "../forms/useFileForm";
 import validateUpload from "../../validation/validateRxn";
@@ -176,14 +177,29 @@ const AtomTransitionData = ({
         <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
           <Button variant="link">Click</Button>
         </OverlayTrigger>
-        <strong>Image:</strong>
+        {/* <strong>Image:</strong>
         <OverlayTrigger
           placement="right"
           trigger="focus"
           overlay={popoverImage}
         >
           <Button variant="link">Click</Button>
-        </OverlayTrigger>
+        </OverlayTrigger> */}
+      </p>
+      <p>
+        <TransformWrapper>
+          <TransformComponent>
+            <img
+              src={imageSource}
+              onError={(e) => {
+                e.target.onError = null;
+                e.target.src = no_aam;
+              }}
+              alt={`Structure Atom Mapping ${id}`}
+              style={{ width: "100%" }}
+            />
+          </TransformComponent>
+        </TransformWrapper>
       </p>
       <div className="download mb-3">
         <button
