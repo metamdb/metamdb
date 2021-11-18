@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import MainContextProvider from "./contexts/MainContext";
 import AuthContextProvider from "./contexts/AuthContext";
@@ -40,56 +40,38 @@ const App = (props) => {
           <div className="App">
             <Navbar />
             <div>
-              <Routes>
-                <Route exact path="/" element={<Home />} />
-                <Route exact path="/atom-mapping" element={<AtomMapping />} />
+              <Route exact path="/" component={Home} />
+              <Route exact path="/atom-mapping" component={AtomMapping} />
+              <Route exact path="/mid-calculation" component={MidCalculation} />
+              <Route exact path="/database-query" component={DatabaseQuery} />
+
+              <Route exact path="/reaction-model" component={ReactionModel} />
+
+              <Route exact path="/contact" component={Contact} />
+              <Route exact path="/datenschutz" component={Datenschutz} />
+              <Route exact path="/impressum" component={Impressum} />
+
+              <ReactionContextProvider>
                 <Route
                   exact
-                  path="/mid-calculation"
-                  element={<MidCalculation />}
+                  path="/reaction/:id"
+                  component={ReactionContainer}
                 />
+              </ReactionContextProvider>
+              <MetaboliteContextProvider>
                 <Route
                   exact
-                  path="/database-query"
-                  element={<DatabaseQuery />}
+                  path="/metabolite/:id"
+                  component={MetaboliteContainer}
                 />
+              </MetaboliteContextProvider>
+              <Route exact path="/pathway/:id" component={PathwayContainer} />
 
-                <Route
-                  exact
-                  path="/reaction-model"
-                  element={<ReactionModel />}
-                />
-
-                <Route exact path="/contact" element={<Contact />} />
-                <Route exact path="/datenschutz" element={<Datenschutz />} />
-                <Route exact path="/impressum" element={<Impressum />} />
-
-                <ReactionContextProvider>
-                  <Route
-                    exact
-                    path="/reaction/:id"
-                    element={<ReactionContainer />}
-                  />
-                </ReactionContextProvider>
-                <MetaboliteContextProvider>
-                  <Route
-                    exact
-                    path="/metabolite/:id"
-                    element={<MetaboliteContainer />}
-                  />
-                </MetaboliteContextProvider>
-                <Route
-                  exact
-                  path="/pathway/:id"
-                  element={<PathwayContainer />}
-                />
-
-                <Route exact path="/login" element={<Login />} />
-                <Route exact path="/me" element={<Profile />} />
-                <Route exact path="/postLogin" element={<PostLogin />} />
-                <Route exact path="/user/:id" element={<User />} />
-                {/* <Route exact path="/register" element={<Register} /> */}
-              </Routes>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/me" component={Profile} />
+              <Route exact path="/postLogin" component={PostLogin} />
+              <Route exact path="/user/:id" component={User} />
+              {/* <Route exact path="/register" component={Register} /> */}
             </div>
             <Footer />
           </div>
