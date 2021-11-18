@@ -151,7 +151,7 @@ const AtomTransitionData = ({
       )}
       <h2>Atom Transition {id}</h2>
       <p className="lead text-muted">
-        <strong>Updated: </strong>
+        <strong>Curated: </strong>
         {updated ? (
           <i className="fas fa-check" />
         ) : (
