@@ -280,6 +280,7 @@ const DatabaseQuery = (props) => {
     axios
       .post("/api/query", reactionData)
       .then((res) => {
+        console.log(res.data);
         setFeed(res.data);
         setLoading(false);
         setAlerts(null);
@@ -352,10 +353,10 @@ const DatabaseQuery = (props) => {
               {showSuggestions && suggestions.length ? (
                 <div className="card border-0 shadow">
                   <div className="card-body">
-                    <ul className="list-group list-group-flush">
+                    <div className="list-group list-group-flush">
                       {suggestions.length
                         ? suggestions.map((item, index) => (
-                            <li
+                            <button
                               key={index}
                               onClick={onClick}
                               id={
@@ -363,25 +364,22 @@ const DatabaseQuery = (props) => {
                                   ? item.databaseIdentifier
                                   : item.name
                               }
-                              className={classnames("list-group-item py-2", {
-                                active: index === suggestionIndex,
-                              })}
+                              className={classnames(
+                                "list-group-item list-group-item-action py-2 ",
+                                {
+                                  active: index === suggestionIndex,
+                                }
+                              )}
                             >
-                              {type === "pathway" && (
-                                <>
-                                  {item.name} ({item.sourceId})
-                                </>
-                              )}
-                              {type === "name" && (
-                                <>
-                                  {item.databaseIdentifier} ({item.source.name})
-                                </>
-                              )}
+                              {type === "pathway" &&
+                                `${item.name} (${item.sourceId})`}
+                              {type === "name" &&
+                                `${item.databaseIdentifier} (${item.source.name})`}
                               {type === "metabolite" && <>{item.name}</>}
-                            </li>
+                            </button>
                           ))
                         : null}
-                    </ul>
+                    </div>
                   </div>
                 </div>
               ) : null}

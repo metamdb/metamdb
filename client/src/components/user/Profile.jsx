@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/AuthContext";
 import { Tabs, Tab } from "react-bootstrap";
@@ -10,7 +10,7 @@ import Reviews from "./Reviews";
 
 const Profile = (props) => {
   const { authState, authDispatch } = useContext(AuthContext);
-  const history = useNavigate();
+  const history = useHistory();
 
   const [reactionHistory, setReactionHistory] = useState(null);
   const [reviews, setReviews] = useState(null);

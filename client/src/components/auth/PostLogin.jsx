@@ -1,5 +1,5 @@
 import { useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -9,7 +9,7 @@ import jwt_decode from "jwt-decode";
 const PostLogin = (props) => {
   const { authDispatch } = useContext(AuthContext);
   const location = useLocation();
-  const history = useNavigate();
+  const history = useHistory();
 
   useEffect(() => {
     if (location.search) {
