@@ -1,6 +1,6 @@
 import React from "react";
 
-const PathwayInfo = ({ name, source_id, source }) => {
+const PathwayInfo = ({ name, sourceId, source }) => {
   return (
     <div className="mt-3">
       <p className="text-muted">
@@ -10,7 +10,7 @@ const PathwayInfo = ({ name, source_id, source }) => {
       <p className="text-muted">
         <strong>Identifier:</strong>
       </p>
-      <p className="text-muted">{source_id} </p>
+      <p className="text-muted">{sourceId} </p>
       <p className="text-muted">
         <strong>Database:</strong>
       </p>

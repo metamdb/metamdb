@@ -11,9 +11,10 @@ const PathwayContainer = (props) => {
 
   useEffect(() => {
     axios
-      .get(`/api/pathways/${id}/reactions`)
+      .get(`/api/pathways/${id}`)
       .then((res) => {
         setPathway(res.data);
+        console.log(res.data);
         setIsPathway(true);
       })
       .catch((err) => {
