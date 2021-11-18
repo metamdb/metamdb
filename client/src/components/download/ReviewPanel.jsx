@@ -16,13 +16,8 @@ const ReviewPanel = () => {
 
   const { reaction } = useContext(ReactionContext);
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useFileFormValidation({ file: null }, validateUpload, uploadFile);
+  const { values, errors, isSubmitting, handleChange, handleSubmit } =
+    useFileFormValidation({ file: null }, validateUpload, uploadFile);
 
   function uploadFile() {
     setLoading(true);
@@ -55,6 +50,7 @@ const ReviewPanel = () => {
 
   return (
     <div className="mt-3">
+      <h2>Review Panel</h2>
       <div className="row">
         <div className="col-3">
           <div

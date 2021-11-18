@@ -33,13 +33,8 @@ const AtomTransitionData = ({
   const [description, setDescription] = useState("");
   const [alert, setAlert] = useState(null);
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useFileFormValidation({ file: null }, validateUpload, uploadFile);
+  const { values, errors, isSubmitting, handleChange, handleSubmit } =
+    useFileFormValidation({ file: null }, validateUpload, uploadFile);
 
   const imageSource = `${process.env.PUBLIC_URL}/img/aam/${reactionId}.svg`;
 
@@ -149,7 +144,7 @@ const AtomTransitionData = ({
           {alert}
         </div>
       )}
-      <h2>Atom Transition {id}</h2>
+      <h2>Atom Mapping</h2>
       <p className="lead text-muted">
         <strong>Curated: </strong>
         {updated ? (
