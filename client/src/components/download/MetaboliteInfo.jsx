@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Popover, OverlayTrigger, Button } from "react-bootstrap";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 import { MetaboliteContext } from "../../contexts/MetaboliteContext";
 
@@ -53,12 +54,17 @@ const MetaboliteInfo = ({ id }) => {
         {metabolite.inchi}
       </p>
       <p className="text-muted">
-        <strong>inchiShort: </strong>
-        {metabolite.inchiShort}
-      </p>
-      <p className="text-muted">
         <strong>inchiKey: </strong>
         {metabolite.inchiKey}
+      </p>
+      <p className="text-muted">
+        <strong>reactions: </strong>
+        <Link
+          target="_blank"
+          to={`/database-query?metabolite_id=${metabolite.id}`}
+        >
+          See the reactions here!
+        </Link>
       </p>
       <p className="text-muted">
         <strong>Mol File:</strong>
