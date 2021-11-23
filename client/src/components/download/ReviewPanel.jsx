@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { Tabs, Tab } from "react-bootstrap";
 import axios from "axios";
 import classnames from "classnames";
 
@@ -48,9 +47,46 @@ const ReviewPanel = () => {
       });
   }
 
+  function keepFile() {
+    setLoading(true);
+
+    const token = localStorage.getItem("token");
+    const data = { dummy: true };
+    const config = {
+      headers: { Authorization: "Bearer " + token },
+    };
+
+    axios
+      .post(`/api/query/reaction/${reaction.id}/upload/correct`, data, config)
+      .then((res) => {
+        setAlert(res.data.message);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setApiError(err.response.data.file);
+        setLoading(false);
+      });
+  }
+
   return (
     <div className="mt-3">
       <h2>Review Panel</h2>
+      {alert && (
+        <div
+          className="alert alert-dismissible fade show alert-success"
+          role="alert"
+        >
+          <button
+            type="button"
+            className="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+          {alert}
+        </div>
+      )}
       <div className="row">
         <div className="col-3">
           <div
@@ -81,7 +117,7 @@ const ReviewPanel = () => {
             >
               Upload RXN-File
             </a>
-            <a
+            {/* <a
               className="nav-link"
               id="v-pills-abc-tab"
               data-toggle="pill"
@@ -102,7 +138,7 @@ const ReviewPanel = () => {
               aria-selected="false"
             >
               Send Feedback
-            </a>
+            </a> */}
           </div>
         </div>
         <div className="col-9">
@@ -114,7 +150,11 @@ const ReviewPanel = () => {
               aria-labelledby="v-pills-no-changes-tab"
             >
               <h3>Is the current Atom Mapping correct?</h3>
-              <button type="button" className="btn btn-success mt-2">
+              <button
+                type="button"
+                className="btn btn-success mt-2"
+                onClick={() => keepFile()}
+              >
                 The Atom Mapping is Correct!
               </button>
             </div>
@@ -125,22 +165,6 @@ const ReviewPanel = () => {
               aria-labelledby="v-pills-rxn-tab"
             >
               <div className="upload mb-3">
-                {alert && (
-                  <div
-                    className="alert alert-dismissible fade show alert-success"
-                    role="alert"
-                  >
-                    <button
-                      type="button"
-                      className="close"
-                      data-dismiss="alert"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                    {alert}
-                  </div>
-                )}
                 <div className="file-upload">
                   <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -193,7 +217,7 @@ const ReviewPanel = () => {
                 </div>
               </div>
             </div>
-            <div
+            {/* <div
               className="tab-pane fade"
               id="v-pills-abc"
               role="tabpanel"
@@ -208,7 +232,7 @@ const ReviewPanel = () => {
               aria-labelledby="v-pills-feedback-tab"
             >
               ...
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

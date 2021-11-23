@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Tab } from "react-bootstrap";
 import axios from "axios";
 
 import PathwayInfo from "./PathwayInfo";
