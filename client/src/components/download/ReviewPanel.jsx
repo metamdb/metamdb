@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { Tabs, Tab } from "react-bootstrap";
 import axios from "axios";
 import classnames from "classnames";
 
@@ -81,7 +80,7 @@ const ReviewPanel = () => {
             >
               Upload RXN-File
             </a>
-            <a
+            {/* <a
               className="nav-link"
               id="v-pills-abc-tab"
               data-toggle="pill"
@@ -102,7 +101,7 @@ const ReviewPanel = () => {
               aria-selected="false"
             >
               Send Feedback
-            </a>
+            </a> */}
           </div>
         </div>
         <div className="col-9">
@@ -193,7 +192,7 @@ const ReviewPanel = () => {
                 </div>
               </div>
             </div>
-            <div
+            {/* <div
               className="tab-pane fade"
               id="v-pills-abc"
               role="tabpanel"
@@ -208,7 +207,7 @@ const ReviewPanel = () => {
               aria-labelledby="v-pills-feedback-tab"
             >
               ...
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
