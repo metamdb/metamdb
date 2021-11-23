@@ -26,12 +26,14 @@ def reaction_query():
 
 
 def get_query(query_keyword, query_type):
+    print(query_keyword, query_type)
     reaction_schema = ReactionSchema(many=True)
 
     result = None
     if query_type == 'name':
         query = Reaction.query.join(Reaction.identifiers).filter(
-            ReactionSource.database_identifier.like(f'%{query_keyword}%'))
+            or_(ReactionSource.database_identifier.like(f'%{query_keyword}%'),
+                ReactionSource.reaction_id.like(f'%{query_keyword}%')))
         query_result = query.all()
 
         result = reaction_schema.dump(query_result)
@@ -52,7 +54,8 @@ def get_query(query_keyword, query_type):
         pathway_schema = PathwaySchema(many=True)
         query = Pathway.query.filter(
             or_(Pathway.source_id.like(f'%{query_keyword}%'),
-                Pathway.name.like(f'%{query_keyword}%')))
+                Pathway.name.like(f'%{query_keyword}%'),
+                Pathway.pw_id.like(f'%{query_keyword}%')))
         query_result = query.all()
 
         result = pathway_schema.dump(query_result)

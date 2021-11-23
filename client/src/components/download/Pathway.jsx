@@ -11,9 +11,10 @@ const PathwayContainer = (props) => {
 
   useEffect(() => {
     axios
-      .get(`/api/pathways/${id}/reactions`)
+      .get(`/api/pathways/${id}`)
       .then((res) => {
         setPathway(res.data);
+        console.log(res.data);
         setIsPathway(true);
       })
       .catch((err) => {
@@ -32,14 +33,8 @@ const PathwayContainer = (props) => {
           <h1>Pathway {id}</h1>
           {isPathway && (
             <>
-              <Tabs defaultActiveKey="pathway">
-                <Tab eventKey="pathway" title="Pathway">
-                  <PathwayInfo {...pathway} />
-                </Tab>
-                <Tab eventKey="reactions" title="Reactions">
-                  <PathwayReactions {...pathway} />
-                </Tab>
-              </Tabs>
+              <PathwayInfo {...pathway} />
+              <PathwayReactions {...pathway} />
             </>
           )}
           {notFound && (

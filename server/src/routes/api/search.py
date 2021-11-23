@@ -1,7 +1,7 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Literal, Union
 
 from flask import Blueprint, json, jsonify, request
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from src.errors import handler
 from src.models.casm import ReactionSource, Source, ReactionJsonSchema, Pathway, PathwayJsonSchema
 
@@ -10,6 +10,8 @@ search_blueprint.register_error_handler(handler.InvalidUsage,
                                         handler.handle_invalid_usage)
 
 SEARCH_TYPES = ['reaction', 'pathway']
+KEYWORD_MATCHES: List[Union[Literal['exact'],
+                            Literal['broad']]] = ['exact', 'broad']
 
 
 @search_blueprint.route('', methods=['GET'])
@@ -46,25 +48,36 @@ def get_search():
     else:
         offset = 0
 
-    result = get_search_items(query, query_type, limit, offset)
+    keyword_match: Optional[str] = request.args.get('keyword_match')
+    if not keyword_match:
+        keyword_match = 'exact'
+    if keyword_match == 'exact' or keyword_match == 'broad':
+        result = get_search_items(query, query_type, limit, offset,
+                                  keyword_match)
+    else:
+        result = get_search_items(query, query_type, limit, offset)
 
     return jsonify(result)
 
 
-def get_search_items(query: str, query_type: str, limit: int, offset: int):
+def get_search_items(query: str,
+                     query_type: str,
+                     limit: int,
+                     offset: int,
+                     keyword_match: Literal['exact', 'broad'] = 'exact'):
     search_items = {
         'href':
-        f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={offset}&limit={limit}',
+        f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={offset}&limit={limit}&keyword_match={keyword_match}',
         'offset': offset,
         'limit': limit
     }
 
     items, total = None, None
     if query_type.lower() == 'reaction':
-        items, total = get_reaction_items(query, limit, offset)
+        items, total = get_reaction_items(query, limit, offset, keyword_match)
 
     elif query_type.lower() == 'pathway':
-        items, total = get_pathway_items(query, limit, offset)
+        items, total = get_pathway_items(query, limit, offset, keyword_match)
 
     search_items.setdefault('items', items)
     search_items.setdefault('total', total)
@@ -74,16 +87,16 @@ def get_search_items(query: str, query_type: str, limit: int, offset: int):
     else:
         diff = offset - limit
         if diff < 0:
-            previous = f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={diff}&limit={limit}'
+            previous = f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={diff}&limit={limit}&keyword_match={keyword_match}'
         else:
-            previous = f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={0}&limit={limit}'
+            previous = f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={0}&limit={limit}&keyword_match={keyword_match}'
 
     search_items.setdefault('previous', previous)
 
     if total is None or total - offset < limit:
         next = None
     else:
-        next = f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={offset+limit}&limit={limit}'
+        next = f'https://metamdb.tu-bs.de/api/search?q={query}&type={query_type}&offset={offset+limit}&limit={limit}&keyword_match={keyword_match}'
 
     search_items.setdefault('next', next)
 
@@ -98,19 +111,34 @@ def get_search_items(query: str, query_type: str, limit: int, offset: int):
 
 
 def get_pathway_items(
-        query: str, limit: int,
-        offset: int) -> Tuple[List["ReactionSource"], Optional[int]]:
+    query: str, limit: int, offset: int, keyword_match: Literal['exact',
+                                                                'broad']
+) -> Tuple[List["ReactionSource"], Optional[int]]:
     name, source = identify_query(query)
 
     sql_query = None
-    if name is not None and source is not None:
-        sql_query = Pathway.query.filter(
-            and_(Pathway.source_id.in_(name), Pathway.source.in_(source)))
+    if keyword_match == 'exact':
+        if name is not None and source is not None:
+            sql_query = Pathway.query.filter(
+                and_(Pathway.source_id.in_(name), Pathway.source.in_(source)))
 
-    elif name is not None:
-        sql_query = Pathway.query.filter(Pathway.source_id.in_(name))
+        elif name is not None:
+            sql_query = Pathway.query.filter(Pathway.source_id.in_(name))
 
-    elif source is not None:
+    else:
+        if name is not None and source is not None:
+            name = [f'%{element}%' for element in name]
+
+            sql_query = Pathway.query.filter(
+                and_(
+                    or_(*[Pathway.source_id.like(element)
+                          for element in name]), Pathway.source.in_(source)))
+
+        elif name is not None:
+            name = [f'%{element}%' for element in name]
+            sql_query = Pathway.query.filter(
+                or_(*[Pathway.source_id.like(element) for element in name]))
+    if sql_query is None and source is not None:
         sql_query = Pathway.query.filter(Pathway.source.in_(source))
 
     query_count = None
@@ -119,7 +147,7 @@ def get_pathway_items(
         query_count = sql_query.count()
 
         sql_query = sql_query.limit(limit)
-        sql_query = sql_query.offset(limit * offset)
+        sql_query = sql_query.offset(offset)
         results = sql_query.all()
 
         for entry in results:
@@ -135,21 +163,42 @@ def get_pathway_items(
 
 
 def get_reaction_items(
-        query: str, limit: int,
-        offset: int) -> Tuple[List["ReactionSource"], Optional[int]]:
+    query: str, limit: int, offset: int, keyword_match: Literal['exact',
+                                                                'broad']
+) -> Tuple[List["ReactionSource"], Optional[int]]:
     name, source = identify_query(query)
 
     sql_query = None
-    if name is not None and source is not None:
-        sql_query = ReactionSource.query.join(ReactionSource.source).filter(
-            and_(ReactionSource.database_identifier.in_(name),
-                 Source.name.in_(source)))
+    if keyword_match == 'exact':
+        if name is not None and source is not None:
+            sql_query = ReactionSource.query.join(
+                ReactionSource.source).filter(
+                    and_(ReactionSource.database_identifier.in_(name),
+                         Source.name.in_(source)))
 
-    elif name is not None:
-        sql_query = ReactionSource.query.filter(
-            ReactionSource.database_identifier.in_(name))
+        elif name is not None:
+            sql_query = ReactionSource.query.filter(
+                ReactionSource.database_identifier.in_(name))
 
-    elif source is not None:
+    else:
+        if name is not None and source is not None:
+            name = [f'%{element}%' for element in name]
+            sql_query = ReactionSource.query.join(
+                ReactionSource.source).filter(
+                    and_(
+                        or_(*[
+                            ReactionSource.database_identifier.like(element)
+                            for element in name
+                        ]), Source.name.in_(source)))
+
+        elif name is not None:
+            name = [f'%{element}%' for element in name]
+            sql_query = ReactionSource.query.filter(
+                or_(*[
+                    ReactionSource.database_identifier.like(element)
+                    for element in name
+                ]))
+    if sql_query is None and source is not None:
         sql_query = ReactionSource.query.join(ReactionSource.source).filter(
             Source.name.in_(source))
 

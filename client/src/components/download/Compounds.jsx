@@ -14,13 +14,14 @@ const Compounds = () => {
   const orderedCompounds = {};
   Object.keys(unorderedCompounds)
     .reverse()
-    .forEach(function(key) {
+    .forEach(function (key) {
       orderedCompounds[key] = unorderedCompounds[key];
     });
 
   return (
     <div className="mt-3">
-      <table className="table table-striped">
+      <h2>Compounds</h2>
+      <table className="table">
         <thead>
           <tr>
             <th scope="col">Substrates</th>
@@ -58,12 +59,6 @@ const Compounds = () => {
                 : "No products"}
             </td>
           </tr>
-          {/* {entry.data.map((isotopomer, key) => (
-                      <tr key={key}>
-                        <td>{`M+${key}`}</td>
-                        <td>{isotopomer.toFixed(3)}</td>
-                      </tr>
-                    ))} */}
         </tbody>
       </table>
     </div>

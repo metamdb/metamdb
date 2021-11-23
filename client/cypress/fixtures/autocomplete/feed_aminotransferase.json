@@ -1,0 +1,93 @@
+[
+  {
+    "formula": "2-oxoglutarate + L-alanine = L-glutamate + pyruvate",
+    "id": 1676,
+    "identifiers": [
+      {
+        "databaseIdentifier": "BR47397",
+        "source": {
+          "id": 1,
+          "name": "BRENDA"
+        }
+      },
+      {
+        "databaseIdentifier": "R00258",
+        "source": {
+          "id": 2,
+          "name": "KEGG"
+        }
+      },
+      {
+        "databaseIdentifier": "ALANINE-AMINOTRANSFERASE-RXN",
+        "source": {
+          "id": 3,
+          "name": "MetaCyc"
+        }
+      },
+      {
+        "databaseIdentifier": "RXN-13698",
+        "source": {
+          "id": 3,
+          "name": "MetaCyc"
+        }
+      }
+    ],
+    "updated": false
+  },
+  {
+    "formula": "3-sulfino-L-alanine + 2-oxoglutarate = 3-sulfinopyruvate + L-glutamate",
+    "id": 5391,
+    "identifiers": [
+      {
+        "databaseIdentifier": "BS356302",
+        "source": {
+          "id": 1,
+          "name": "BRENDA"
+        }
+      },
+      {
+        "databaseIdentifier": "R02619",
+        "source": {
+          "id": 2,
+          "name": "KEGG"
+        }
+      },
+      {
+        "databaseIdentifier": "3-SULFINOALANINE-AMINOTRANSFERASE-RXN",
+        "source": {
+          "id": 3,
+          "name": "MetaCyc"
+        }
+      }
+    ],
+    "updated": false
+  },
+  {
+    "formula": "2-oxoglutarate + D-alanine = D-glutamate + pyruvate",
+    "id": 6941,
+    "identifiers": [
+      {
+        "databaseIdentifier": "BR47398",
+        "source": {
+          "id": 1,
+          "name": "BRENDA"
+        }
+      },
+      {
+        "databaseIdentifier": "R01148",
+        "source": {
+          "id": 2,
+          "name": "KEGG"
+        }
+      },
+      {
+        "databaseIdentifier": "D-ALANINE-AMINOTRANSFERASE-RXN",
+        "source": {
+          "id": 3,
+          "name": "MetaCyc"
+        }
+      }
+    ],
+    "updated": true
+  }
+]

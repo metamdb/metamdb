@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import Blueprint, json, jsonify, request
 from src.errors import handler
-from src.models.casm import Pathway, PathwayJsonSchema
+from src.models.casm import Pathway, PathwayJsonSchema, PathwayReactionsSchema
 
 pathways_blueprint = Blueprint('pathways',
                                __name__,
@@ -14,8 +14,10 @@ pathways_blueprint.register_error_handler(handler.InvalidUsage,
 @pathways_blueprint.route('', methods=['GET'])
 def get_pathways():
     pathway_ids: Optional[str] = request.args.get('ids')
-    if not pathway_ids:
-        raise handler.InvalidId()
+    if pathway_ids is None:
+        raise handler.MissingRequiredQueryParameter(['ids'])
+    elif not pathway_ids:
+        raise handler.NoIdsGiven()
 
     split_ids = pathway_ids.split(',')
     pathways = []
@@ -50,12 +52,7 @@ def get_pathway_reactions(id):
     if not pathway:
         raise handler.InvalidId()
 
-    json_schema = PathwayJsonSchema()
+    json_schema = PathwayReactionsSchema()
     json_dump = json_schema.dump(pathway)
-    reactions = []
-    for reaction in json_dump['reactions']:
-        reactions.append(reaction['reaction'])
-
-    json_dump['reactions'] = reactions
 
     return jsonify(json_dump)

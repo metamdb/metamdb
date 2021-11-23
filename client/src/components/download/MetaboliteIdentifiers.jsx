@@ -20,6 +20,7 @@ const MetaboliteIdentifiers = () => {
 
   return (
     <div className="mt-3">
+      <h2>Identifiers</h2>
       {Object.entries(orderedIdentifiers).map(([key, values], idx) => {
         return (
           <div className={`source-${key}`} key={idx}>

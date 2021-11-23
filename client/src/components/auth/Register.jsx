@@ -28,13 +28,8 @@ const Register = (props) => {
 
   const [apiErrors, setApiErrors] = useState({});
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useTextForm(initialState, validateRegister, registerUser);
+  const { values, errors, isSubmitting, handleChange, handleSubmit } =
+    useTextForm(initialState, validateRegister, registerUser);
 
   return (
     <div className="login">

@@ -10,19 +10,14 @@ from sqlalchemy.dialects.mysql import LONGTEXT, TEXT
 from src import db, ma
 
 
-class Casm(db.Model):
-    __abstract__ = True
-    __bind_key__ = 'casm'
-
-
-class Role(Casm):
+class Role(db.Model):
     __tablename__ = 'role'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name: str = db.Column(db.String(45), nullable=False, unique=True)
 
 
-class User(Casm):
+class User(db.Model):
     __tablename__ = 'user'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -38,7 +33,7 @@ class User(Casm):
     role: str = db.relationship('Role')
 
 
-class Pathway(Casm):
+class Pathway(db.Model):
     __tablename__ = 'pathway'
 
     pw_id = db.Column(db.Integer, primary_key=True)
@@ -46,12 +41,12 @@ class Pathway(Casm):
     name = db.Column(db.String(1000), nullable=False)
     source = db.Column(db.String(100))
 
-    reactions = db.relationship('PathwayReaction',
-                                backref=db.backref('pathways'),
-                                lazy='dynamic')
+    # reactions = db.relationship('PathwayReaction',
+    #                             backref=db.backref('pathways'),
+    #                             lazy='dynamic')
 
 
-class Enzyme(Casm):
+class Enzyme(db.Model):
     __tablename__ = 'enzyme'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +54,7 @@ class Enzyme(Casm):
     name = db.Column(db.String(255), nullable=False)
 
 
-class Compound(Casm):
+class Compound(db.Model):
     __tablename__ = 'compound'
 
     id: int = db.Column(db.Integer, primary_key=True)
@@ -68,7 +63,7 @@ class Compound(Casm):
     inchi_short: str = db.Column(TEXT)
     inchi_key: str = db.Column(db.String(100))
     formula: str = db.Column(TEXT)
-    file: str = db.Column(LONGTEXT)
+    file: str = db.Column(TEXT)
 
     elements = db.relationship('CompoundElement', back_populates='compound')
     reactions = db.relationship('ReactionCompound',
@@ -77,7 +72,7 @@ class Compound(Casm):
     identifiers = db.relationship('CompoundSource', back_populates='compound')
 
 
-class ReactionCompound(Casm):
+class ReactionCompound(db.Model):
     __tablename__ = 'reaction_compounds'
 
     reaction_id: int = db.Column(db.Integer,
@@ -101,7 +96,7 @@ class ReactionCompound(Casm):
                                          back_populates='reactions')
 
 
-class PathwayReaction(Casm):
+class PathwayReaction(db.Model):
     __tablename__ = 'pathway_reactions'
 
     pathway_id: int = db.Column(db.Integer,
@@ -113,20 +108,20 @@ class PathwayReaction(Casm):
                                  primary_key=True,
                                  autoincrement=False)
 
-    reaction = db.relationship('Reaction', back_populates='pathways')
-    pathway: Compound = db.relationship('Pathway', back_populates='reactions')
+    # reaction = db.relationship('Reaction', back_populates='pathways')
+    # pathway: Compound = db.relationship('Pathway', back_populates='reactions')
 
 
-class Reaction(Casm):
+class Reaction(db.Model):
     __tablename__ = 'reaction'
 
     id: int = db.Column(db.Integer, primary_key=True)
     formula: str = db.Column(TEXT, nullable=False)
     natural_substrates: bool = db.Column(db.Boolean)
-    file: str = db.Column(LONGTEXT)
+    file: str = db.Column(TEXT)
     json: "AtomTransitionTyping" = db.Column(db.JSON)
     img: str = db.Column(db.String(100))
-    description: str = db.Column(LONGTEXT)
+    description: str = db.Column(TEXT)
     updated: bool = db.Column(db.Boolean)
     updated_by_id: int = db.Column(
         db.Integer,
@@ -139,12 +134,15 @@ class Reaction(Casm):
     identifiers = db.relationship('ReactionSource', back_populates='reaction')
     compounds: List[ReactionCompound] = db.relationship(
         'ReactionCompound', back_populates='reaction')
-    pathways = db.relationship('PathwayReaction', back_populates='reaction')
+    pathways = db.relationship('Pathway',
+                               secondary="pathway_reactions",
+                               backref='reactions',
+                               lazy="joined")
 
     updated_by = db.relationship('User')
 
 
-class Element(Casm):
+class Element(db.Model):
     __tablename__ = 'element'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -154,7 +152,7 @@ class Element(Casm):
     compounds = db.relationship('CompoundElement', back_populates='element')
 
 
-class Source(Casm):
+class Source(db.Model):
     __tablename__ = 'source'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -164,22 +162,22 @@ class Source(Casm):
     compound = db.relationship('CompoundSource', back_populates='source')
 
 
-class Status(Casm):
+class Status(db.Model):
     __tablename__ = 'status'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name: str = db.Column(db.String(100), nullable=False, unique=True)
 
 
-class ReactionHistory(Casm):
+class ReactionHistory(db.Model):
     __tablename__ = 'reaction_history'
 
     id: int = db.Column(db.Integer, primary_key=True, autoincrement=True)
     reaction_id: int = db.Column(db.Integer,
                                  db.ForeignKey('reaction.id'),
                                  nullable=False)
-    file: str = db.Column(LONGTEXT, nullable=False)
-    description: str = db.Column(LONGTEXT, nullable=False)
+    file: str = db.Column(TEXT, nullable=False)
+    description: str = db.Column(TEXT, nullable=False)
     updated_by_id: int = db.Column(db.Integer,
                                    db.ForeignKey('user.id'),
                                    nullable=False)
@@ -212,7 +210,7 @@ class ReactionHistory(Casm):
 
 
 # ---------- Link Tables ---------- #
-class EnzymeReaction(Casm):
+class EnzymeReaction(db.Model):
     __tablename__ = 'enzyme_reactions'
 
     enzyme_id = db.Column(db.Integer,
@@ -225,7 +223,7 @@ class EnzymeReaction(Casm):
                             autoincrement=False)
 
 
-class ReactionSource(Casm):
+class ReactionSource(db.Model):
     __tablename__ = 'reaction_source'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -239,7 +237,7 @@ class ReactionSource(Casm):
     source = db.relationship('Source', back_populates='reaction')
 
 
-class CompoundSource(Casm):
+class CompoundSource(db.Model):
     __tablename__ = 'compound_source'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -254,7 +252,7 @@ class CompoundSource(Casm):
     source = db.relationship('Source', back_populates='compound')
 
 
-class CompoundElement(Casm):
+class CompoundElement(db.Model):
     __tablename__ = 'compound_elements'
 
     compound_id = db.Column(db.Integer,
@@ -353,13 +351,13 @@ class ReactionJsonSchema(ma.SQLAlchemySchema):
     updated = ma.auto_field()
     updated_on = ma.auto_field(data_key='updatedOn')
 
-    updated_by = Nested(UserSchema)
+    updated_by = Nested(UserSchema, data_key='updatedBy')
     identifiers = Nested(ReactionSourceSchema, many=True)
     compounds = Nested(ReactionCompoundSchema, many=True)
 
     href = ma.Method('get_href')
     type = ma.Method('get_type')
-    external_urls = ma.Method('get_external_urls')
+    external_urls = ma.Method('get_external_urls', data_key='externalUrls')
 
     file = ma.auto_field(data_key='rxnFile')
 
@@ -404,10 +402,9 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
     href = ma.Method('get_href')
     type = ma.Method('get_type')
 
-    external_urls = ma.Method('get_external_urls')
+    external_urls = ma.Method('get_external_urls', data_key='externalUrls')
 
     file = ma.auto_field(data_key='rxnFile')
-    json = ma.auto_field(data_key='jsonFile')
 
     def get_href(self, obj):
         if obj.id is None:
@@ -426,9 +423,9 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
         else:
             external_urls.setdefault('metamdb', '')
 
-        if obj.img is not None:
+        if obj.id is not None:
             external_urls.setdefault(
-                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.img}')
+                'img', f'https://metamdb.tu-bs.de/img/aam/{obj.id}')
         else:
             external_urls.setdefault('img', '')
 
@@ -437,25 +434,32 @@ class ReactionPathwaySchema(ma.SQLAlchemySchema):
 
 class PathwayReactionsSchema(ma.SQLAlchemySchema):
     class Meta:
-        model = PathwayReaction
+        model = Pathway
 
-    reaction = Nested(ReactionPathwaySchema)
+    href = ma.Method('get_href')
+
+    reactions = Nested(ReactionPathwaySchema, many=True)
+
+    def get_href(self, obj):
+        if obj.pw_id is None:
+            return ''
+        return f'https://metamdb.tu-bs.de/api/pathways/{obj.pw_id}/reactions'
 
 
 class PathwayJsonSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Pathway
 
-    pw_id = ma.auto_field()
-    source_id = ma.auto_field()
+    pw_id = ma.auto_field(data_key='id')
+    source_id = ma.auto_field(data_key='sourceId')
     name = ma.auto_field()
     source = ma.auto_field()
 
     href = ma.Method('get_href')
     type = ma.Method('get_type')
-    external_urls = ma.Method('get_external_urls')
+    external_urls = ma.Method('get_external_urls', data_key='externalUrls')
 
-    reactions = Nested(PathwayReactionsSchema, many=True)
+    reactions = Nested(ReactionPathwaySchema, many=True)
 
     def get_href(self, obj):
         if obj.pw_id is None:
@@ -492,11 +496,41 @@ class ReactionHistorySchema(ma.SQLAlchemySchema):
     id = ma.auto_field()
     file = ma.auto_field()
     description = ma.auto_field()
-    updated_on = ma.auto_field()
-    reviewed_on = ma.auto_field()
+    updated_on = ma.auto_field(data_key='updatedOn')
+    reviewed_on = ma.auto_field(data_key='reviewedOn')
 
     reaction = Nested(ReactionSchema)
-    updated_by = Nested(UserSchema)
-    reviewed_by = Nested(UserSchema)
+    updated_by = Nested(UserSchema, data_key='updatedBy')
+    reviewed_by = Nested(UserSchema, data_key='reviewedBy')
 
-    review_status = Nested(StatusSchema)
+    review_status = Nested(StatusSchema, data_key='status')
+
+
+class PathwayAutoCompleteSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Pathway
+
+    pw_id = ma.auto_field(data_key='id')
+    source_id = ma.auto_field(data_key='sourceId')
+    name = ma.auto_field()
+
+
+class ReactionAutoCompleteSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = ReactionSource
+
+    id = ma.auto_field()
+    reaction_id = ma.auto_field(data_key='reactionId')
+    database_identifier = ma.auto_field(data_key='databaseIdentifier')
+    source = Nested(SourceSchema)
+
+
+class CompoundAutoCompleteSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Compound
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+    inchi = ma.auto_field()
+    inchi_short = ma.auto_field(data_key='inchiShort')
+    inchi_key = ma.auto_field(data_key='inchiKey')

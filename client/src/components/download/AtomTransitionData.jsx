@@ -4,6 +4,8 @@ import axios from "axios";
 import classnames from "classnames";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Tabs, Tab } from "react-bootstrap";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import useFileFormValidation from "../forms/useFileForm";
 import validateUpload from "../../validation/validateRxn";
@@ -32,13 +34,8 @@ const AtomTransitionData = ({
   const [description, setDescription] = useState("");
   const [alert, setAlert] = useState(null);
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useFileFormValidation({ file: null }, validateUpload, uploadFile);
+  const { values, errors, isSubmitting, handleChange, handleSubmit } =
+    useFileFormValidation({ file: null }, validateUpload, uploadFile);
 
   const imageSource = `${process.env.PUBLIC_URL}/img/aam/${reactionId}.svg`;
 
@@ -148,9 +145,9 @@ const AtomTransitionData = ({
           {alert}
         </div>
       )}
-      <h2>Atom Transition {id}</h2>
+      <h2>Atom Mapping</h2>
       <p className="lead text-muted">
-        <strong>Updated: </strong>
+        <strong>Curated: </strong>
         {updated ? (
           <i className="fas fa-check" />
         ) : (
@@ -180,14 +177,29 @@ const AtomTransitionData = ({
         <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
           <Button variant="link">Click</Button>
         </OverlayTrigger>
-        <strong>Image:</strong>
+        {/* <strong>Image:</strong>
         <OverlayTrigger
           placement="right"
           trigger="focus"
           overlay={popoverImage}
         >
           <Button variant="link">Click</Button>
-        </OverlayTrigger>
+        </OverlayTrigger> */}
+      </p>
+      <p>
+        <TransformWrapper>
+          <TransformComponent>
+            <img
+              src={imageSource}
+              onError={(e) => {
+                e.target.onError = null;
+                e.target.src = no_aam;
+              }}
+              alt={`Structure Atom Mapping ${id}`}
+              style={{ width: "100%" }}
+            />
+          </TransformComponent>
+        </TransformWrapper>
       </p>
       <div className="download mb-3">
         <button
@@ -197,64 +209,10 @@ const AtomTransitionData = ({
         >
           <i className="fa fa-download" /> Download RXN
         </button>
-        <button type="button" className="btn btn-info" onClick={downloadSvg}>
+        <button type="button" className="btn btn-primary" onClick={downloadSvg}>
           <i className="fa fa-download" /> Download SVG
         </button>
       </div>
-      {isUser && (
-        <div className="upload mb-3">
-          <div className="file-upload">
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <div className="custom-file">
-                  <input
-                    type="file"
-                    name="file"
-                    className={classnames("custom-file-input", {
-                      "is-invalid": errors.file || apiError,
-                    })}
-                    id="customUpload"
-                    onChange={handleChange}
-                  />
-                  <label
-                    id="customUploadLabel"
-                    htmlFor="customUpload"
-                    className="custom-file-label"
-                  >
-                    {values.file ? values.file.name : "Browse File..."}
-                  </label>
-                  {errors.file && (
-                    <div className="invalid-feedback">{errors.file}</div>
-                  )}
-                  {apiError && (
-                    <div className="invalid-feedback">{apiError}</div>
-                  )}
-                </div>
-                <div className="mt-3">
-                  <textarea
-                    className="form-control"
-                    id="description"
-                    rows="3"
-                    placeholder="Changes..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  ></textarea>
-                </div>
-              </div>
-              <div className="mt-3">
-                <button
-                  className="btn btn-warning mr-2"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  <i className="fas fa-upload" /> Upload RXN
-                </button>
-                {loading && <i className="fas fa-spinner fa-pulse" />}
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -177,6 +177,79 @@ const DatabaseQuery = (props) => {
     }
   }, [location]);
 
+  const suggestionPaths = {
+    name: "reactions",
+    metabolite: "metabolites",
+    pathway: "pathways",
+  };
+
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestionIndex, setSuggestionIndex] = useState(-1);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [typedInput, setTypedInput] = useState("");
+
+  const onChangeSearch = (text) => {
+    setReaction(text);
+    setTypedInput(text);
+
+    if (text.length && text.length > 1) {
+      axios
+        .get(`api/suggestions/${suggestionPaths[type]}?q=${text}`)
+        .then((res) => setSuggestions(res.data))
+        .catch((err) => console.log(err.response.data));
+    } else {
+      setSuggestions([]);
+    }
+    setSuggestionIndex(-1);
+    setShowSuggestions(true);
+  };
+
+  const onClick = (e) => {
+    setSuggestions([]);
+    setShowSuggestions(false);
+    setReaction(e.target.id);
+    setSuggestionIndex(-1);
+    handleSubmit(e, e.target.id);
+  };
+
+  const setInputOnKeyDown = (newSuggestionIndex) => {
+    if (newSuggestionIndex === -1) {
+      setReaction(typedInput);
+    } else {
+      if (type === "metabolite" || type === "pathway") {
+        setReaction(suggestions[newSuggestionIndex].name);
+      } else if (type === "name") {
+        setReaction(suggestions[newSuggestionIndex].databaseIdentifier);
+      }
+    }
+  };
+
+  const onKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      setSuggestions([]);
+      setInputOnKeyDown(suggestionIndex);
+      setSuggestionIndex(-1);
+      setShowSuggestions(false);
+    } else if (e.keyCode === 38) {
+      e.preventDefault();
+      if (suggestionIndex !== -1) {
+        setSuggestionIndex(suggestionIndex - 1);
+        setInputOnKeyDown(suggestionIndex - 1);
+      } else if (suggestionIndex === -1) {
+        setSuggestionIndex(suggestions.length - 1);
+        setInputOnKeyDown(suggestions.length - 1);
+      }
+    } else if (e.keyCode === 40) {
+      if (suggestionIndex !== suggestions.length - 1) {
+        setSuggestionIndex(suggestionIndex + 1);
+        setInputOnKeyDown(suggestionIndex + 1);
+      } else if (suggestionIndex === suggestions.length - 1) {
+        setSuggestionIndex(-1);
+        setInputOnKeyDown(-1);
+      }
+    }
+  };
+
   const columns = {
     name: columnsReaction,
     metabolite: columnsReaction,
@@ -184,13 +257,22 @@ const DatabaseQuery = (props) => {
   };
   useEffect(() => {
     setFeed(null);
+    setSuggestions([]);
+    setReaction("");
+    setSuggestionIndex(-1);
+    setShowSuggestions(false);
   }, [type]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, queryData = null) => {
     event.preventDefault();
+    setShowSuggestions(false);
 
     const reactionData = new FormData();
-    reactionData.append("query", reaction);
+    if (queryData !== null) {
+      reactionData.append("query", queryData);
+    } else {
+      reactionData.append("query", reaction);
+    }
     reactionData.append("type", type);
     if (reaction) {
       setLoading(true);
@@ -198,6 +280,7 @@ const DatabaseQuery = (props) => {
     axios
       .post("/api/query", reactionData)
       .then((res) => {
+        console.log(res.data);
         setFeed(res.data);
         setLoading(false);
         setAlerts(null);
@@ -232,39 +315,75 @@ const DatabaseQuery = (props) => {
             </a>
           </p>
           <div className="reaction-form">
-            <div className="form-row">
-              <form onSubmit={handleSubmit} className="form-group">
-                <div className="input-group">
-                  <div className="input-group-append">
-                    <select
-                      className="form-select"
-                      onChange={(e) => setType(e.target.value)}
-                    >
-                      <option default value="name">
-                        Reaction
-                      </option>
-                      <option value="metabolite">Metabolite</option>
-                      <option value="pathway">Pathway</option>
-                    </select>
-                  </div>
-                  <input
-                    type="text"
-                    name="text"
-                    value={reaction}
-                    onChange={(e) => setReaction(e.target.value)}
-                    className={classnames("form-control")}
-                    placeholder={searchPlaceholder[type]}
-                    aria-label="reaction"
-                    aria-describedby="button-reaction"
-                  />
-                  <div className="input-group-append">
-                    <button type="submit" className="btn btn-dark">
-                      <i className="fas fa-search" />
-                    </button>
+            <form
+              onSubmit={handleSubmit}
+              className="form-group"
+              autoComplete="off"
+            >
+              <div className="input-group">
+                <div className="input-group-append">
+                  <select
+                    className="form-select"
+                    onChange={(e) => setType(e.target.value)}
+                  >
+                    <option default value="name">
+                      Reaction
+                    </option>
+                    <option value="metabolite">Metabolite</option>
+                    <option value="pathway">Pathway</option>
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  name="text"
+                  value={reaction}
+                  onChange={(e) => onChangeSearch(e.target.value)}
+                  onKeyDown={onKeyDown}
+                  className={classnames("form-control")}
+                  placeholder={searchPlaceholder[type]}
+                  aria-label="reaction"
+                  aria-describedby="button-reaction"
+                />
+                <div className="input-group-append">
+                  <button type="submit" className="btn btn-dark">
+                    <i className="fas fa-search" />
+                  </button>
+                </div>
+              </div>
+              {showSuggestions && suggestions.length ? (
+                <div className="card border-0 shadow">
+                  <div className="card-body">
+                    <div className="list-group list-group-flush">
+                      {suggestions.length
+                        ? suggestions.map((item, index) => (
+                            <button
+                              key={index}
+                              onClick={onClick}
+                              id={
+                                type === "name"
+                                  ? item.databaseIdentifier
+                                  : item.name
+                              }
+                              className={classnames(
+                                "list-group-item list-group-item-action py-2 ",
+                                {
+                                  active: index === suggestionIndex,
+                                }
+                              )}
+                            >
+                              {type === "pathway" &&
+                                `${item.name} (${item.sourceId})`}
+                              {type === "name" &&
+                                `${item.databaseIdentifier} (${item.source.name})`}
+                              {type === "metabolite" && <>{item.name}</>}
+                            </button>
+                          ))
+                        : null}
+                    </div>
                   </div>
                 </div>
-              </form>
-            </div>
+              ) : null}
+            </form>
             {alerts && <Alerts alerts={alerts} />}
             <div className="form-feed">
               {loading && <i className="fas fa-spinner fa-pulse" />}
