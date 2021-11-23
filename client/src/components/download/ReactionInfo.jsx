@@ -8,6 +8,7 @@ const ReactionInfo = () => {
 
   return (
     <div className="mt-3">
+      <h2>Reaction Info</h2>
       {/* <p className="text-muted">
         <strong>formula:</strong>
       </p> */}

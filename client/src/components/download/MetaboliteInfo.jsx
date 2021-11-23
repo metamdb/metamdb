@@ -41,6 +41,7 @@ const MetaboliteInfo = ({ id }) => {
 
   return (
     <div className="mt-3">
+      <h2>Metabolite Info</h2>
       <p className="text-muted">
         <strong>name: </strong>
         {metabolite.name}

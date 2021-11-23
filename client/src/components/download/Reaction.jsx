@@ -52,15 +52,23 @@ const Reaction = ({ id, notFound, isReaction, isUser }) => {
           <h1>Reaction {id}</h1>
           {isReaction && (
             <>
-              <ReactionInfo />
-
-              <ReactionIdentifiers />
-
-              <Compounds />
-
-              <AtomTransitions />
-
-              {isUser && <ReviewPanel />}
+              <Tabs defaultActiveKey="reaction">
+                <Tab eventKey="reaction" title="Reaction">
+                  <ReactionInfo />
+                  <ReactionIdentifiers />
+                </Tab>
+                <Tab eventKey="compounds" title="Compounds">
+                  <Compounds />
+                </Tab>
+                <Tab eventKey="transitions" title="Atom Mappings">
+                  <AtomTransitions />
+                </Tab>
+                {isUser && (
+                  <Tab eventKey="review" title="Review Panel">
+                    <ReviewPanel />
+                  </Tab>
+                )}
+              </Tabs>
             </>
           )}
           {notFound && (
