@@ -33,14 +33,8 @@ const PathwayContainer = (props) => {
           <h1>Pathway {id}</h1>
           {isPathway && (
             <>
-              <Tabs defaultActiveKey="pathway">
-                <Tab eventKey="pathway" title="Pathway">
-                  <PathwayInfo {...pathway} />
-                </Tab>
-                <Tab eventKey="reactions" title="Reactions">
-                  <PathwayReactions {...pathway} />
-                </Tab>
-              </Tabs>
+              <PathwayInfo {...pathway} />
+              <PathwayReactions {...pathway} />
             </>
           )}
           {notFound && (
