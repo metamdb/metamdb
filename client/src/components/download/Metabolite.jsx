@@ -41,9 +41,14 @@ const Metabolite = ({ id, notFound, isMetabolite }) => {
           <h1>Metabolite {id}</h1>
           {isMetabolite && (
             <>
-              <MetaboliteInfo id={id} />
-
-              <MetaboliteIdentifiers />
+              <Tabs defaultActiveKey="metabolite">
+                <Tab eventKey="metabolite" title="Metabolite">
+                  <MetaboliteInfo id={id} />
+                </Tab>
+                <Tab eventKey="identifiers" title="Identifiers">
+                  <MetaboliteIdentifiers />
+                </Tab>
+              </Tabs>
             </>
           )}
           {notFound && (
