@@ -20,14 +20,13 @@ const ReactionIdentifiers = () => {
 
   return (
     <div className="mt-3">
+      <h2>Identifiers</h2>
       {Object.entries(orderedIdentifiers).map(([key, values], idx) => {
         if (key === "BRENDA") {
           return (
             <div className={`source-${key}`} key={idx}>
               <p className="text-muted">
                 <strong>{key}: </strong>
-              </p>
-              <p className="text-muted">
                 {values
                   .map((value, id) => {
                     return value.databaseIdentifier;
@@ -40,9 +39,7 @@ const ReactionIdentifiers = () => {
           return (
             <div className={`source-${key}`} key={idx}>
               <p className="text-muted">
-                <strong>{key}: </strong>
-              </p>
-              <p className="text-muted">
+                <strong>{key}: </strong>{" "}
                 {values.map((value, id) => {
                   return (
                     <a

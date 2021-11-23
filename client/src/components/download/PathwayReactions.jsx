@@ -176,6 +176,7 @@ const PathwayReactions = ({ reactions }) => {
   return (
     <>
       <div className="model">
+        <h2>Reactions</h2>
         <Styles>
           <Table columns={columns} data={data} />
         </Styles>

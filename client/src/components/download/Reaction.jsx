@@ -55,8 +55,6 @@ const Reaction = ({ id, notFound, isReaction, isUser }) => {
               <Tabs defaultActiveKey="reaction">
                 <Tab eventKey="reaction" title="Reaction">
                   <ReactionInfo />
-                </Tab>
-                <Tab eventKey="identifiers" title="Identifiers">
                   <ReactionIdentifiers />
                 </Tab>
                 <Tab eventKey="compounds" title="Compounds">

@@ -48,9 +48,6 @@ const Metabolite = ({ id, notFound, isMetabolite }) => {
                 <Tab eventKey="identifiers" title="Identifiers">
                   <MetaboliteIdentifiers />
                 </Tab>
-                <Tab eventKey="reactions" title="Reactions">
-                  <Reactions />
-                </Tab>
               </Tabs>
             </>
           )}

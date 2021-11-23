@@ -8,9 +8,10 @@ const ReactionInfo = () => {
 
   return (
     <div className="mt-3">
-      <p className="text-muted">
+      <h2>Reaction Info</h2>
+      {/* <p className="text-muted">
         <strong>formula:</strong>
-      </p>
+      </p> */}
       <p className="text-muted">{formula} </p>
     </div>
   );
