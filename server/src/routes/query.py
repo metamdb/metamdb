@@ -88,6 +88,25 @@ def reactionUpload(id, atom_id):
     history = ReactionHistory(reaction_id=atom_id,
                               file=rxn_file,
                               description=desc,
+                              change=True,
+                              updated_by_id=user.id)
+    db.session.add(history)
+    db.session.commit()
+
+    return jsonify({'message': 'Your update has been sent for review!'})
+
+
+@query_blueprint.route('/reaction/<string:id>/upload/correct',
+                       methods=['POST'])
+@jwt_required()
+def reactionCorrect(id):
+    user = current_user
+
+    rxn_file = Reaction.query.get(id).file
+    history = ReactionHistory(reaction_id=id,
+                              file=rxn_file,
+                              description='',
+                              change=False,
                               updated_by_id=user.id)
     db.session.add(history)
     db.session.commit()
