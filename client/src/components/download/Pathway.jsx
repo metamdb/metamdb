@@ -13,7 +13,6 @@ const PathwayContainer = (props) => {
       .get(`/api/pathways/${id}`)
       .then((res) => {
         setPathway(res.data);
-        console.log(res.data);
         setIsPathway(true);
       })
       .catch((err) => {

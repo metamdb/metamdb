@@ -42,11 +42,8 @@ def get_reactions_suggestions():
 @suggestions_blueprint.route('/metabolites', methods=['GET'])
 def get_metabolites_suggestions():
     q = request.args.get('q')
-    compounds = Compound.query.filter(
-        or_(Compound.name.like(f'{q}%'), Compound.inchi.like(f'{q}%'),
-            Compound.inchi_short.like(f'{q}%'),
-            Compound.inchi_key.like(f'{q}%'))).order_by(
-                Compound.name.asc()).limit(10).all()
+    compounds = Compound.query.filter(Compound.name.like(f'{q}%')).order_by(
+        Compound.name.asc()).limit(10).all()
 
     json_schema = CompoundAutoCompleteSchema(many=True)
     json_dump = json_schema.dump(compounds)

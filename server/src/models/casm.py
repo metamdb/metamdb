@@ -315,6 +315,16 @@ class ReactionSchema(ma.SQLAlchemySchema):
     identifiers = Nested(ReactionSourceSchema, many=True)
 
 
+class CompoundSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Compound
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+    inchi = ma.auto_field()
+    formula = ma.auto_field()
+
+
 class PathwaySchema(ma.SQLAlchemySchema):
     class Meta:
         model = Pathway
@@ -323,14 +333,6 @@ class PathwaySchema(ma.SQLAlchemySchema):
     source_id = ma.auto_field()
     name = ma.auto_field()
     source = ma.auto_field()
-
-
-class CompoundSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Compound
-
-    name = ma.auto_field()
-    id = ma.auto_field()
 
 
 class ReactionCompoundSchema(ma.SQLAlchemySchema):

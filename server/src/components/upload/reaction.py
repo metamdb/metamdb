@@ -216,7 +216,6 @@ class ReactionModel():
     def initialize_from_identifiers(self, reactions):
         for index, entry in enumerate(reactions):
             reaction = CasmReaction.query.get(entry['reaction']['id'])
-            print(reaction.json)
 
     def initialize_reactions(self, file: str):
         self.reactions = []

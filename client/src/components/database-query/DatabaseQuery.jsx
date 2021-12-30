@@ -36,6 +36,20 @@ function pathwayLink(cell, row) {
   );
 }
 
+function metaboliteLink(cell, row) {
+  return (
+    <span
+      style={{
+        width: 50,
+      }}
+    >
+      <Link className="text-primary" to={`/metabolite/${cell}`} target="_blank">
+        {cell}
+      </Link>
+    </span>
+  );
+}
+
 function identifierFormatter(cell, row) {
   return cell ? (
     <span
@@ -93,6 +107,41 @@ const columnsPathway = [
     dataField: "source",
     text: "Source",
     sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "10%" };
+    },
+  },
+];
+
+const columnsMetabolite = [
+  {
+    dataField: "name",
+    text: "Name",
+    sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "30%" };
+    },
+  },
+  {
+    dataField: "id",
+    text: "Reaction ID",
+    sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "10%" };
+    },
+    formatter: metaboliteLink,
+  },
+  {
+    dataField: "inchi",
+    text: "Inchi",
+    sort: true,
+    headerStyle: (colum, colIndex) => {
+      return { width: "30%" };
+    },
+  },
+  {
+    dataField: "formula",
+    text: "Formula",
     headerStyle: (colum, colIndex) => {
       return { width: "10%" };
     },
@@ -252,7 +301,7 @@ const DatabaseQuery = (props) => {
 
   const columns = {
     name: columnsReaction,
-    metabolite: columnsReaction,
+    metabolite: columnsMetabolite,
     pathway: columnsPathway,
   };
   useEffect(() => {
@@ -280,7 +329,6 @@ const DatabaseQuery = (props) => {
     axios
       .post("/api/query", reactionData)
       .then((res) => {
-        console.log(res.data);
         setFeed(res.data);
         setLoading(false);
         setAlerts(null);

@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, current_user
 from sqlalchemy import or_
 
 from src import db
-from src.models.casm import Compound, Reaction, ReactionHistory, ReactionJsonSchema, ReactionSource, ReactionSchema, Pathway, PathwaySchema, ReactionHistory
+from src.models.casm import Compound, CompoundSchema, Reaction, ReactionHistory, ReactionJsonSchema, ReactionSource, ReactionSchema, Pathway, PathwaySchema, ReactionHistory
 from src.errors import handler
 
 query_blueprint = Blueprint('query', __name__, url_prefix='/api/query')
@@ -26,7 +26,6 @@ def reaction_query():
 
 
 def get_query(query_keyword, query_type):
-    print(query_keyword, query_type)
     reaction_schema = ReactionSchema(many=True)
 
     result = None
@@ -39,10 +38,11 @@ def get_query(query_keyword, query_type):
         result = reaction_schema.dump(query_result)
 
     elif query_type == 'metabolite':
-        query = Reaction.query.filter(
-            Reaction.formula.like(f'%{query_keyword}%'))
+        compound_schema = CompoundSchema(many=True)
+        query = Compound.query.filter(Compound.name.like(f'%{query_keyword}%'))
         query_result = query.all()
-        result = reaction_schema.dump(query_result)
+
+        result = compound_schema.dump(query_result)
 
     elif query_type == 'metabolite_id':
         query = Compound.query.get(query_keyword)
