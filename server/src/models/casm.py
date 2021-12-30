@@ -178,7 +178,7 @@ class ReactionHistory(db.Model):
                                  nullable=False)
     file: str = db.Column(TEXT, nullable=False)
     description: str = db.Column(TEXT, nullable=False)
-    change: bool = db.Column(db.Boolean, nullable=False, default='0')
+    change: bool = db.Column(db.Boolean, nullable=False, default=0)
     updated_by_id: int = db.Column(db.Integer,
                                    db.ForeignKey('user.id'),
                                    nullable=False)
