@@ -58,7 +58,7 @@ const Navbar = (props) => {
               <li className="nav-item">
                 <a
                   target="_blank"
-                  href="https://collinstark.github.io/metamdb-docs/getting-started"
+                  href="https://metamdb.github.io/docs/getting-started"
                   className="nav-link"
                   rel="noopener noreferrer"
                 >

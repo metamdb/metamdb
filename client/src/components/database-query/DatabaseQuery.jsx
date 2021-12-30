@@ -307,7 +307,7 @@ const DatabaseQuery = (props) => {
             D-Glucose/Glucose-6-phosphate). <br />
             Further information{" "}
             <a
-              href="https://collinstark.github.io/metamdb-docs/database-search"
+              href="https://metamdb.github.io/docs/database-search"
               target="_blank"
               rel="noopener noreferrer"
             >

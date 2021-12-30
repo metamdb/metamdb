@@ -15,7 +15,7 @@ const ReactionModelUpload = (props) => {
       <p className="lead text-muted">
         To get an atom mapping model you can upload your own metabolic model.{" "}
         <a
-          href="https://collinstark.github.io/metamdb-docs/reaction-model"
+          href="https://metamdb.github.io/docs/reaction-model"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -23,7 +23,7 @@ const ReactionModelUpload = (props) => {
         </a>
       </p>
       <p>
-        <a href="https://collinstark.github.io/metamdb-docs/assets/files/example_model-a423dac6169034c7325e93b30371611c.csv">
+        <a href="https://metamdb.github.io/docs/assets/files/example_model-a423dac6169034c7325e93b30371611c.csv">
           Download the example model here!
         </a>
       </p>
