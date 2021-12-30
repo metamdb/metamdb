@@ -124,7 +124,7 @@ const columnsMetabolite = [
   },
   {
     dataField: "id",
-    text: "Reaction ID",
+    text: "Metabolite ID",
     sort: true,
     headerStyle: (colum, colIndex) => {
       return { width: "10%" };
@@ -133,7 +133,7 @@ const columnsMetabolite = [
   },
   {
     dataField: "inchi",
-    text: "Inchi",
+    text: "InChI",
     sort: true,
     headerStyle: (colum, colIndex) => {
       return { width: "30%" };
