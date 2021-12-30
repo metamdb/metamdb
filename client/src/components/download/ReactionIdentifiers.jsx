@@ -10,8 +10,20 @@ const ReactionIdentifiers = () => {
       a.link = `https://www.genome.jp/dbget-bin/www_bget?rn:${a.databaseIdentifier}`;
     } else if (a.source.name === "MetaCyc") {
       a.link = `https://biocyc.org/META/NEW-IMAGE?object=${a.databaseIdentifier}`;
-    } else {
-      a.link = null;
+    } else if (a.source.name === "BRENDA") {
+      if (a.databaseIdentifier.includes("BR")) {
+        a.link = `https://www.brenda-enzymes.org/structure.php?show=reaction&id=${a.databaseIdentifier.replace(
+          "BR",
+          ""
+        )}&type=I&displayType=marvin`;
+      } else if (a.databaseIdentifier.includes("BS")) {
+        a.link = `https://www.brenda-enzymes.org/structure.php?show=reaction&id=${a.databaseIdentifier.replace(
+          "BS",
+          ""
+        )}&type=S&displayType=marvin`;
+      } else {
+        a.link = null;
+      }
     }
     r[a.source.name] = r[a.source.name] || [];
     r[a.source.name].push(a);
@@ -22,42 +34,27 @@ const ReactionIdentifiers = () => {
     <div className="mt-3">
       <h2>Identifiers</h2>
       {Object.entries(orderedIdentifiers).map(([key, values], idx) => {
-        if (key === "BRENDA") {
-          return (
-            <div className={`source-${key}`} key={idx}>
-              <p className="text-muted">
-                <strong>{key}: </strong>
-                {values
-                  .map((value, id) => {
-                    return value.databaseIdentifier;
-                  })
-                  .join(", ")}
-              </p>
-            </div>
-          );
-        } else {
-          return (
-            <div className={`source-${key}`} key={idx}>
-              <p className="text-muted">
-                <strong>{key}: </strong>{" "}
-                {values.map((value, id) => {
-                  return (
-                    <a
-                      className="mr-2"
-                      key={value.databaseIdentifier}
-                      href={value.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i className="fas fa-external-link-alt"></i>{" "}
-                      {value.databaseIdentifier}
-                    </a>
-                  );
-                })}
-              </p>
-            </div>
-          );
-        }
+        return (
+          <div className={`source-${key}`} key={idx}>
+            <p className="text-muted">
+              <strong>{key}: </strong>{" "}
+              {values.map((value, id) => {
+                return (
+                  <a
+                    className="mr-2"
+                    key={value.databaseIdentifier}
+                    href={value.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className="fas fa-external-link-alt"></i>{" "}
+                    {value.databaseIdentifier}
+                  </a>
+                );
+              })}
+            </p>
+          </div>
+        );
       })}
     </div>
   );

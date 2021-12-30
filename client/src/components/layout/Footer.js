@@ -22,7 +22,7 @@ const Footer = (props) => {
             <ul className="list-inline social-buttons">
               <li className="list-inline-item">
                 <a
-                  href="https://github.com/CollinStark/metamdb"
+                  href="https://github.com/metamdb/metamdb"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
