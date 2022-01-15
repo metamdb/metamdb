@@ -10,7 +10,7 @@ const Footer = (props) => {
     //     </span>
     //   </div>
     // </footer>
-    <footer className="fixed-bottom mt-5 p-3">
+    <footer className="fixed-bottom mt-5 p-2">
       <div className="container">
         <div className="row text-center">
           <div className="col-md-4 box">
