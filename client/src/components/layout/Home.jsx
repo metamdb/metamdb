@@ -10,10 +10,10 @@ const Home = (props) => {
           <p className="lead text-muted">Welcome to MetAMDB!</p>
           {/* <br /> */}
           <p className="lead text-muted">
-            MetAMDB is an easy to use tool for all things atom mappings. MetAMDB
-            provides atom mapping models for user-specific uploaded metabolic
-            models, as well as atom mapping searches for reactions, metabolites,
-            and pathways. Additionally, the MetAMDB{" "}
+            MetAMDB is an easy to use tool for atom mappings. MetAMDB provides
+            atom mapping models for user-specific uploaded metabolic models, as
+            well as atom mappings for individual reactions. Additionally, the
+            MetAMDB{" "}
             <a
               href="https://metamdb.github.io/docs/api"
               target="_blank"
@@ -21,7 +21,7 @@ const Home = (props) => {
             >
               API
             </a>{" "}
-            can be utilized to query the database programmatically.
+            can be utilized to query the database.
           </p>
           <DataStatistics />
         </div>
