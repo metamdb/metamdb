@@ -12,7 +12,7 @@ const AtomTransitions = () => {
 
   return (
     <>
-      {reaction.rxnFile ? (
+      {reaction.rxnFile && reaction.balanced ? (
         <AtomTransitionData
           key={reaction.id.toString()}
           {...reaction}

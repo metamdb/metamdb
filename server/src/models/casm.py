@@ -130,6 +130,7 @@ class Reaction(db.Model):
     updated_on: str = db.Column(db.DateTime(timezone=True),
                                 onupdate=func.now())
     symmetry: bool = db.Column(db.Boolean)
+    balanced: bool = db.Column(db.Boolean)
 
     identifiers = db.relationship('ReactionSource', back_populates='reaction')
     compounds: List[ReactionCompound] = db.relationship(
@@ -353,6 +354,7 @@ class ReactionJsonSchema(ma.SQLAlchemySchema):
     formula = ma.auto_field()
     updated = ma.auto_field()
     updated_on = ma.auto_field(data_key='updatedOn')
+    balanced = ma.auto_field()
 
     updated_by = Nested(UserSchema, data_key='updatedBy')
     identifiers = Nested(ReactionSourceSchema, many=True)

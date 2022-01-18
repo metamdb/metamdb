@@ -21,6 +21,7 @@ const ReactionContainer = (props) => {
       .get(`/api/query/reaction/${id}`)
       .then((res) => {
         setReaction(res.data);
+        console.log(res.data);
         setIsReaction(true);
       })
       .catch((err) => {

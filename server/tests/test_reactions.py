@@ -2,11 +2,17 @@ def test_single_id(client):
     response = client.get('/api/reactions/1')
     json_data = response.get_json()
 
+    print(response)
     json_data_result = {
+        'balanced':
+        False,
         'compounds': [{
             'compound': {
                 'id': 1,
-                'name': 'fumarate'
+                'name': 'fumarate',
+                'inchi':
+                'InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+',
+                'formula': 'C4H4O4'
             },
             'position': 1,
             'quantity': 1,
@@ -50,6 +56,8 @@ def test_single_id2(client):
     json_data = response.get_json()
 
     json_data_result = {
+        'balanced':
+        False,
         'compounds': [],
         'externalUrls': {
             'img': 'https://metamdb.tu-bs.de/img/aam/2',
@@ -127,10 +135,15 @@ def test_multiple_ids(client):
 
     json_data_result = {
         'reactions': [{
+            'balanced':
+            False,
             'compounds': [{
                 'compound': {
                     'id': 1,
-                    'name': 'fumarate'
+                    'name': 'fumarate',
+                    'inchi':
+                    'InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+',
+                    'formula': 'C4H4O4'
                 },
                 'position': 1,
                 'quantity': 1,
@@ -164,6 +177,8 @@ def test_multiple_ids(client):
             'updatedOn':
             None
         }, {
+            'balanced':
+            False,
             'compounds': [],
             'externalUrls': {
                 'img': 'https://metamdb.tu-bs.de/img/aam/2',
@@ -212,10 +227,15 @@ def test_multiple_ids_one_wrong(client):
 
     json_data_result = {
         'reactions': [{
+            'balanced':
+            False,
             'compounds': [{
                 'compound': {
                     'id': 1,
-                    'name': 'fumarate'
+                    'name': 'fumarate',
+                    'inchi':
+                    'InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+',
+                    'formula': 'C4H4O4'
                 },
                 'position': 1,
                 'quantity': 1,
@@ -271,10 +291,15 @@ def test_multiple_ids_one_bad(client):
 
     json_data_result = {
         'reactions': [{
+            'balanced':
+            False,
             'compounds': [{
                 'compound': {
                     'id': 1,
-                    'name': 'fumarate'
+                    'name': 'fumarate',
+                    'inchi':
+                    'InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+',
+                    'formula': 'C4H4O4'
                 },
                 'position': 1,
                 'quantity': 1,

@@ -34,6 +34,7 @@ def test_search_one_hit(client):
             'href':
             'https://metamdb.tu-bs.de/api/search?q=RXN-0543&type=reaction&offset=0&limit=20&keyword_match=exact',
             'items': [{
+                'balanced': False,
                 'compounds': [],
                 'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/2',
@@ -99,6 +100,7 @@ def test_search_one_hit2(client):
             'href':
             'https://metamdb.tu-bs.de/api/search?q=RXN-0543,HALLO&type=reaction&offset=0&limit=20&keyword_match=exact',
             'items': [{
+                'balanced': False,
                 'compounds': [],
                 'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/2',
@@ -165,15 +167,19 @@ def test_search_two_hit_broad(client):
             'href':
             'https://metamdb.tu-bs.de/api/search?q=rxn&type=reaction&offset=0&limit=20&keyword_match=broad',
             'items': [{
-                'compounds': [{
-                    'compound': {
-                        'id': 1,
-                        'name': 'fumarate'
-                    },
-                    'position': 1,
-                    'quantity': 1,
-                    'reactant': 'substrate'
-                }],
+                        'balanced':
+        False,
+        'compounds': [{
+            'compound': {
+                'id': 1,
+                'name': 'fumarate',
+                'inchi': 'InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+',
+                'formula': 'C4H4O4'
+            },
+            'position': 1,
+            'quantity': 1,
+            'reactant': 'substrate'
+        }],
                 'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/1',
                     'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
@@ -201,7 +207,7 @@ def test_search_two_hit_broad(client):
                 None,
                 'updatedOn':
                 None
-            }, {
+            }, {'balanced': True,
                 'compounds': [],
                 'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/2',
@@ -268,15 +274,19 @@ def test_search_two_hit_broad2(client):
             'href':
             'https://metamdb.tu-bs.de/api/search?q=rxn,abc&type=reaction&offset=0&limit=20&keyword_match=broad',
             'items': [{
-                'compounds': [{
-                    'compound': {
-                        'id': 1,
-                        'name': 'fumarate'
-                    },
-                    'position': 1,
-                    'quantity': 1,
-                    'reactant': 'substrate'
-                }],
+                        'balanced':
+        False,
+        'compounds': [{
+            'compound': {
+                'id': 1,
+                'name': 'fumarate',
+                'inchi': 'InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+',
+                'formula': 'C4H4O4'
+            },
+            'position': 1,
+            'quantity': 1,
+            'reactant': 'substrate'
+        }],
                 'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/1',
                     'metamdb': 'https://metamdb.tu-bs.de/reaction/1'
@@ -304,7 +314,7 @@ def test_search_two_hit_broad2(client):
                 None,
                 'updatedOn':
                 None
-            }, {
+            }, {'balanced': True,
                 'compounds': [],
                 'externalUrls': {
                     'img': 'https://metamdb.tu-bs.de/img/aam/2',

@@ -90,7 +90,8 @@ def client():
                                  updated=0,
                                  updated_by_id=None,
                                  updated_on=None,
-                                 symmetry=1)
+                                 symmetry=1,
+                                 balanced=0)
             db.session.add(reaction1)
             reaction2 = Reaction(id=2,
                                  formula='malate <=> fumarate',
@@ -101,7 +102,8 @@ def client():
                                  updated=1,
                                  updated_by_id=1,
                                  updated_on=None,
-                                 symmetry=1)
+                                 symmetry=1,
+                                 balanced=0)
             db.session.add(reaction2)
             source1 = Source(id=1, name='metacyc')
             db.session.add(source1)
