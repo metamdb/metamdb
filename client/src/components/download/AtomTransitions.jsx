@@ -22,7 +22,7 @@ const AtomTransitions = () => {
       ) : (
         <div className="mt-3">
           <p className="lead text-muted">
-            There are no atom transitions for this reaction :(
+            There are no atom mappings for this reaction :(
           </p>
         </div>
       )}
