@@ -61,7 +61,8 @@ function identifierFormatter(cell, row) {
         .map((entry) => {
           return entry.databaseIdentifier;
         })
-        .join(" , ")}
+        .sort()
+        .join(", ")}
     </span>
   ) : null;
 }
