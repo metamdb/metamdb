@@ -18,7 +18,10 @@ const Contact = (props) => {
   function sendContact() {
     axios
       .post("/api/contact", values)
-      .then((res) => setApiSuccess(res.data))
+      .then((res) => {
+        setValues(initialState);
+        setApiSuccess(res.data);
+      })
       .catch((err) => setApiErrors(err.response.data));
   }
 
@@ -28,6 +31,7 @@ const Contact = (props) => {
     isSubmitting,
     handleChange,
     handleSubmit,
+    setValues,
   } = useTextForm(initialState, validateContact, sendContact);
 
   return (
