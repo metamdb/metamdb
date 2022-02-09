@@ -12,7 +12,6 @@ import {
 import styled from "styled-components";
 
 const Users = ({ users, setUsers }) => {
-  console.log(users);
   const data = React.useMemo(() => users, [users]);
 
   const columns = React.useMemo(
