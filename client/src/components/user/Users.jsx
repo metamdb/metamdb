@@ -10,7 +10,6 @@ import {
   useFlexLayout,
 } from "react-table";
 import styled from "styled-components";
-import { Popover, OverlayTrigger, Button } from "react-bootstrap";
 
 const Users = ({ users, setUsers }) => {
   console.log(users);
@@ -149,46 +148,6 @@ const Styles = styled.div`
     padding: 0.5rem;
   }
 `;
-
-function SelectColumnFilter({
-  column: { filterValue, setFilter, preFilteredRows, id },
-}) {
-  const options = React.useMemo(() => {
-    const options = new Set();
-    preFilteredRows.forEach((row) => {
-      options.add(row.values[id]);
-    });
-    return [...options.values()];
-  }, [id, preFilteredRows]);
-
-  return (
-    <select
-      className="custom-select"
-      value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-      }}
-    >
-      <option value="">All</option>
-      {options.map((option, i) => {
-        let content;
-        if (option === "approved") {
-          content = "Approved";
-        } else if (option === "pending") {
-          content = "Pending";
-        } else {
-          content = "Denied";
-        }
-
-        return (
-          <option key={i} value={option}>
-            {content}
-          </option>
-        );
-      })}
-    </select>
-  );
-}
 
 const Table = ({ columns, data }) => {
   const defaultColumn = React.useMemo(
@@ -361,31 +320,6 @@ const Table = ({ columns, data }) => {
     </>
   );
 };
-
-function reviewIcon({ value }) {
-  let content;
-  if (value === "approved") {
-    content = <i className="fas fa-check" style={{ color: "#438945" }} />;
-  } else if (value === "pending") {
-    content = <i className="fas fa-clock" style={{ color: "#EBA63F" }} />;
-  } else {
-    content = <i className="fas fa-times" style={{ color: "#E40C2B" }} />;
-  }
-
-  return (
-    <span
-      style={{
-        display: "block",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        textAlign: "center",
-      }}
-    >
-      {content}
-    </span>
-  );
-}
 
 function userLink({ value }) {
   return (
