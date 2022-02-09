@@ -39,7 +39,7 @@ const ReactionHistory = ({ reactionHistory }) => {
       },
       {
         Header: "Status",
-        accessor: "review_status.name",
+        accessor: "status.name",
         Cell: reviewIcon,
         Filter: SelectColumnFilter,
         filter: "exactTextCase",
