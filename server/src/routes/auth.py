@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequestKeyError
 
 from src import db, oauth, jwt
 from src.errors import handler
-from src.models.casm import User, ReactionHistory, ReactionHistorySchema
+from src.models.casm import User, ReactionHistory, ReactionHistorySchema, UsersSchema
 
 import datetime
 
@@ -16,6 +16,7 @@ auth_blueprint.register_error_handler(handler.InvalidUsage,
                                       handler.handle_invalid_usage)
 
 APPROVED_REVIEWERS = [2, 3]
+APPROVED_ADMINS = [3]
 
 
 @auth_blueprint.route('/orcid', methods=['GET'])
@@ -78,7 +79,18 @@ def get_user_data():
     else:
         review_dump = None
 
-    return jsonify({'history': history_dump, 'reviews': review_dump})
+    if current_user.role_id in APPROVED_ADMINS:
+        user_schema = UsersSchema(many=True)
+        users = User.query.all()
+        users_dump = user_schema.dump(users)
+    else:
+        users_dump = None
+
+    return jsonify({
+        'history': history_dump,
+        'reviews': review_dump,
+        'users': users_dump
+    })
 
 
 @jwt.user_identity_loader

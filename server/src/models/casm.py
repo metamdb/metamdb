@@ -539,3 +539,14 @@ class CompoundAutoCompleteSchema(ma.SQLAlchemySchema):
     inchi = ma.auto_field()
     inchi_short = ma.auto_field(data_key='inchiShort')
     inchi_key = ma.auto_field(data_key='inchiKey')
+
+
+class UsersSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+
+    id: int = ma.auto_field()
+    name: str = ma.auto_field()
+    date = ma.auto_field()
+    orcid: str = ma.auto_field()
+    role: str = Nested(RoleSchema)

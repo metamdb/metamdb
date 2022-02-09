@@ -7,6 +7,7 @@ import { Tabs, Tab } from "react-bootstrap";
 import axios from "axios";
 import ReactionHistory from "./ReactionHistory";
 import Reviews from "./Reviews";
+import Users from "./Users";
 
 const Profile = (props) => {
   const { authState, authDispatch } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const Profile = (props) => {
 
   const [reactionHistory, setReactionHistory] = useState(null);
   const [reviews, setReviews] = useState(null);
+  const [users, setUsers] = useState(null);
 
   useEffect(() => {
     if (!authState.isUser) {
@@ -28,6 +30,7 @@ const Profile = (props) => {
         .then((res) => {
           setReactionHistory(res.data.history);
           setReviews(res.data.reviews);
+          setUsers(res.data.users);
         })
         .catch((err) => console.log(err.response.data));
     }
@@ -65,6 +68,11 @@ const Profile = (props) => {
             {reviews && (
               <Tab eventKey="review" title="Reviews">
                 <Reviews reviews={reviews} setReviews={setReviews} />
+              </Tab>
+            )}
+            {users && (
+              <Tab eventKey="users" title="Users">
+                <Users users={users} setUsers={setUsers} />
               </Tab>
             )}
           </Tabs>

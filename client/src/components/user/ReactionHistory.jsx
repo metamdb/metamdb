@@ -386,10 +386,11 @@ function reactionLink({ value }) {
   );
 }
 
+const StyledPopover = styled(Popover)`
+  min-width: 600px;
+`;
+
 function fileDisplay({ value }) {
-  const StyledPopover = styled(Popover)`
-    min-width: 600px;
-  `;
   const popover = (
     <StyledPopover id="popover" className="shadow">
       <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>

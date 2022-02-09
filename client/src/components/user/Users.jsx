@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   useTable,
@@ -11,205 +11,63 @@ import {
 } from "react-table";
 import styled from "styled-components";
 import { Popover, OverlayTrigger, Button } from "react-bootstrap";
-import axios from "axios";
-import classnames from "classnames";
 
-const Reviews = ({ reviews, setReviews }) => {
-  const data = React.useMemo(() => reviews, [reviews]);
+const Users = ({ users, setUsers }) => {
+  console.log(users);
+  const data = React.useMemo(() => users, [users]);
 
-  let reviewedObject = reviews.map((review) => {
-    return { id: review.id, approved: null };
-  });
-
-  const [reviewed, setReviewed] = useState(reviewedObject);
-
-  const handleUpdateReview = (currentId, currentApproved) => {
-    let updateObject = reviewed.map((review, index) => {
-      return review.id === currentId
-        ? { id: currentId, approved: currentApproved }
-        : review;
-    });
-    setReviewed(updateObject);
-  };
-
-  function actionCell({ row }) {
-    return (
-      <div className="actions">
-        <div className="btn-group btn-group-toggle" data-toggle="buttons">
-          <label
-            className={classnames("btn btn-success", {
-              active: reviewed[row.id].approved,
-            })}
-            onClick={() => handleUpdateReview(reviewed[row.id].id, true)}
-          >
-            <input
-              type="radio"
-              name="options"
-              id="option1"
-              autoComplete="off"
-            />{" "}
-            Approve
-          </label>
-          <label
-            className={classnames("btn btn-danger", {
-              active: reviewed[row.id].approved === false,
-            })}
-            onClick={() => handleUpdateReview(reviewed[row.id].id, false)}
-          >
-            <input
-              type="radio"
-              name="options"
-              id="option2"
-              autoComplete="off"
-            />{" "}
-            Deny
-          </label>
-        </div>
-      </div>
-    );
-  }
-
-  const columns = [
-    {
-      Header: "ID",
-      accessor: "reaction.id",
-      Cell: reactionLink,
-      width: 50,
-      maxwidth: 60,
-      minWidth: 40,
-    },
-    {
-      Header: "File",
-      accessor: "file",
-      Cell: fileDisplay,
-      width: 100,
-      disableSortBy: true,
-    },
-    {
-      Header: "Desc.",
-      accessor: "description",
-      width: 200,
-      disableSortBy: true,
-    },
-    {
-      Header: "By",
-      accessor: "updatedBy",
-      Cell: userLink,
-      width: 60,
-    },
-    {
-      Header: "Action",
-      accessor: "id",
-      Cell: actionCell,
-      width: 80,
-      maxwidth: 80,
-      minWidth: 80,
-      disableSortBy: true,
-    },
-  ];
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: { Authorization: "Bearer " + token },
-    };
-
-    axios
-      .post("api/review", reviewed, config)
-      .then((res) => {
-        setReviews(res.data.reviews);
-      })
-      .catch((err) => console.log(err.response.data));
-  };
-
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "id",
+        Cell: userLink,
+        width: 50,
+        maxwidth: 60,
+        minWidth: 40,
+      },
+      {
+        Header: "Name",
+        accessor: "name",
+        width: 50,
+        maxwidth: 60,
+        minWidth: 40,
+      },
+      {
+        Header: "Date",
+        accessor: "date",
+        width: 50,
+        maxwidth: 60,
+        minWidth: 40,
+      },
+      {
+        Header: "Role",
+        accessor: "role.name",
+        width: 50,
+        maxwidth: 60,
+        minWidth: 40,
+      },
+      {
+        Header: "OrcID",
+        accessor: "orcid",
+        Cell: orcidLink,
+        width: 50,
+        maxwidth: 60,
+        minWidth: 40,
+      },
+    ],
+    []
+  );
   return (
     <div className="model">
       <Styles>
         <Table columns={columns} data={data} />
       </Styles>
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-toggle="modal"
-        data-target="#modalSubmit"
-      >
-        Save Changes
-      </button>
-
-      <div
-        className="modal fade"
-        id="modalSubmit"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="modalSubmitTitle"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Are you sure you want to save the following changes?
-              </h5>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="mb-3">
-                <p>
-                  Approved:{" "}
-                  {reviewed.map((review, index) =>
-                    review.approved ? (
-                      <Link
-                        key={index}
-                        className="text-primary mr-1 ml-1"
-                        to={`/reaction/${reviews[index].reaction.id}`}
-                        target="_blank"
-                      >
-                        {reviews[index].reaction.id}
-                      </Link>
-                    ) : null
-                  )}
-                </p>{" "}
-                <p>
-                  Denied:{" "}
-                  {reviewed.map((review, index) =>
-                    review.approved === false ? (
-                      <Link
-                        key={index}
-                        className="text-primary mr-1 ml-1"
-                        to={`/reaction/${reviews[index].reaction.id}`}
-                        target="_blank"
-                      >
-                        {reviews[index].reaction.id}
-                      </Link>
-                    ) : null
-                  )}
-                </p>{" "}
-              </div>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <button type="submit" className="btn btn-primary">
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
 
-export default Reviews;
+export default Users;
 
 const Styles = styled.div`
   padding: 1rem;
@@ -291,6 +149,46 @@ const Styles = styled.div`
     padding: 0.5rem;
   }
 `;
+
+function SelectColumnFilter({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}) {
+  const options = React.useMemo(() => {
+    const options = new Set();
+    preFilteredRows.forEach((row) => {
+      options.add(row.values[id]);
+    });
+    return [...options.values()];
+  }, [id, preFilteredRows]);
+
+  return (
+    <select
+      className="custom-select"
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      {options.map((option, i) => {
+        let content;
+        if (option === "approved") {
+          content = "Approved";
+        } else if (option === "pending") {
+          content = "Pending";
+        } else {
+          content = "Denied";
+        }
+
+        return (
+          <option key={i} value={option}>
+            {content}
+          </option>
+        );
+      })}
+    </select>
+  );
+}
 
 const Table = ({ columns, data }) => {
   const defaultColumn = React.useMemo(
@@ -464,39 +362,48 @@ const Table = ({ columns, data }) => {
   );
 };
 
-function reactionLink({ value }) {
+function reviewIcon({ value }) {
+  let content;
+  if (value === "approved") {
+    content = <i className="fas fa-check" style={{ color: "#438945" }} />;
+  } else if (value === "pending") {
+    content = <i className="fas fa-clock" style={{ color: "#EBA63F" }} />;
+  } else {
+    content = <i className="fas fa-times" style={{ color: "#E40C2B" }} />;
+  }
+
   return (
-    <Link className="text-primary" to={`/reaction/${value}`} target="_blank">
-      {value}
-    </Link>
+    <span
+      style={{
+        display: "block",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
+        textAlign: "center",
+      }}
+    >
+      {content}
+    </span>
   );
 }
 
 function userLink({ value }) {
   return (
-    <Link className="text-primary" to={`/user/${value.id}`} target="_blank">
-      {value.name}
+    <Link className="text-primary" to={`/user/${value}`} target="_blank">
+      {value}
     </Link>
   );
 }
 
-const StyledPopover = styled(Popover)`
-  min-width: 600px;
-`;
-
-function fileDisplay({ value }) {
-  const popover = (
-    <StyledPopover id="popover" className="shadow">
-      <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
-      <StyledPopover.Content>
-        <pre>{value}</pre>
-      </StyledPopover.Content>
-    </StyledPopover>
-  );
-
+function orcidLink({ value }) {
   return (
-    <OverlayTrigger placement="right" trigger="focus" overlay={popover}>
-      <Button variant="link">Click</Button>
-    </OverlayTrigger>
+    <a
+      href={`https://orcid.org/${value}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-primary"
+    >
+      {value}
+    </a>
   );
 }
