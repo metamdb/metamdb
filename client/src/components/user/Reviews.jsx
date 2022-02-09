@@ -10,7 +10,7 @@ import {
   useFlexLayout,
 } from "react-table";
 import styled from "styled-components";
-import { Popover, OverlayTrigger, Button } from "react-bootstrap";
+import { Popover, OverlayTrigger, Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import classnames from "classnames";
 
@@ -115,7 +115,6 @@ const Reviews = ({ reviews, setReviews }) => {
     const config = {
       headers: { Authorization: "Bearer " + token },
     };
-
     axios
       .post("api/review", reviewed, config)
       .then((res) => {
@@ -124,87 +123,72 @@ const Reviews = ({ reviews, setReviews }) => {
       .catch((err) => console.log(err.response.data));
   };
 
+  const [show, setShow] = useState(false);
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+
   return (
     <div className="model">
       <Styles>
         <Table columns={columns} data={data} />
       </Styles>
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-toggle="modal"
-        data-target="#modalSubmit"
-      >
+      <button type="button" className="btn btn-primary" onClick={handleShow}>
         Save Changes
       </button>
 
-      <div
-        className="modal fade"
-        id="modalSubmit"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="modalSubmitTitle"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Are you sure you want to save the following changes?
-              </h5>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Are you sure you want to save the following changes?
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <p>
+              Approved:{" "}
+              {reviewed.map((review, index) =>
+                review.approved ? (
+                  <Link
+                    key={index}
+                    className="text-primary mr-1 ml-1"
+                    to={`/reaction/${reviews[index].reaction.id}`}
+                    target="_blank"
+                  >
+                    {reviews[index].reaction.id}
+                  </Link>
+                ) : null
+              )}
+            </p>{" "}
+            <p>
+              Denied:{" "}
+              {reviewed.map((review, index) =>
+                review.approved === false ? (
+                  <Link
+                    key={index}
+                    className="text-primary mr-1 ml-1"
+                    to={`/reaction/${reviews[index].reaction.id}`}
+                    target="_blank"
+                  >
+                    {reviews[index].reaction.id}
+                  </Link>
+                ) : null
+              )}
+            </p>{" "}
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
               <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
+                type="submit"
+                className="btn btn-primary"
+                onClick={handleClose}
               >
-                <span aria-hidden="true">&times;</span>
+                Save Changes
               </button>
             </div>
-            <div className="modal-body">
-              <div className="mb-3">
-                <p>
-                  Approved:{" "}
-                  {reviewed.map((review, index) =>
-                    review.approved ? (
-                      <Link
-                        key={index}
-                        className="text-primary mr-1 ml-1"
-                        to={`/reaction/${reviews[index].reaction.id}`}
-                        target="_blank"
-                      >
-                        {reviews[index].reaction.id}
-                      </Link>
-                    ) : null
-                  )}
-                </p>{" "}
-                <p>
-                  Denied:{" "}
-                  {reviewed.map((review, index) =>
-                    review.approved === false ? (
-                      <Link
-                        key={index}
-                        className="text-primary mr-1 ml-1"
-                        to={`/reaction/${reviews[index].reaction.id}`}
-                        target="_blank"
-                      >
-                        {reviews[index].reaction.id}
-                      </Link>
-                    ) : null
-                  )}
-                </p>{" "}
-              </div>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <button type="submit" className="btn btn-primary">
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+          </form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };
