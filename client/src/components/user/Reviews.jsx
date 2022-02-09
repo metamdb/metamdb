@@ -93,7 +93,7 @@ const Reviews = ({ reviews, setReviews }) => {
     },
     {
       Header: "By",
-      accessor: "updated_by",
+      accessor: "updatedBy",
       Cell: userLink,
       width: 60,
     },
