@@ -106,7 +106,6 @@ class ReactionModel():
 
     def init_row(self, name: str, identifier: str, index: int,
                  row: dict[Any, Any], flux_type: Optional[str]):
-
         reaction = Reaction(name, identifier, index)
         reaction.arrow = row['arrow']
         reaction.set_identifier(identifier)
@@ -207,9 +206,9 @@ class ReactionModel():
                                 # TODO: Error message
                                 print('ERROR MET')
                         #TODO: Error message
-                        else:
-                            print('ERROR', reaction, metabo_identifier,
-                                  compounds)
+                        # else:
+                        #     print('ERROR', reaction, metabo, compounds)
+
             reaction.set_atom_mapping(metabolites)
         self.reactions.append(reaction)
 
@@ -363,7 +362,10 @@ class Reaction:
                         products: str) -> "MetabolitesTyping":
         metabolites: "MetabolitesTyping" = {'substrate': [], 'product': []}
         reactants = ['substrate', 'product']
+
         for index, reactant in enumerate([substrates, products]):
+            if reactant is None:
+                continue
             for element in reactant.split(' + '):
                 result = VALID_REACTION_IDENTIFIER_NEW.search(element)
                 if result is not None:
@@ -416,6 +418,7 @@ class Reaction:
     def set_atom_mapping(self, metabolites: "MetabolitesTyping"):
         atom_mapping = AtomMapping(self.name)
 
+        print(self.identifier, self.user_mapping)
         if self.identifier is None or self.user_mapping:
             self.curated = 'user'
             atom_mapping.set_user(metabolites)
@@ -592,6 +595,7 @@ class AtomMapping:
         self.mappings.append(mapping)
 
     def set_user(self, metabolites: "MetabolitesTyping"):
+        print(metabolites)
         mapping = []
         for reactant in ['substrate', 'product']:
             compounds = metabolites[reactant]
@@ -600,15 +604,16 @@ class AtomMapping:
                     compound['identifier'] = compound['name']
                 user_mapping = compound['mapping']
                 if user_mapping is None:
-                    AtomMapping.reaction_errors.append(self.reaction)
-                    break
+                    continue
+                    # AtomMapping.reaction_errors.append(self.reaction)
+                    # break
                 else:
                     compound_mapping = self.set_compound_mapping(
                         compound['name'], compound['identifier'], reactant,
                         user_mapping, compound['const'])
                     mapping.append(compound_mapping)
-        if mapping:
-            self.mappings.append(mapping)
+
+        self.mappings.append(mapping)
 
     def set_compound_mapping(self, name: str, metabolite: Optional[Union[int,
                                                                          str]],

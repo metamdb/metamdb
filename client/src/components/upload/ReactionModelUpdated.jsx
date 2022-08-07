@@ -589,8 +589,12 @@ const makeCsvData = (reactions) => {
         }
       });
     });
+    let reaction_name;
+    reaction_name = reaction.database_identifier
+      ? `${reaction.name} [${reaction.database_identifier}]`
+      : reaction.name;
     return {
-      name: reaction.name,
+      name: reaction_name,
       substrates: substrates.join(" + "),
       arrow: reaction.arrow,
       products: products.join(" + "),
