@@ -28,7 +28,7 @@ const FluxModelUpload = (props) => {
           </p>
           <p className="lead text-muted">
             Want to inspect your Reaction Model?{" "}
-            <Link className="text-primary" to="/reaction-model" target="_blank">
+            <Link className="text-primary" to="/atom-mapping" target="_blank">
               Click here!
             </Link>
           </p>
