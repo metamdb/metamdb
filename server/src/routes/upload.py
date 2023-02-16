@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from werkzeug.datastructures import FileStorage
 
 from flask import Blueprint, Response, jsonify, request
-from src.components.upload import reaction
+from src.components.upload import reaction, model
 from src.errors import handler
 from src.errors.exception import (AtomMappingError,
                                   FluxModelIdentificationError,
@@ -53,19 +53,22 @@ def upload_flux_model() -> Response:
     file: FileStorage = request.files['flux_file']
     file_read = file.read().decode('utf-8')
 
-    model_data = request.form['model']
-    model_schema = schema.ModelSchema()
-    model = model_schema.load(json.loads(model_data))
-    try:
-        model.initialize_fluxes(file_read)
-    except (NoFluxTypeError, FluxModelIdentificationError) as error:
-        error_message = error.args[0]
-        raise handler.InvalidUsage(status_code=400,
-                                   payload={'flux_file': error_message})
+    model_data = json.loads(request.form['model'])
+    aam_model = model.AtomMappingModel()._decode_metamdb(
+        model_data['reactions'])
 
-    data = schema.ModelSchema(only=('reactions', )).dump(model)
+    # model_schema = schema.ModelSchema()
+    # model = model_schema.load(json.loads(model_data))
+    # try:
+    #     model.initialize_fluxes(file_read)
+    # except (NoFluxTypeError, FluxModelIdentificationError) as error:
+    #     error_message = error.args[0]
+    #     raise handler.InvalidUsage(status_code=400,
+    #                                payload={'flux_file': error_message})
 
-    return jsonify({'data': data})
+    # data = schema.ModelSchema(only=('reactions', )).dump(model)
+
+    return jsonify({'data': 'test'})
 
 
 @upload_blueprint.route('reactions', methods=['POST'])
