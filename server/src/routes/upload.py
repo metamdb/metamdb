@@ -61,21 +61,3 @@ def upload_flux_model() -> Response:
     aam_model = model.read_flux_model(flux_model, aam_model)
 
     return jsonify({'data': 'test'})
-
-
-@upload_blueprint.route('reactions', methods=['POST'])
-def upload_reactions() -> Response:
-    reactions = request.get_json()
-
-    model = reaction.ReactionModel()
-    try:
-        model.initialize_from_identifiers(reactions)
-    except (AtomMappingError, NoFluxTypeError,
-            FluxModelIdentificationError) as error:
-        error_message = error.args[0]
-        raise handler.InvalidUsage(status_code=400,
-                                   payload={'file': error_message})
-
-    data = schema.ModelSchema().dump(model)
-
-    return jsonify({'data': data})
