@@ -57,16 +57,8 @@ def upload_flux_model() -> Response:
     aam_model = model.AtomMappingModel()._decode_metamdb(
         model_data['reactions'])
 
-    # model_schema = schema.ModelSchema()
-    # model = model_schema.load(json.loads(model_data))
-    # try:
-    #     model.initialize_fluxes(file_read)
-    # except (NoFluxTypeError, FluxModelIdentificationError) as error:
-    #     error_message = error.args[0]
-    #     raise handler.InvalidUsage(status_code=400,
-    #                                payload={'flux_file': error_message})
-
-    # data = schema.ModelSchema(only=('reactions', )).dump(model)
+    flux_model = [row.split(',') for row in file_read.split('\n') if row]
+    aam_model = model.read_flux_model(flux_model, aam_model)
 
     return jsonify({'data': 'test'})
 

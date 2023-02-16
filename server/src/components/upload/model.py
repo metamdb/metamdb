@@ -51,7 +51,6 @@ class AtomMappingModel():
     def _decode_metamdb(self, model: List[dict]) -> AtomMappingModel:
         print(type(model))
         for user_reaction in model:
-            print(user_reaction)
             reaction_name = user_reaction['name']
 
             reaction = Reaction(reaction_name, user_reaction['arrow'],
