@@ -175,3 +175,6 @@ img.tar.xz
 rxn/
 json/
 database/
+
+# Test data
+*.csv
