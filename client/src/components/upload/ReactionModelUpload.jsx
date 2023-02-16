@@ -23,8 +23,8 @@ const ReactionModelUpload = (props) => {
         </a>
       </p>
       <p>
-        <a href="https://metamdb.github.io/docs/assets/files/example_model-a423dac6169034c7325e93b30371611c.csv">
-          Download the example model here!
+        <a href="https://metamdb.github.io/docs/reaction-model">
+          You can find an example model here!
         </a>
       </p>
 
