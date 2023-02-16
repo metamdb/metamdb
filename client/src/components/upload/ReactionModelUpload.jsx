@@ -33,7 +33,7 @@ const ReactionModelUpload = (props) => {
       </p>
 
       <small className="text-muted">
-        e.g. v1 [10021], Glucose [1] (abcdef), -->, Glucose 6-phosphate [2]
+        e.g. v1 [10021], Glucose [1] (abcdef), --&gt;, Glucose 6-phosphate [2]
         (abcdef)
       </small>
       <FileUploadContainer {...initialState} />

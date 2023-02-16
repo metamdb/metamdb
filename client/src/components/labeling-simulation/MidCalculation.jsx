@@ -7,7 +7,7 @@ import ReactionModelUpload from "../upload/ReactionModelUpload";
 import MidParameter from "./MidParameter";
 import MidFeed from "./MidFeed";
 
-const MidCalculation = props => {
+const MidCalculation = (props) => {
   const { contextState } = useContext(MainContext);
 
   let midContent;
@@ -25,7 +25,13 @@ const MidCalculation = props => {
     }
   }
 
-  return <div className="mid-calcultion">{midContent}</div>;
+  return (
+    <div className="simulation">
+      <div className="content">
+        <div className="container">{midContent}</div>
+      </div>
+    </div>
+  );
 };
 
 export default MidCalculation;

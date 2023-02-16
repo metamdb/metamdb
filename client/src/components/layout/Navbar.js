@@ -46,6 +46,11 @@ const Navbar = (props) => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to="/simulation">
+                  Labeling Simulation
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/database-query">
                   Database Query
                 </Link>

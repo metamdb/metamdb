@@ -11,7 +11,7 @@ import Home from "./components/layout/Home";
 import Footer from "./components/layout/Footer";
 
 import AtomMapping from "./components/atom-mapping/AtomMapping";
-import MidCalculation from "./components/mid-calculation/MidCalculation";
+import LabelingSimulation from "./components/labeling-simulation/LabelingSimulation";
 import DatabaseQuery from "./components/database-query/DatabaseQuery";
 
 import ReactionModel from "./components/upload/ReactionModel";
@@ -42,7 +42,7 @@ const App = (props) => {
             <div>
               <Route exact path="/" component={Home} />
               <Route exact path="/atom-mapping" component={AtomMapping} />
-              <Route exact path="/mid-calculation" component={MidCalculation} />
+              <Route exact path="/simulation" component={LabelingSimulation} />
               <Route exact path="/database-query" component={DatabaseQuery} />
 
               <Route exact path="/reaction-model" component={ReactionModel} />
