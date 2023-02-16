@@ -23,7 +23,11 @@ const ReactionModelUpload = (props) => {
         </a>
       </p>
       <p>
-        <a href="https://metamdb.github.io/docs/reaction-model">
+        <a
+          href="https://metamdb.github.io/docs/reaction-model"
+          target="_blank"
+          rel="noreferrer"
+        >
           You can find an example model here!
         </a>
       </p>
