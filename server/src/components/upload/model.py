@@ -49,7 +49,6 @@ class AtomMappingModel():
         return self
 
     def _decode_metamdb(self, model: List[dict]) -> AtomMappingModel:
-        print(type(model))
         for user_reaction in model:
             reaction_name = user_reaction['name']
 
@@ -114,7 +113,6 @@ class AtomMappingModel():
         }
 
         for compound in compounds:
-            print(compound)
             name, mapping, reactant = compound['name'], compound[
                 'mapping'], compound['reactant']
 
