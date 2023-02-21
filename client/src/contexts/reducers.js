@@ -7,12 +7,14 @@ export const mainReducer = (state, action) => {
         ...state,
         isReactionModel: true,
         reactions: action.payload.data.reactions,
+        metabolites: action.payload.data.metabolites,
       };
     case "DELETE_REACTION_MODEL":
       return {
         ...state,
         isReactionModel: false,
         reactions: null,
+        metabolites: null,
       };
     case "UPDATE_ATOM_MAPPING":
       return update(state, {

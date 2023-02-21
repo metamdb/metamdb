@@ -7,6 +7,7 @@ const MainContextProvider = (props) => {
   const initialState = {
     isReactionModel: false,
     reactions: null,
+    metabolites: null,
     alerts: [],
   };
 
