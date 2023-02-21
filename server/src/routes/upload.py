@@ -54,6 +54,9 @@ def upload_flux_model() -> Response:
     file_read = file.read().decode('utf-8')
 
     model_data = json.loads(request.form['model'])
+    options = json.loads(request.form['options'])
+    print(options)
+
     aam_model = model.AtomMappingModel()._decode_metamdb(
         model_data['reactions'])
 

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { MainContext } from "../../contexts/MainContext";
 
 import ReactionModelUpload from "../upload/ReactionModelUpload";
-import FluxModelUpload from "../upload/FluxModelUpload";
+import LabelingOptions from "./LabelingOptions";
 
 const LabelingSimulation = (props) => {
   const { contextState } = useContext(MainContext);
@@ -13,7 +13,7 @@ const LabelingSimulation = (props) => {
     simulationContent = <ReactionModelUpload />;
   } else {
     if (!contextState.isFluxModel) {
-      simulationContent = <FluxModelUpload />;
+      simulationContent = <LabelingOptions />;
     }
   }
 
