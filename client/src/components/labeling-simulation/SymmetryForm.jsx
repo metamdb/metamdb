@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import Select from "react-select";
 
 function SymmetryForm({ metabolites, values, setValues }) {
   const [formData, setFormData] = useState({
     name: "",
     symmetry: "",
   });
+
+  const options = metabolites.map((metabolite) => {
+    return { value: metabolite, label: metabolite };
+  });
+  const onTargetChange = (inputValue, { action, prevInputValue }) => {
+    setFormData({ ...formData, name: inputValue.value });
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -30,19 +38,20 @@ function SymmetryForm({ metabolites, values, setValues }) {
   return (
     <div>
       <div className="form-inline">
-        <select
-          className="form-control mb-2 mr-sm-2"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-        >
-          <option value="">Metabolite...</option>
-          {metabolites.map((metabolite, index) => (
-            <option key={index} value={metabolite}>
-              {metabolite}
-            </option>
-          ))}
-        </select>
+        <Select
+          placeholder="Select Tracer Metabolite..."
+          className="mb-2 mr-sm-2"
+          closeMenuOnSelect={true}
+          options={options}
+          onChange={onTargetChange}
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              width: "100%",
+              minWidth: "450px",
+            }),
+          }}
+        />
 
         <label className="sr-only" htmlFor="inlineFormInputsymmetry">
           Symmetry

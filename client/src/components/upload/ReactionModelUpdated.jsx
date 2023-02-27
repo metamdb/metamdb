@@ -596,6 +596,7 @@ const makeCsvData = (reactions) => {
       products: products.join(" + "),
     };
   });
+  console.log(data);
   return data;
 };
 

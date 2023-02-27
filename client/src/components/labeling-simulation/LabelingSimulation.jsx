@@ -4,6 +4,7 @@ import { MainContext } from "../../contexts/MainContext";
 
 import ReactionModelUpload from "../upload/ReactionModelUpload";
 import LabelingOptions from "./LabelingOptions";
+import LabelingFeed from "./LabelingFeed";
 
 const LabelingSimulation = (props) => {
   const { contextState } = useContext(MainContext);
@@ -12,8 +13,10 @@ const LabelingSimulation = (props) => {
   if (!contextState.isReactionModel) {
     simulationContent = <ReactionModelUpload />;
   } else {
-    if (!contextState.isFluxModel) {
+    if (!contextState.isCalculated) {
       simulationContent = <LabelingOptions />;
+    } else {
+      simulationContent = <LabelingFeed />;
     }
   }
 

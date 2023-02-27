@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
 
 function MetaboliteForm({ metabolites, values, setValues }) {
   const [formData, setFormData] = useState({
@@ -8,9 +12,17 @@ function MetaboliteForm({ metabolites, values, setValues }) {
     enrichment: "",
   });
 
+  const options = metabolites.map((metabolite) => {
+    return { value: metabolite, label: metabolite };
+  });
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const onTargetChange = (inputValue, { action, prevInputValue }) => {
+    setFormData({ ...formData, name: inputValue.value });
   };
 
   const handleFormSubmit = (event) => {
@@ -34,19 +46,20 @@ function MetaboliteForm({ metabolites, values, setValues }) {
   return (
     <div>
       <div className="form-inline">
-        <select
-          className="form-control mb-2 mr-sm-2"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-        >
-          <option value="">Metabolite...</option>
-          {metabolites.map((metabolite, index) => (
-            <option key={index} value={metabolite}>
-              {metabolite}
-            </option>
-          ))}
-        </select>
+        <Select
+          placeholder="Select Tracer Metabolite..."
+          className="mb-2 mr-sm-2"
+          closeMenuOnSelect={true}
+          options={options}
+          onChange={onTargetChange}
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              width: "100%",
+              minWidth: "450px",
+            }),
+          }}
+        />
 
         <label className="sr-only" htmlFor="inlineFormInputLabeling">
           Labeling
@@ -60,6 +73,7 @@ function MetaboliteForm({ metabolites, values, setValues }) {
           value={formData.labeling}
           onChange={handleInputChange}
         />
+
         <label className="sr-only" htmlFor="inlineFormInputPurity">
           Purity
         </label>

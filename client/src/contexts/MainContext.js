@@ -6,8 +6,10 @@ export const MainContext = createContext();
 const MainContextProvider = (props) => {
   const initialState = {
     isReactionModel: false,
+    isCalculated: false,
     reactions: null,
     metabolites: null,
+    mids: [],
     alerts: [],
   };
 

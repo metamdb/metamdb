@@ -9,12 +9,24 @@ export const mainReducer = (state, action) => {
         reactions: action.payload.data.reactions,
         metabolites: action.payload.data.metabolites,
       };
+    case "UPLOAD_FLUX_MODEL":
+      return {
+        ...state,
+        isCalculated: true,
+        mids: action.payload.data.mids,
+      };
     case "DELETE_REACTION_MODEL":
       return {
         ...state,
         isReactionModel: false,
         reactions: null,
         metabolites: null,
+      };
+    case "DELETE_SIMULATION":
+      return {
+        ...state,
+        isCalculated: false,
+        mids: [],
       };
     case "UPDATE_ATOM_MAPPING":
       return update(state, {

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import axios from "axios";
 import classnames from "classnames";
 import { Row, Col, Alert } from "react-bootstrap";
@@ -16,6 +16,66 @@ import SymmetryForm from "./SymmetryForm";
 const animatedComponents = makeAnimated();
 
 const LabelingOptions = (props) => {
+  const [jsonFile, setJsonFile] = useState("");
+  const [fileContent, setFileContent] = useState("");
+  let fileRef = useRef();
+
+  const readFile = (event) => {
+    setJsonFile(event.target.files[0]);
+    const fileReader = new FileReader();
+    const { files } = event.target;
+
+    fileReader.readAsText(files[0], "UTF-8");
+    fileReader.onload = (e) => {
+      const content = e.target.result;
+      setFileContent(JSON.parse(content));
+    };
+  };
+
+  const useJson = () => {
+    if (fileContent.tracer) {
+      fileContent.tracer.forEach((tracer) => {
+        setTimeout(() => {
+          setValues((values) => ({
+            ...values,
+            tracer: [...values.tracer, tracer],
+          }));
+        }, "500");
+      });
+    }
+    if (fileContent.targets) {
+      fileContent.targets.forEach((target) => {
+        setTimeout(() => {
+          setValues((values) => ({
+            ...values,
+            targets: [...values.targets, { label: target, value: target }],
+          }));
+        }, "500");
+      });
+    }
+    if (fileContent.symmetry) {
+      fileContent.symmetry.forEach((sym) => {
+        setTimeout(() => {
+          setValues((values) => ({
+            ...values,
+            symmetry: [...values.symmetry, sym],
+          }));
+        }, "500");
+      });
+    }
+    if (fileContent.ignore) {
+      fileContent.ignore.forEach((ignore) => {
+        console.log(ignore);
+        setTimeout(() => {
+          setValues((values) => ({
+            ...values,
+            ignore: [...values.ignore, { label: ignore, value: ignore }],
+          }));
+        }, "500");
+      });
+    }
+  };
+
   const { contextState, dispatch } = useContext(MainContext);
   const { metabolites } = contextState;
 
@@ -30,8 +90,8 @@ const LabelingOptions = (props) => {
     ignore: [],
   };
   const [values, setValues] = useState(initialValues);
+  const [targets, setTargets] = useState([]);
   const [file, setFile] = useState(null);
-  console.log(values);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -57,9 +117,10 @@ const LabelingOptions = (props) => {
     axios
       .post(`/api/upload/flux`, uploadData)
       .then((res) => {
+        console.log(res.data);
         dispatch({
           type: "UPLOAD_FLUX_MODEL",
-          payload: res.data,
+          payload: res,
         });
         setLoading(false);
       })
@@ -81,8 +142,8 @@ const LabelingOptions = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const validationErrors = validateUpload(values);
-    setErrors(validationErrors);
+    // const validationErrors = validateUpload(values);
+    // setErrors(validationErrors);
 
     setSubmitting(true);
     const noErrors = Object.keys(errors).length === 0;
@@ -96,7 +157,7 @@ const LabelingOptions = (props) => {
 
   const [apiError, setApiError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  console.log(values);
   return (
     <div className="labeling-options">
       <div className="content">
@@ -108,7 +169,7 @@ const LabelingOptions = (props) => {
 
           <form onSubmit={handleSubmit}>
             <div className="flux-upload">
-              <h2>Flux Model</h2>
+              <h1>Flux Model</h1>
               <p className="lead text-muted">
                 Flux model upload for the calculation of mass isotopomer
                 distributions (MID). The flux model has to be seperated into
@@ -152,13 +213,54 @@ const LabelingOptions = (props) => {
                 </div>
               </div>
             </div>
+            <div className="json-upload">
+              <h1>Options</h1>
+              <div className="form-group">
+                <div className="row">
+                  <div className="col-10">
+                    <div className="custom-file">
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        onChange={readFile}
+                        name="file"
+                        className={classnames("custom-file-input", {
+                          "is-invalid": errors.jsonfile,
+                        })}
+                        id="customUpload"
+                      />
+                      <label
+                        id="customUploadLabel"
+                        htmlFor="customUpload"
+                        className="custom-file-label"
+                      >
+                        {jsonFile ? jsonFile.name : "Upload JSON Config..."}
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-2">
+                    <button
+                      className="btn btn-outline-primary mr-2"
+                      type="button"
+                      onClick={useJson}
+                    >
+                      <i className="fas fa-file-upload" /> Activate Config
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="tracers">
               <h2>Tracers</h2>
               <p className="lead text-muted">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi
-                neque fugit excepturi! Modi, facilis error quo consequatur
-                officia rem itaque? At vero enim possimus nihil quisquam
-                incidunt facere repellat accusamus!
+                Add your desired tracer combinations! To add a tracer choose the
+                metabolite from the drowdown and add it's labeling state in
+                string format with 0 for unlabeled atoms and 1 for labeled atoms
+                (e.g. "101" for a 1,3 labeled tracer). Then add the purity from
+                0.0-1.0 and the enrichment from 0.0-1.0. You can use the
+                enrichment to simulate tracer combinations (e.g. "111111"
+                enrichment 0.5 + "000000" enrichment 0.5 for a 50% fully labeled
+                tracer).
               </p>
               {errors.tracer && (
                 <div className="invalid-feedback">{errors.tracer}</div>
@@ -181,6 +283,7 @@ const LabelingOptions = (props) => {
                 <div className="invalid-feedback">{errors.target}</div>
               )}
               <Select
+                value={values.targets}
                 placeholder="Select Target Metabolites..."
                 closeMenuOnSelect={false}
                 components={animatedComponents}
@@ -199,10 +302,11 @@ const LabelingOptions = (props) => {
             <div className="symmetries mt-3">
               <h2>Symmetries</h2>
               <p className="lead text-muted">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi
-                neque fugit excepturi! Modi, facilis error quo consequatur
-                officia rem itaque? At vero enim possimus nihil quisquam
-                incidunt facere repellat accusamus!
+                Add symmetric metabolites for the simulation! Choose the
+                symmetric metabolite from the dropdown and reorder the indeces
+                of its atom mapping in string format (e.g. given the atom
+                mapping "abcd" with a/d and b/c symmetric atoms reorder its
+                indices to "4321").
               </p>
               <SymmetryForm
                 metabolites={metabolites}
@@ -223,6 +327,7 @@ const LabelingOptions = (props) => {
               )}
               <Select
                 placeholder="Select Metabolites To Ignore..."
+                value={values.ignore}
                 closeMenuOnSelect={false}
                 components={animatedComponents}
                 isMulti
