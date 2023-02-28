@@ -101,4 +101,5 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             source /home/${{ secrets.REMOTE_USER }}/.virtualenv/casm/bin/activate
-            pip install -r /home/${{ secrets.REMOTE_USER }}/apps/metamdb/server/requirements.txt
+            sudo pip install -r /home/${{ secrets.REMOTE_USER }}/apps/metamdb/server/requirements.txt
+            sudo systemctl restart supervisord
