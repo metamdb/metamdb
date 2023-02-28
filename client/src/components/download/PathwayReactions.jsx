@@ -393,10 +393,10 @@ function mappingImage({ value }) {
 
   const popoverImage = (
     <StyledPopoverImage id="popover" className="shadow">
-      <StyledPopoverImage.Title as="h3">
+      <StyledPopoverImage.Header as="h3">
         Atom Transition Image {value}
-      </StyledPopoverImage.Title>
-      <StyledPopoverImage.Content>
+      </StyledPopoverImage.Header>
+      <StyledPopoverImage.Body>
         <img
           src={imageSource}
           onError={(e) => {
@@ -406,7 +406,7 @@ function mappingImage({ value }) {
           alt={`Structure Atom Mapping ${value}`}
           style={{ width: "100%" }}
         />
-      </StyledPopoverImage.Content>
+      </StyledPopoverImage.Body>
     </StyledPopoverImage>
   );
 
