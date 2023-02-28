@@ -23,13 +23,17 @@ const ReactionModelUpload = (props) => {
         </a>
       </p>
       <p>
-        <a href="https://metamdb.github.io/docs/assets/files/example_model-a423dac6169034c7325e93b30371611c.csv">
-          Download the example model here!
+        <a
+          href="https://metamdb.github.io/docs/reaction-model"
+          target="_blank"
+          rel="noreferrer"
+        >
+          You can find an example model here!
         </a>
       </p>
 
       <small className="text-muted">
-        e.g. v1 [10021], Glucose [1] (abcdef), -->, Glucose 6-phosphate [2]
+        e.g. v1 [10021], Glucose [1] (abcdef), --&gt;, Glucose 6-phosphate [2]
         (abcdef)
       </small>
       <FileUploadContainer {...initialState} />

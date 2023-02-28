@@ -67,9 +67,9 @@ const MetaboliteStatistics = () => {
     <div className="metabolite-statistics">
       <div className="row">
         <div className="col-12 mb-3">
-          <div class="card shadow-sm">
-            <div class="card-content">
-              <div class="card-body">
+          <div className="card shadow-sm">
+            <div className="card-content">
+              <div className="card-body">
                 <h3>Metabolites</h3>
                 <Bar options={options} data={data} width={"500%"} />
               </div>

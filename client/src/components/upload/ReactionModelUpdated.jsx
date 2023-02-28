@@ -596,6 +596,7 @@ const makeCsvData = (reactions) => {
       products: products.join(" + "),
     };
   });
+  console.log(data);
   return data;
 };
 
@@ -712,7 +713,7 @@ function mappingConversion({ value }) {
 
   const popover = (
     <StyledPopover id="popover" className="shadow">
-      <StyledPopover.Content>
+      <StyledPopover.Body>
         {Object.keys(value).length ? (
           <ul className="list-group">
             {Object.keys(valueCopy).map((key, index) => (
@@ -724,7 +725,7 @@ function mappingConversion({ value }) {
         ) : (
           <h3>No Conversion</h3>
         )}
-      </StyledPopover.Content>
+      </StyledPopover.Body>
     </StyledPopover>
   );
 

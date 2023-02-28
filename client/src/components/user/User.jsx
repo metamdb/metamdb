@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   useTable,
   usePagination,
@@ -16,7 +16,7 @@ import { Popover, OverlayTrigger, Button } from "react-bootstrap";
 import ORCIDiD_iconvector from "../../shared/ORCIDiD_iconvector.svg";
 
 const User = (props) => {
-  const { id } = props.match.params;
+  const { id } = useParams();
 
   const [user, setUser] = useState(null);
   const [reactionHistory, setReactionHistory] = useState(null);
@@ -439,10 +439,10 @@ function fileDisplay({ value }) {
   `;
   const popover = (
     <StyledPopover id="popover" className="shadow">
-      <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
-      <StyledPopover.Content>
+      <StyledPopover.Header as="h3">Atom Transition</StyledPopover.Header>
+      <StyledPopover.Body>
         <pre>{value}</pre>
-      </StyledPopover.Content>
+      </StyledPopover.Body>
     </StyledPopover>
   );
 

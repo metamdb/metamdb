@@ -14,10 +14,11 @@ const MetaboliteInfo = ({ id }) => {
 
   const popover = (
     <StyledPopover id="popover" className="shadow">
-      <StyledPopover.Title as="h3">Mol File</StyledPopover.Title>
-      <StyledPopover.Content>
+      <StyledPopover.Header as="h3">Mol File</StyledPopover.Header>
+      <StyledPopover.Body>
+        {console.log(metabolite.file)}
         <pre>{metabolite.file}</pre>
-      </StyledPopover.Content>
+      </StyledPopover.Body>
     </StyledPopover>
   );
 
