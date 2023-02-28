@@ -6,9 +6,10 @@ import { MetaboliteContext } from "../../contexts/MetaboliteContext";
 
 import MetaboliteInfo from "./MetaboliteInfo";
 import MetaboliteIdentifiers from "./MetaboliteIdentifiers";
+import { useParams } from "react-router-dom";
 
 const MetaboliteContainer = (props) => {
-  const { id } = props.match.params;
+  const { id } = useParams();
   const { setMetabolite } = useContext(MetaboliteContext);
 
   useEffect(() => {

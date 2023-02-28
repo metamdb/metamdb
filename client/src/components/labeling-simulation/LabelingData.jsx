@@ -20,8 +20,8 @@ const LabelingData = () => {
   );
   return (
     <div className="labeling-data">
-      <div class="row">
-        <div class="col text-center">
+      <div className="row">
+        <div className="col text-center">
           <CSVLink
             className="btn btn-primary mt-3 text-center"
             data={csvData}
