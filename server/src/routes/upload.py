@@ -72,7 +72,11 @@ def upload_flux_model() -> Response:
         model_data['reactions'])
 
     print(file_read)
-    flux_model = [row.split(',') for row in file_read.split('\r\n') if row]
+    if '\r\n' in file_read:
+        flux_model = [row.split(',') for row in file_read.split('\r\n') if row]
+    else:
+        flux_model = [row.split(',') for row in file_read.split('\n') if row]
+
     print(flux_model)
     aam_model = model.read_flux_model(flux_model, aam_model)
 
