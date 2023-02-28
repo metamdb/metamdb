@@ -93,3 +93,12 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
       - name: Deploy with rsync
         run: rsync -avz /home/runner/work/metamdb/metamdb ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/home/${{ secrets.REMOTE_USER }}/apps
+      - name: Install Python Dependencies
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            source /home/${{ secrets.REMOTE_USER }}/.virtualenv/casm/bin/activate
+            pip install -r /home/${{ secrets.REMOTE_USER }}/apps/server/requirements.txt
