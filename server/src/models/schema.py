@@ -72,6 +72,10 @@ class ModelSchema(ma.Schema):
     reactions = ma.List(ma.Nested(ReactionSchema))
     elements = ma.Dict(keys=ma.Str(), values=ma.Nested(ElementSchema))
     flux_model = ma.Boolean(data_key='isFluxModel')
+    metabolites = ma.Method('get_metabolites')
+
+    def get_metabolites(self, obj):
+        return [val.name for val in obj.metabolites.values()]
 
     @post_load
     def make_model(self, data, **kwargs):

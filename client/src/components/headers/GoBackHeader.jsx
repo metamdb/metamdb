@@ -2,14 +2,14 @@ import React, { useContext } from "react";
 
 import { MainContext } from "../../contexts/MainContext";
 
-const GoBackHeader = props => {
+const GoBackHeader = (props) => {
   const { dispatch } = useContext(MainContext);
 
   const { title, type } = props;
 
   const goBack = () => {
     dispatch({
-      type: type
+      type: type,
     });
   };
 
@@ -21,7 +21,7 @@ const GoBackHeader = props => {
       <div className="col-2 ml-auto">
         <button
           type="button"
-          className="btn btn-outline-primary"
+          className="btn btn-danger"
           onClick={goBack}
           style={{ float: "right" }}
         >

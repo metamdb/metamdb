@@ -7,7 +7,8 @@ if TYPE_CHECKING:
     from werkzeug.datastructures import FileStorage
 
 from flask import Blueprint, Response, jsonify, request
-from src.components.upload import reaction
+from src.components.upload import reaction, model
+from src.components.calculation import simulation
 from src.errors import handler
 from src.errors.exception import (AtomMappingError,
                                   FluxModelIdentificationError,
@@ -43,7 +44,7 @@ def upload() -> Response:
     return jsonify({'data': data})
 
 
-@upload_blueprint.route('flux', methods=['POST'])
+@upload_blueprint.route('flux', methods=['POST', 'GET'])
 def upload_flux_model() -> Response:
     """Route for processing of a flux mode.
 
@@ -52,35 +53,38 @@ def upload_flux_model() -> Response:
     """
     file: FileStorage = request.files['flux_file']
     file_read = file.read().decode('utf-8')
+    # hola
 
-    model_data = request.form['model']
-    model_schema = schema.ModelSchema()
-    model = model_schema.load(json.loads(model_data))
-    try:
-        model.initialize_fluxes(file_read)
-    except (NoFluxTypeError, FluxModelIdentificationError) as error:
-        error_message = error.args[0]
-        raise handler.InvalidUsage(status_code=400,
-                                   payload={'flux_file': error_message})
+    model_data = json.loads(request.form['model'])
+    # print(model_data)
+    options = json.loads(request.form['options'])
+    print(options)
+    tracers = [{
+        k: float(v) if k in ['purity', 'enrichment'] else v
+        for k, v in tracer.items()
+    } for tracer in options['tracer']]
 
-    data = schema.ModelSchema(only=('reactions', )).dump(model)
+    targets = [target['value'] for target in options['targets']]
+    symmetries = options['symmetry']
+    ignore = [entry['value'] for entry in options['ignore']]
 
-    return jsonify({'data': data})
+    aam_model = model.AtomMappingModel()._decode_metamdb(
+        model_data['reactions'])
 
+    print(file_read)
+    flux_model = [row.split(',') for row in file_read.split('\r\n') if row]
+    print(flux_model)
+    aam_model = model.read_flux_model(flux_model, aam_model)
 
-@upload_blueprint.route('reactions', methods=['POST'])
-def upload_reactions() -> Response:
-    reactions = request.get_json()
+    for name, reaction in aam_model.reactions.items():
+        print(reaction.__dict__)
 
-    model = reaction.ReactionModel()
-    try:
-        model.initialize_from_identifiers(reactions)
-    except (AtomMappingError, NoFluxTypeError,
-            FluxModelIdentificationError) as error:
-        error_message = error.args[0]
-        raise handler.InvalidUsage(status_code=400,
-                                   payload={'file': error_message})
+    sim = simulation.Simulation(aam_model)
+    sim.initialize_substrates(tracers, ignore)
+    sim.initialize_targets(targets)
+    sim.initialize_symmetries(symmetries)
+    sim.generate_emus()
+    sim.calculate_mids()
+    mids = sim.get_mids()
 
-    data = schema.ModelSchema().dump(model)
-
-    return jsonify({'data': data})
+    return jsonify({'mids': mids})

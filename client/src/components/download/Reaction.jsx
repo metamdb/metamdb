@@ -9,9 +9,10 @@ import ReactionIdentifiers from "./ReactionIdentifiers";
 import Compounds from "./Compounds";
 import AtomTransitions from "./AtomTransitions";
 import ReviewPanel from "./ReviewPanel";
+import { useParams } from "react-router-dom";
 
 const ReactionContainer = (props) => {
-  const { id } = props.match.params;
+  const { id } = useParams();
   const { setReaction } = useContext(ReactionContext);
   const { authState } = useContext(AuthContext);
   const { isUser } = authState;

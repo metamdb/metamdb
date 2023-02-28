@@ -393,10 +393,10 @@ const StyledPopover = styled(Popover)`
 function fileDisplay({ value }) {
   const popover = (
     <StyledPopover id="popover" className="shadow">
-      <StyledPopover.Title as="h3">Atom Transition</StyledPopover.Title>
-      <StyledPopover.Content>
+      <StyledPopover.Header as="h3">Atom Transition</StyledPopover.Header>
+      <StyledPopover.Body>
         <pre>{value}</pre>
-      </StyledPopover.Content>
+      </StyledPopover.Body>
     </StyledPopover>
   );
 

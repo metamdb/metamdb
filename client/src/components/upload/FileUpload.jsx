@@ -67,13 +67,8 @@ const initialState = {
 const FileUploadContainer = (props) => {
   const { contextState, dispatch } = useContext(MainContext);
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-  } = useFileFormValidation(initialState, validateUpload, uploadFile);
+  const { values, errors, isSubmitting, handleChange, handleSubmit } =
+    useFileFormValidation(initialState, validateUpload, uploadFile);
 
   const [apiError, setApiError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -95,12 +90,14 @@ const FileUploadContainer = (props) => {
     axios
       .post(uploadPath, uploadData)
       .then((res) => {
+        console.log(res.data);
         dispatch({
           type: type,
           payload: res.data,
         });
       })
       .catch((err) => {
+        console.log(err.response.data);
         setApiError(err.response.data.file);
         setLoading(false);
       });

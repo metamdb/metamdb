@@ -3,9 +3,10 @@ import axios from "axios";
 
 import PathwayInfo from "./PathwayInfo";
 import PathwayReactions from "./PathwayReactions";
+import { useParams } from "react-router-dom";
 
 const PathwayContainer = (props) => {
-  const { id } = props.match.params;
+  const { id } = useParams();
   const [pathway, setPathway] = useState(null);
 
   useEffect(() => {
