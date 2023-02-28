@@ -6,7 +6,6 @@ import json
 from itertools import combinations, product
 from collections import deque
 from typing import Dict, Iterator, List, Optional, TextIO, Tuple
-from matplotlib.pyplot import get
 
 from typing_extensions import TypedDict
 

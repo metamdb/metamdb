@@ -262,8 +262,9 @@ class ReactionModel():
                     self.init_row(name, identifier, index + index_add_on, row,
                                   flux_type)
 
+        print(AtomMapping.reaction_errors)
         if AtomMapping.reaction_errors:
-            print(AtomMapping.reaction_errors)
+            print('Atom Mapping Reaction Errors', AtomMapping.reaction_errors)
             raise MissingAtomMappingError(AtomMapping.reaction_errors)
 
         # self.elements = {}
