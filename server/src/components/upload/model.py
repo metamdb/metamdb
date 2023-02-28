@@ -2,12 +2,7 @@ from __future__ import annotations
 
 import csv
 import re
-import json
-from itertools import combinations, product
-from collections import deque
 from typing import Dict, Iterator, List, Optional, TextIO, Tuple
-
-from typing_extensions import TypedDict
 
 from src.components.upload.components import Metabolite, Reaction
 
