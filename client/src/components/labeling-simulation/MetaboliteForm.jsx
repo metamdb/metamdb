@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import makeAnimated from "react-select/animated";
-
-const animatedComponents = makeAnimated();
 
 function MetaboliteForm({ metabolites, values, setValues }) {
   const [formData, setFormData] = useState({

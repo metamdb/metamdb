@@ -1,7 +1,6 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext, useRef } from "react";
 import axios from "axios";
 import classnames from "classnames";
-import { Row, Col, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import GoBackHeader from "../headers/GoBackHeader";
 import Select from "react-select";
@@ -9,7 +8,6 @@ import makeAnimated from "react-select/animated";
 
 import { MainContext } from "../../contexts/MainContext";
 
-import validateUpload from "../../validation/validateUpload";
 import MetaboliteForm from "./MetaboliteForm";
 import SymmetryForm from "./SymmetryForm";
 
@@ -90,7 +88,6 @@ const LabelingOptions = (props) => {
     ignore: [],
   };
   const [values, setValues] = useState(initialValues);
-  const [targets, setTargets] = useState([]);
   const [file, setFile] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setSubmitting] = useState(false);
@@ -126,18 +123,13 @@ const LabelingOptions = (props) => {
       })
       .catch((err) => {
         setApiError(err.response.data.file);
+        setErrors("error");
         setLoading(false);
       });
   };
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
-  };
-
-  const handleChange = (event) => {
-    setValues({
-      [event.target.name]: event.target.value,
-    });
   };
 
   const handleSubmit = (event) => {
