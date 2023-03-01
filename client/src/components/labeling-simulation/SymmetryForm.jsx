@@ -23,7 +23,7 @@ function SymmetryForm({ metabolites, values, setValues }) {
     event.preventDefault();
     setValues({ ...values, symmetry: [...values.symmetry, formData] });
     setFormData({
-      name: "",
+      ...formData,
       symmetry: "",
     });
   };

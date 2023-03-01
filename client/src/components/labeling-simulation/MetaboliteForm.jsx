@@ -26,7 +26,7 @@ function MetaboliteForm({ metabolites, values, setValues }) {
     event.preventDefault();
     setValues({ ...values, tracer: [...values.tracer, formData] });
     setFormData({
-      name: "",
+      ...formData,
       labeling: "",
       purity: "",
       enrichment: "",
