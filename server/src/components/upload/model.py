@@ -70,10 +70,7 @@ class AtomMappingModel():
         return self
 
     def _create_reaction(self, row: List[str], index: int) -> None:
-        reaction_name = row[0].split(' [')
-        reaction_name = reaction_name[0]
-
-        reaction = Reaction(reaction_name, row[2], index)
+        reaction = Reaction(row[0], row[2], index)
 
         try:
             self._set_metabolites(row[1], row[3], reaction)
@@ -81,7 +78,7 @@ class AtomMappingModel():
             if self._verbose:
                 print(e)
         else:
-            self.reactions.setdefault(reaction_name, reaction)
+            self.reactions.setdefault(row[0], reaction)
 
     def _identifiy_compoung_string(
             self, compound: str) -> Tuple[Optional[str], Optional[str]]:

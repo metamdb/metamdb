@@ -414,9 +414,12 @@ class Simulation():
                             emu.mid[0] += 1.0 * enrichment
 
                         self.substrate_emus.append(emu)
-        print(self.substrate_emus)
+        print('substrate emus', self.substrate_emus)
+        print('emus', self.generated_emus)
 
     def calculate_mids(self):
+        print(self.generated_emus)
+        print(self.generated_emus.keys())
         for emu_size in sorted(self.generated_emus.keys()):
             emu_network = self.generated_emus[emu_size]
             emu_names = list(emu_network.keys())
@@ -425,7 +428,9 @@ class Simulation():
             adj_matrix = np.zeros([len(emu_network), len(emu_network)])
             sub_matrix = np.empty((len(emu_network), 0), int)
 
+            print('network', emu_network)
             for index, emu in enumerate(emu_network.keys()):
+                print(index, emu)
                 for reaction_name, reaction in emu.sources.items():
                     flux = reaction['flux']
                     source_emus = reaction['emus']
@@ -482,6 +487,7 @@ class Simulation():
             self.substrate_emus += emu_network.keys()
 
     def _calculate_substrate_mids(self, emus):
+        print(emus)
         mids = [self._get_mid(emu) for emu in emus]
 
         max_length = len(max(mids, key=len))

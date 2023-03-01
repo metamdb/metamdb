@@ -81,7 +81,7 @@ def upload_flux_model() -> Response:
     aam_model = model.read_flux_model(flux_model, aam_model)
 
     for name, reaction in aam_model.reactions.items():
-        print(reaction.__dict__)
+        print('REACTION', reaction.__dict__)
 
     sim = simulation.Simulation(aam_model)
     sim.initialize_substrates(tracers, ignore)
