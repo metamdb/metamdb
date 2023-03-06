@@ -138,8 +138,6 @@ class Metabolite():
                     source_mapping_new = source_mapping
                     target_mapping_new = target_mapping
 
-                # print()
-                # print(source_mapping_new, target_mapping_new)
                 for atom in source_mapping_new:
                     if atom in target_mapping_new:
                         for to_add in mappings_to_add:

@@ -272,7 +272,6 @@ class Simulation():
         for size, removed_emus in sorted(removed.items()):
             for removed_emu in removed_emus:
                 for next_emu, reaction in removed_emu.next:
-                    # print(removed_emu, next_emu, reaction, next_emu.sources)
                     if len(next_emu) not in removed or next_emu not in removed[
                             len(next_emu)]:
                         if next_emu != removed_emu.parent:
@@ -316,8 +315,6 @@ class Simulation():
         for p in processes:
             p.join()
 
-        # for emu in self.generated_emus:
-        #     print(emu, emu.__dict__)
         for name, emu in result_d.items():
             self.generated_emus.append(emu)
 
@@ -414,12 +411,8 @@ class Simulation():
                             emu.mid[0] += 1.0 * enrichment
 
                         self.substrate_emus.append(emu)
-        print('substrate emus', self.substrate_emus)
-        print('emus', self.generated_emus)
 
     def calculate_mids(self):
-        print(self.generated_emus)
-        print(self.generated_emus.keys())
         for emu_size in sorted(self.generated_emus.keys()):
             emu_network = self.generated_emus[emu_size]
             emu_names = list(emu_network.keys())
@@ -428,9 +421,7 @@ class Simulation():
             adj_matrix = np.zeros([len(emu_network), len(emu_network)])
             sub_matrix = np.empty((len(emu_network), 0), int)
 
-            print('network', emu_network)
             for index, emu in enumerate(emu_network.keys()):
-                print(index, emu)
                 for reaction_name, reaction in emu.sources.items():
                     flux = reaction['flux']
                     source_emus = reaction['emus']
@@ -443,7 +434,6 @@ class Simulation():
 
                         elif len(source_emus) > 1:
                             for source_emu in source_emus:
-                                # print(emu, emu_size, source_emu)
                                 adj_matrix[index][emu_names.index(
                                     source_emu)] += flux / len(source_emus)
                     else:
@@ -459,13 +449,7 @@ class Simulation():
                     adj_matrix[index][index] -= flux * 1
 
             substrate_mids = self._calculate_substrate_mids(seen_emus)
-            # print(emu_network)
-            # print(adj_matrix)
-            # np.savetxt("adj_test.csv", adj_matrix, delimiter=",")
-            # print(seen_emus)
-            # print(sub_matrix)
 
-            # print(substrate_mids)
             try:
                 target_mids = np.dot(
                     np.dot(np.linalg.inv(adj_matrix), sub_matrix),
@@ -487,7 +471,6 @@ class Simulation():
             self.substrate_emus += emu_network.keys()
 
     def _calculate_substrate_mids(self, emus):
-        print(emus)
         mids = [self._get_mid(emu) for emu in emus]
 
         max_length = len(max(mids, key=len))

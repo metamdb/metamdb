@@ -419,7 +419,6 @@ class Reaction:
     def set_atom_mapping(self, metabolites: "MetabolitesTyping"):
         atom_mapping = AtomMapping(self.name)
 
-        print(self.identifier, self.user_mapping)
         if self.identifier is None or self.user_mapping:
             self.curated = 'user'
             atom_mapping.set_user(metabolites)
@@ -596,7 +595,6 @@ class AtomMapping:
         self.mappings.append(mapping)
 
     def set_user(self, metabolites: "MetabolitesTyping"):
-        print(metabolites)
         mapping = []
         for reactant in ['substrate', 'product']:
             compounds = metabolites[reactant]
