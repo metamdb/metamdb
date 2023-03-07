@@ -164,6 +164,18 @@ class MissingRequiredQueryParameter(BadRequest):
         super().__init__(self.payload)
 
 
+class DeadEndError(BadRequest):
+    """Uploaded flux model and reaction model cant be solved"""
+    def __init__(self, metabolites: List[str]):
+        self.payload = {
+            'deadend':
+            "The following metabolites are dead end's: %s" %
+            ', '.join(metabolites)
+        }
+
+        super(DeadEndError, self).__init__(self.payload)
+
+
 def handle_invalid_usage(error: InvalidUsage) -> Response:
     """Handles and returns base exceptions.
 

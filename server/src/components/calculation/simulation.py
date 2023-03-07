@@ -9,7 +9,7 @@ from typing_extensions import TypedDict
 
 from src.components.upload.components import EMU, Metabolite
 from src.components.upload.model import AtomMappingModel
-
+from src.errors import handler
 import logging
 from logging.config import dictConfig
 
@@ -459,8 +459,14 @@ class Simulation():
 
                 for col in np.where(~adj_matrix.any(axis=0))[0]:
                     print('col 0', col, emu_names[col])
+
+                zero_row = []
                 for row in np.where(~adj_matrix.any(axis=1))[0]:
+                    if emu_names[row].metabolite not in zero_row:
+                        zero_row.append(emu_names[row].metabolite)
                     print('row 0', row, emu_names[row])
+                if zero_row:
+                    raise handler.DeadEndError(zero_row)
 
                 print('LINALG ERROR', e)
                 break

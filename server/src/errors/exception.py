@@ -66,6 +66,15 @@ class LabelingSimulationError(Exception):
         super(LabelingSimulationError, self).__init__(message)
 
 
+class DeadEndError(LabelingSimulationError):
+    """Uploaded flux model and reaction model cant be solved"""
+    def __init__(self, metabolites: List[str]):
+        message = "The following metabolites are dead end's: %s" % ', '.join(
+            metabolites)
+
+        super(DeadEndError, self).__init__(message)
+
+
 class SingularMatrixError(LabelingSimulationError):
     """Uploaded flux model and reaction model cant be solved"""
     def __init__(self):

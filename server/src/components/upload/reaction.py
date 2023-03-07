@@ -106,7 +106,7 @@ class ReactionModel():
 
     def init_row(self, name: str, identifier: str, index: int,
                  row: dict[Any, Any], flux_type: Optional[str]):
-        reaction = Reaction(row['reaction'], identifier, index)
+        reaction = Reaction(name, identifier, index)
         reaction.arrow = row['arrow']
         reaction.set_identifier(identifier)
         reaction.reversible = row['arrow'] in REVERSIBLE

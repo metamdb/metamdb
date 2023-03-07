@@ -12,7 +12,7 @@ from src.components.calculation import simulation
 from src.errors import handler
 from src.errors.exception import (AtomMappingError,
                                   FluxModelIdentificationError,
-                                  NoFluxTypeError)
+                                  NoFluxTypeError, DeadEndError)
 from src.models import schema
 
 upload_blueprint = Blueprint('upload', __name__, url_prefix='/api/upload')

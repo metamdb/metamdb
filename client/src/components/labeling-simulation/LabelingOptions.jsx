@@ -63,7 +63,6 @@ const LabelingOptions = (props) => {
     }
     if (fileContent.ignore) {
       fileContent.ignore.forEach((ignore) => {
-        console.log(ignore);
         setTimeout(() => {
           setValues((values) => ({
             ...values,
@@ -89,7 +88,6 @@ const LabelingOptions = (props) => {
   };
   const [values, setValues] = useState(initialValues);
   const [file, setFile] = useState(null);
-  const [errors, setErrors] = useState({});
   const [isSubmitting, setSubmitting] = useState(false);
 
   const onTargetChange = (inputValue, { action, prevInputValue }) => {
@@ -114,7 +112,6 @@ const LabelingOptions = (props) => {
     axios
       .post(`/api/upload/flux`, uploadData)
       .then((res) => {
-        console.log(res.data);
         dispatch({
           type: "UPLOAD_FLUX_MODEL",
           payload: res,
@@ -122,8 +119,7 @@ const LabelingOptions = (props) => {
         setLoading(false);
       })
       .catch((err) => {
-        setApiError(err.response.data.file);
-        setErrors("error");
+        setApiError(err.response.data);
         setLoading(false);
       });
   };
@@ -134,22 +130,14 @@ const LabelingOptions = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const validationErrors = validateUpload(values);
-    // setErrors(validationErrors);
-
     setSubmitting(true);
-    const noErrors = Object.keys(errors).length === 0;
-    if (noErrors) {
-      upload();
-      setSubmitting(false);
-    } else {
-      setSubmitting(false);
-    }
+    upload();
+    setSubmitting(false);
   };
 
-  const [apiError, setApiError] = useState(null);
+  const [apiErrors, setApiError] = useState({});
   const [loading, setLoading] = useState(false);
-  console.log(values);
+
   return (
     <div className="labeling-options">
       <div className="content">
@@ -187,7 +175,7 @@ const LabelingOptions = (props) => {
                     type="file"
                     name="file"
                     className={classnames("custom-file-input", {
-                      "is-invalid": errors.file || apiError,
+                      "is-invalid": apiErrors.file,
                     })}
                     id="customUpload"
                     onChange={handleFileChange}
@@ -199,8 +187,8 @@ const LabelingOptions = (props) => {
                   >
                     {file ? file.name : "Upload File..."}
                   </label>
-                  {errors.file && (
-                    <div className="invalid-feedback">{errors.file}</div>
+                  {apiErrors.file && (
+                    <div className="invalid-feedback">{apiErrors.file}</div>
                   )}
                 </div>
               </div>
@@ -216,9 +204,7 @@ const LabelingOptions = (props) => {
                         type="file"
                         onChange={readFile}
                         name="file"
-                        className={classnames("custom-file-input", {
-                          "is-invalid": errors.jsonfile,
-                        })}
+                        className="custom-file-input"
                         id="customUpload"
                       />
                       <label
@@ -254,9 +240,7 @@ const LabelingOptions = (props) => {
                 enrichment 0.5 + "000000" enrichment 0.5 for a 50% fully labeled
                 tracer).
               </p>
-              {errors.tracer && (
-                <div className="invalid-feedback">{errors.tracer}</div>
-              )}
+
               <MetaboliteForm
                 metabolites={metabolites}
                 values={values}
@@ -271,9 +255,7 @@ const LabelingOptions = (props) => {
                 searchable and you can remove single metabolites from the list
                 or all of them together.
               </p>
-              {errors.target && (
-                <div className="invalid-feedback">{errors.target}</div>
-              )}
+
               <Select
                 value={values.targets}
                 placeholder="Select Target Metabolites..."
@@ -285,8 +267,8 @@ const LabelingOptions = (props) => {
                 styles={{
                   control: (baseStyles, state) => ({
                     ...baseStyles,
-                    width: "max-content",
-                    minWidth: "100%",
+                    width: "100%",
+                    minWidth: "0px",
                   }),
                 }}
               />
@@ -305,19 +287,17 @@ const LabelingOptions = (props) => {
                 values={values}
                 setValues={setValues}
               />
-              {errors.symmetry && (
-                <div className="invalid-feedback">{errors.symmetry}</div>
-              )}
             </div>
             <div className="ignore mt-3">
               <h2>Metabolites To Ignore</h2>
               <p className="lead text-muted">
                 Metabolites to ignore for the labeling simulation.
               </p>
-              {errors.ignore && (
-                <div className="invalid-feedback">{errors.ignore}</div>
-              )}
+
               <Select
+                className={classnames("test", {
+                  "is-invalid": apiErrors.deadend,
+                })}
                 placeholder="Select Metabolites To Ignore..."
                 value={values.ignore}
                 closeMenuOnSelect={false}
@@ -326,9 +306,12 @@ const LabelingOptions = (props) => {
                 options={options}
                 onChange={onIgnoreChange}
               />
+
+              {apiErrors.deadend && (
+                <div className="invalid-feedback">{apiErrors.deadend}</div>
+              )}
             </div>
             <div className="mt-3">
-              {apiError && <div className="invalid-feedback">{apiError}</div>}
               <button
                 className="btn btn-outline-primary mr-2"
                 type="submit"

@@ -52,7 +52,6 @@ function MetaboliteForm({ metabolites, values, setValues }) {
           styles={{
             control: (baseStyles, state) => ({
               ...baseStyles,
-              width: "100%",
               minWidth: "450px",
             }),
           }}
