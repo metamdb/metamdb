@@ -140,7 +140,6 @@ const FluxModel = () => {
   );
 
   const csvData = React.useMemo(() => makeCsvData(model), [model]);
-  const [data, setData] = React.useState(() => model);
 
   return (
     <>
@@ -165,7 +164,7 @@ const FluxModel = () => {
             </div>
             <div className="model">
               <Styles>
-                <Table columns={columns} data={data} />
+                <Table columns={columns} data={model} />
               </Styles>
             </div>
           </div>
