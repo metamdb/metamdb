@@ -14,6 +14,7 @@ export const mainReducer = (state, action) => {
         ...state,
         isCalculated: true,
         mids: action.payload.data.mids,
+        model: action.payload.data.model,
       };
     case "DELETE_REACTION_MODEL":
       return {
@@ -27,6 +28,7 @@ export const mainReducer = (state, action) => {
         ...state,
         isCalculated: false,
         mids: [],
+        model: [],
       };
     case "UPDATE_ATOM_MAPPING":
       return update(state, {

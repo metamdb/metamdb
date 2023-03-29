@@ -39,6 +39,8 @@ class ReactionSchema(ma.Schema):
     database_identifier = ma.Str()
     index = ma.Int()
     identifier = ma.Int(allow_none=True)
+    left = ma.Str()
+    right = ma.Str()
 
     reversible = ma.Boolean()
     conversion = ma.Dict(keys=KeyField(), values=ValueField(), allow_none=True)
@@ -83,3 +85,17 @@ class ModelSchema(ma.Schema):
         model.load(**data)
 
         return model
+
+
+class ModelReaction(ma.Schema):
+    name = ma.Str()
+    forward = ma.Float()
+    reverse = ma.Float()
+    reversible = ma.Boolean()
+    arrow = ma.Str()
+    left = ma.Str()
+    right = ma.Str()
+
+
+class AtomMappingModelSchema(ma.Schema):
+    reactions = ma.Dict(keys=ma.Str(), values=ma.Nested(ModelReaction))

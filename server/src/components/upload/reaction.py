@@ -104,9 +104,10 @@ class ReactionModel():
 
         return '_'.join([first_header, second_header])
 
-    def init_row(self, name: str, identifier: str, index: int,
-                 row: dict[Any, Any], flux_type: Optional[str]):
-        reaction = Reaction(name, identifier, index)
+    def init_row(self, name: str, identifier: str, index: int, row: dict[Any,
+                                                                         Any],
+                 flux_type: Optional[str], left: str, right: str):
+        reaction = Reaction(name, identifier, index, left, right)
         reaction.arrow = row['arrow']
         reaction.set_identifier(identifier)
         reaction.reversible = row['arrow'] in REVERSIBLE
@@ -251,7 +252,8 @@ class ReactionModel():
                         if identifier is None:
                             identifier = name
                         self.init_row(name, identifier, index + index_add_on,
-                                      row, flux_type)
+                                      row, flux_type, row['substrates'],
+                                      row['products'])
             else:
                 match = VALID_REACTION_IDENTIFIER.search(row['reaction'])
                 if match is not None:
@@ -260,7 +262,8 @@ class ReactionModel():
                     if identifier is None:
                         identifier = name
                     self.init_row(name, identifier, index + index_add_on, row,
-                                  flux_type)
+                                  flux_type, row['substrates'],
+                                  row['products'])
 
         print(AtomMapping.reaction_errors)
         if AtomMapping.reaction_errors:
@@ -328,7 +331,12 @@ class ReactionModel():
 class Reaction:
     """Get casm reaction based on provided identifier.
     """
-    def __init__(self, name: str, database_identifier: str, index: int):
+    def __init__(self,
+                 name: str,
+                 database_identifier: str,
+                 index: int,
+                 left: str = '',
+                 right: str = ''):
         self.name = name
         self.database_identifier = database_identifier
         self.index = index
@@ -338,6 +346,8 @@ class Reaction:
         self.reversible = False
         self.user_mapping = False
         self.identifier = None
+        self.left = left
+        self.right = right
 
         self.metabolites = {'substrate': [], 'product': []}
         self.mappings = []

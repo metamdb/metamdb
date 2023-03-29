@@ -169,11 +169,19 @@ class Metabolite():
 
 
 class Reaction:
-    def __init__(self, name: str, arrow: str, index: int):
+    def __init__(self,
+                 name: str,
+                 arrow: str,
+                 index: int,
+                 left_metabolites: str = '',
+                 right_metabolites: str = ''):
         self.name = name
         self.index = index
 
         self.arrow = arrow
+        self.left = left_metabolites
+        self.right = right_metabolites
+
         self.products_right = True
         if self.arrow in REVERSIBLE:
             self.reversible = True

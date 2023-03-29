@@ -22,6 +22,10 @@ class AtomMappingModel():
 
         self._verbose = verbose
 
+    def get_model(self):
+        for reaction in self.reactions.values():
+            print(reaction)
+
     def _add_flux(self, row: List[str], index: int) -> None:
         reaction = self.reactions.get(row[0])
         if reaction is None:
@@ -47,7 +51,8 @@ class AtomMappingModel():
             reaction_name = user_reaction['name']
 
             reaction = Reaction(reaction_name, user_reaction['arrow'],
-                                user_reaction['index'])
+                                user_reaction['index'], user_reaction['left'],
+                                user_reaction['right'])
 
             try:
                 self._set_metamdb_metabolites(user_reaction['mappings'][0],
@@ -70,7 +75,7 @@ class AtomMappingModel():
         return self
 
     def _create_reaction(self, row: List[str], index: int) -> None:
-        reaction = Reaction(row[0], row[2], index)
+        reaction = Reaction(row[0], row[2], index, row[1], row[3])
 
         try:
             self._set_metabolites(row[1], row[3], reaction)

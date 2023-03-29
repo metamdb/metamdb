@@ -11,6 +11,7 @@ const MainContextProvider = (props) => {
     metabolites: null,
     mids: [],
     alerts: [],
+    model : []
   };
 
   const [contextState, dispatch] = useReducer(mainReducer, initialState, () => {

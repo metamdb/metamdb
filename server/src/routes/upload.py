@@ -91,4 +91,7 @@ def upload_flux_model() -> Response:
     sim.calculate_mids()
     mids = sim.get_mids()
 
-    return jsonify({'mids': mids})
+    model_reactions = schema.AtomMappingModelSchema().dump(
+        aam_model)['reactions']
+
+    return jsonify({'mids': mids, 'model': model_reactions})
