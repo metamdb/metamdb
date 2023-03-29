@@ -12,6 +12,7 @@ import Footer from "./components/layout/Footer";
 
 import AtomMapping from "./components/atom-mapping/AtomMapping";
 import LabelingSimulation from "./components/labeling-simulation/LabelingSimulation";
+import FluxModel from "./components/labeling-simulation/FluxModel";
 import DatabaseQuery from "./components/database-query/DatabaseQuery";
 
 import ReactionModel from "./components/upload/ReactionModel";
@@ -52,6 +53,7 @@ const App = (props) => {
               <Route exact path="/database-query" element={<DatabaseQuery />} />
 
               <Route exact path="/reaction-model" element={<ReactionModel />} />
+              <Route exact path="/flux-model" element={<FluxModel />} />
 
               <Route exact path="/contact" element={<Contact />} />
               <Route exact path="/datenschutz" element={<Datenschutz />} />

@@ -98,4 +98,4 @@ class ModelReaction(ma.Schema):
 
 
 class AtomMappingModelSchema(ma.Schema):
-    reactions = ma.Dict(keys=ma.Str(), values=ma.Nested(ModelReaction))
+    reactions = ma.List(ma.Nested(ModelReaction))
