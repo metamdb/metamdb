@@ -497,6 +497,7 @@ class Simulation():
     def get_mids(self):
         mids = []
         for target in self.targets:
+            print(target, [tar.mid for tar in target.emus[1]])
             data = target.emus[target.atom_count][0].mid
             mid = {'name': target.name, 'data': data.tolist()}
             mids.append(mid)
