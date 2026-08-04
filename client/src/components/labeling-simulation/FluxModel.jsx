@@ -12,6 +12,7 @@ import {
 import styled from "styled-components";
 
 import { MainContext } from "../../contexts/MainContext";
+import MetaboliteExplorer from "./MetaboliteExplorer";
 
 const Styles = styled.div`
   padding: 1rem;
@@ -95,7 +96,7 @@ const Styles = styled.div`
 
 const FluxModel = () => {
   const { contextState } = useContext(MainContext);
-  const { model } = contextState;
+  const { model, metaboliteNetwork = {} } = contextState;
 
   const columns = React.useMemo(
     () => [
@@ -162,6 +163,7 @@ const FluxModel = () => {
                 </CSVLink>
               </div>
             </div>
+            <MetaboliteExplorer network={metaboliteNetwork} />
             <div className="model">
               <Styles>
                 <Table columns={columns} data={model} />

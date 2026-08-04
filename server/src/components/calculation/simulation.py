@@ -234,9 +234,13 @@ class Simulation():
                     other_mapping = mapping[0]
                     selected_mapping = mapping[1]
                     other_atoms = []
+                    mapped_selected_atoms = []
                     for atom_position in atoms:
+                        if atom_position > len(selected_mapping):
+                            continue
                         mapping_atom = selected_mapping[atom_position - 1]
                         if mapping_atom in other_mapping:
+                            mapped_selected_atoms.append(atom_position)
                             other_atoms.append(
                                 other_mapping.index(mapping_atom) + 1)
 
@@ -249,10 +253,10 @@ class Simulation():
                         source_metabolite = other_metabolite.name
                         source_atoms = other_atoms
                         target_metabolite = metabolite.name
-                        target_atoms = atoms
+                        target_atoms = mapped_selected_atoms
                     else:
                         source_metabolite = metabolite.name
-                        source_atoms = atoms
+                        source_atoms = mapped_selected_atoms
                         target_metabolite = other_metabolite.name
                         target_atoms = other_atoms
 
@@ -278,6 +282,23 @@ class Simulation():
             'produced_by': collect(metabolite.prev, True),
             'consumed_by': collect(metabolite.next, False)
         }
+
+    def get_metabolite_network(self):
+        """Serialize every mapped metabolite and its carbon-resolved edges."""
+        network = {}
+        for metabolite_name, metabolite in sorted(
+                self.model.metabolites.items()):
+            if metabolite.atom_count is None:
+                continue
+
+            atoms = list(range(1, metabolite.atom_count + 1))
+            network[metabolite_name] = {
+                'name': metabolite_name,
+                'atom_count': metabolite.atom_count,
+                **self.get_metabolite_reactions(metabolite_name, atoms)
+            }
+
+        return network
 
     def generate_emus(self):
         self._initialize_target_emus()

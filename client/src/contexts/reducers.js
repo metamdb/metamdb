@@ -15,6 +15,7 @@ export const mainReducer = (state, action) => {
         isCalculated: true,
         mids: action.payload.data.mids,
         model: action.payload.data.model,
+        metaboliteNetwork: action.payload.data.metabolite_network || {},
       };
     case "DELETE_REACTION_MODEL":
       return {
@@ -29,6 +30,7 @@ export const mainReducer = (state, action) => {
         isCalculated: false,
         mids: [],
         model: [],
+        metaboliteNetwork: {},
       };
     case "UPDATE_ATOM_MAPPING":
       return update(state, {

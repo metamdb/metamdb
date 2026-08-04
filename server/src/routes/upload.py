@@ -100,6 +100,7 @@ def upload_flux_model() -> Response:
         if diagnostic_emu is not None else None,
         **diagnostic_reactions
     }
+    metabolite_network = sim.get_metabolite_network()
 
     reactions = {'reactions': list(aam_model.reactions.values())}
     model_reactions = schema.AtomMappingModelSchema().dump(
@@ -108,5 +109,6 @@ def upload_flux_model() -> Response:
     return jsonify({
         'mids': mids,
         'model': model_reactions,
-        'diagnostic': diagnostic
+        'diagnostic': diagnostic,
+        'metabolite_network': metabolite_network
     })
