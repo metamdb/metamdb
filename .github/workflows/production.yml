@@ -37,7 +37,7 @@ jobs:
           files: ./client
           outPath: client.tar.gz
       - name: Upload client build for deploy
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: client
           path: client.tar.gz
@@ -67,7 +67,7 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Upload server build for deploy
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v7
         with:
           name: server
           path: ./server
@@ -81,7 +81,7 @@ jobs:
 
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v8
       - name: Unpack client
         run: tar -zxvf /home/runner/work/metamdb/metamdb/client/client.tar.gz
       - name: Install SSH Key
