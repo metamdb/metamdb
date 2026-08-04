@@ -71,17 +71,12 @@ def upload_flux_model() -> Response:
     aam_model = model.AtomMappingModel()._decode_metamdb(
         model_data['reactions'])
 
-    print(file_read)
     if '\r\n' in file_read:
         flux_model = [row.split(',') for row in file_read.split('\r\n') if row]
     else:
         flux_model = [row.split(',') for row in file_read.split('\n') if row]
 
-    print(flux_model)
     aam_model = model.read_flux_model(flux_model, aam_model)
-
-    for name, reaction in aam_model.reactions.items():
-        print('REACTION', reaction.__dict__)
 
     sim = simulation.Simulation(aam_model)
     sim.initialize_substrates(tracers, ignore)
