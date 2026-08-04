@@ -112,6 +112,22 @@ const LabelingOptions = (props) => {
     axios
       .post(`/api/upload/flux`, uploadData)
       .then((res) => {
+        const diagnostic = res.data.diagnostic;
+        if (diagnostic?.available) {
+          console.group(
+            `${diagnostic.name} [${diagnostic.atoms.join(", ")}]`
+          );
+          console.log("MID [M+0, M+1]:", diagnostic.mid);
+          console.log("Carbon-resolved producing reactions and fluxes:");
+          console.table(diagnostic.produced_by);
+          console.log("Carbon-resolved consuming reactions and fluxes:");
+          console.table(diagnostic.consumed_by);
+          console.groupEnd();
+        } else {
+          console.warn(
+            "5,10-methylenetetrahydrofolate position 9 is not available in the uploaded model."
+          );
+        }
         dispatch({
           type: "UPLOAD_FLUX_MODEL",
           payload: res,

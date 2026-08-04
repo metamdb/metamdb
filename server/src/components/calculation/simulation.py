@@ -198,6 +198,87 @@ class Simulation():
                     self.model.metabolites[mapping[0]].prev[mapping[1]].append(
                         mapping[2])
 
+    def initialize_diagnostic_emu(self, metabolite_name: str,
+                                  atoms: List[int]):
+        """Ensure an atom subset is calculated without adding it to results."""
+        metabolite = self.model.metabolites.get(metabolite_name)
+        if (metabolite is None or metabolite.atom_count is None or not atoms
+                or any(atom < 1 or atom > metabolite.atom_count
+                       for atom in atoms)):
+            return None
+
+        diagnostic_emu = metabolite.get_emu(sorted(set(atoms)))
+
+        # Tracer/boundary EMUs receive their prescribed MID during substrate
+        # initialization. Other EMUs must join the network calculation.
+        if metabolite not in self.substrates:
+            self.emu_queue.append(diagnostic_emu)
+            self.generated_emus.setdefault(
+                len(diagnostic_emu), {}).setdefault(
+                    diagnostic_emu,
+                    len(self.generated_emus[len(diagnostic_emu)]))
+
+        return diagnostic_emu
+
+    def get_metabolite_reactions(self, metabolite_name: str,
+                                 atoms: List[int]):
+        """Return carbon-resolved reaction directions around an atom subset."""
+        metabolite = self.model.metabolites.get(metabolite_name)
+        if metabolite is None:
+            return {'produced_by': [], 'consumed_by': []}
+
+        def collect(connections, produced):
+            reactions = {}
+            for other_metabolite, mappings in connections.items():
+                for mapping in mappings:
+                    other_mapping = mapping[0]
+                    selected_mapping = mapping[1]
+                    other_atoms = []
+                    for atom_position in atoms:
+                        mapping_atom = selected_mapping[atom_position - 1]
+                        if mapping_atom in other_mapping:
+                            other_atoms.append(
+                                other_mapping.index(mapping_atom) + 1)
+
+                    if not other_atoms:
+                        continue
+
+                    direction = mapping[2]
+                    reaction = mapping[3]
+                    if produced:
+                        source_metabolite = other_metabolite.name
+                        source_atoms = other_atoms
+                        target_metabolite = metabolite.name
+                        target_atoms = atoms
+                    else:
+                        source_metabolite = metabolite.name
+                        source_atoms = atoms
+                        target_metabolite = other_metabolite.name
+                        target_atoms = other_atoms
+
+                    key = (reaction.name, direction, source_metabolite,
+                           tuple(source_atoms), target_metabolite,
+                           tuple(target_atoms))
+                    reactions.setdefault(
+                        key, {
+                            'reaction': reaction.name,
+                            'direction': direction,
+                            'flux': getattr(reaction, direction),
+                            'source_metabolite': source_metabolite,
+                            'source_atoms': source_atoms,
+                            'target_metabolite': target_metabolite,
+                            'target_atoms': target_atoms
+                        })
+
+            return sorted(
+                reactions.values(),
+                key=lambda entry: (entry['reaction'], entry['direction']))
+
+        return {
+            'produced_by': collect(metabolite.prev, True),
+            'consumed_by': collect(metabolite.next, False)
+        }
+
     def generate_emus(self):
         self._initialize_target_emus()
         self._decompose_emus()

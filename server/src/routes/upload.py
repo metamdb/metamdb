@@ -82,12 +82,31 @@ def upload_flux_model() -> Response:
     sim.initialize_substrates(tracers, ignore)
     sim.initialize_targets(targets)
     sim.initialize_symmetries(symmetries)
+    diagnostic_name = '5,10-methylenetetrahydrofolate'
+    diagnostic_atoms = [9]
+    diagnostic_emu = sim.initialize_diagnostic_emu(diagnostic_name,
+                                                   diagnostic_atoms)
     sim.generate_emus()
     sim.calculate_mids()
     mids = sim.get_mids()
+
+    diagnostic_reactions = sim.get_metabolite_reactions(
+        diagnostic_name, diagnostic_atoms)
+    diagnostic = {
+        'name': diagnostic_name,
+        'atoms': diagnostic_atoms,
+        'available': diagnostic_emu is not None,
+        'mid': diagnostic_emu.mid.tolist()
+        if diagnostic_emu is not None else None,
+        **diagnostic_reactions
+    }
 
     reactions = {'reactions': list(aam_model.reactions.values())}
     model_reactions = schema.AtomMappingModelSchema().dump(
         reactions)['reactions']
 
-    return jsonify({'mids': mids, 'model': model_reactions})
+    return jsonify({
+        'mids': mids,
+        'model': model_reactions,
+        'diagnostic': diagnostic
+    })
