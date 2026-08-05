@@ -24,7 +24,10 @@ const formatPercent = (value) => `${(Number(value || 0) * 100).toFixed(2)}%`;
 const MidVector = ({ values, percentages = false }) => (
   <div className="d-flex flex-wrap">
     {(values || []).map((value, index) => (
-      <span className="badge badge-light border mr-1 mb-1" key={`m-${index}`}>
+      <span
+        className="badge bg-light text-dark border mr-1 mb-1"
+        key={`m-${index}`}
+      >
         M+{index}:{" "}
         {percentages ? formatPercent(value) : Number(value).toFixed(6)}
       </span>
@@ -157,7 +160,9 @@ const EmuTraceExplorer = ({ trace }) => {
           <div className="d-flex justify-content-between align-items-center">
             <h3 className="card-title mb-2">{emuLabel(selected)}</h3>
             {selected.boundary && (
-              <span className="badge badge-secondary">Boundary EMU</span>
+              <span className="badge bg-secondary text-white">
+                Boundary EMU
+              </span>
             )}
           </div>
           <strong>Calculated MID</strong>
@@ -212,7 +217,7 @@ const EmuTraceExplorer = ({ trace }) => {
                             {emuLabel(sourceEmu)}
                           </button>
                           {alreadyVisited && (
-                            <span className="badge badge-warning ml-1">
+                            <span className="badge bg-warning text-dark ml-1">
                               cycle
                             </span>
                           )}
