@@ -13,11 +13,14 @@ const MainContextProvider = (props) => {
     alerts: [],
     model: [],
     metaboliteNetwork: {},
+    emuTrace: { targets: [], nodes: {} },
   };
 
   const [contextState, dispatch] = useReducer(mainReducer, initialState, () => {
     const localData = localStorage.getItem("contextState");
-    return localData ? { ...initialState, ...JSON.parse(localData) } : initialState;
+    return localData
+      ? { ...initialState, ...JSON.parse(localData) }
+      : initialState;
   });
 
   useEffect(() => {

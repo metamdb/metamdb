@@ -178,3 +178,4 @@ database/
 
 # Test data
 *.csv
+test_data/

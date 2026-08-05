@@ -16,6 +16,7 @@ export const mainReducer = (state, action) => {
         mids: action.payload.data.mids,
         model: action.payload.data.model,
         metaboliteNetwork: action.payload.data.metabolite_network || {},
+        emuTrace: action.payload.data.emu_trace || { targets: [], nodes: {} },
       };
     case "DELETE_REACTION_MODEL":
       return {
@@ -31,6 +32,7 @@ export const mainReducer = (state, action) => {
         mids: [],
         model: [],
         metaboliteNetwork: {},
+        emuTrace: { targets: [], nodes: {} },
       };
     case "UPDATE_ATOM_MAPPING":
       return update(state, {

@@ -101,6 +101,7 @@ def upload_flux_model() -> Response:
         **diagnostic_reactions
     }
     metabolite_network = sim.get_metabolite_network()
+    emu_trace = sim.get_emu_trace()
 
     reactions = {'reactions': list(aam_model.reactions.values())}
     model_reactions = schema.AtomMappingModelSchema().dump(
@@ -110,5 +111,6 @@ def upload_flux_model() -> Response:
         'mids': mids,
         'model': model_reactions,
         'diagnostic': diagnostic,
-        'metabolite_network': metabolite_network
+        'metabolite_network': metabolite_network,
+        'emu_trace': emu_trace
     })

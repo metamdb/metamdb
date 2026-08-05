@@ -300,6 +300,127 @@ class Simulation():
 
         return network
 
+    @staticmethod
+    def _emu_key(emu: EMU) -> str:
+        atoms = ','.join(str(atom) for atom in emu.atoms)
+        return f'{emu.metabolite}::{atoms}'
+
+    @staticmethod
+    def _mid_values(mid) -> List[float]:
+        return [float(value) for value in np.asarray(mid, dtype=float)]
+
+    def _combined_source_mid(self, source_emus: List[EMU],
+                             source_mode: str):
+        if not source_emus:
+            return np.array([], dtype=float)
+
+        if source_mode == 'convolution':
+            combined_mid = np.asarray(source_emus[0].mid, dtype=float)
+            for source_emu in source_emus[1:]:
+                combined_mid = np.convolve(
+                    combined_mid,
+                    np.asarray(source_emu.mid, dtype=float))
+            return combined_mid
+
+        if source_mode == 'average':
+            return np.mean([
+                np.asarray(source_emu.mid, dtype=float)
+                for source_emu in source_emus
+            ], axis=0)
+
+        return np.asarray(source_emus[0].mid, dtype=float)
+
+    @staticmethod
+    def _fit_mid(mid, size: int):
+        mid_values = np.asarray(mid, dtype=float)
+        if len(mid_values) < size:
+            return np.pad(mid_values, (0, size - len(mid_values)))
+        return mid_values[:size]
+
+    def get_emu_trace(self):
+        """Serialize the calculated EMU graph required by selected targets."""
+        target_emus = []
+        for target in self.targets:
+            if target.atom_count is None:
+                continue
+            atoms = list(range(1, target.atom_count + 1))
+            target_emus.append(target.get_emu(atoms))
+
+        boundary_metabolites = {
+            metabolite.name for metabolite in self.substrates
+        }
+        nodes = {}
+        pending = list(target_emus)
+
+        while pending:
+            emu = pending.pop()
+            emu_key = self._emu_key(emu)
+            if emu_key in nodes:
+                continue
+
+            target_mid = np.asarray(emu.mid, dtype=float)
+            total_flux = sum(
+                float(source.get('flux') or 0.0)
+                for source in emu.sources.values())
+            source_rows = []
+
+            for source in emu.sources.values():
+                source_emus = source.get('emus', [])
+                pending.extend(source_emus)
+
+                flux = float(source.get('flux') or 0.0)
+                flux_share = flux / total_flux if total_flux else 0.0
+                source_mode = source.get('source_mode', 'direct')
+                source_mid = self._fit_mid(
+                    self._combined_source_mid(source_emus, source_mode),
+                    len(target_mid))
+                mid_contribution = source_mid * flux_share
+                mass_isotopomer_share = np.divide(
+                    mid_contribution,
+                    target_mid,
+                    out=np.zeros_like(mid_contribution),
+                    where=np.abs(target_mid) > 1e-15)
+
+                source_rows.append({
+                    'reaction': source.get('reaction'),
+                    'direction': source.get('direction'),
+                    'flux': flux,
+                    'flux_share': flux_share,
+                    'source_mode': source_mode,
+                    'source_mid': self._mid_values(source_mid),
+                    'mid_contribution': self._mid_values(mid_contribution),
+                    'mass_isotopomer_share': self._mid_values(
+                        mass_isotopomer_share),
+                    'source_emus': [{
+                        'id': self._emu_key(source_emu),
+                        'metabolite': source_emu.metabolite,
+                        'atoms': source_emu.atoms,
+                        'mid': self._mid_values(source_emu.mid)
+                    } for source_emu in source_emus]
+                })
+
+            source_rows.sort(
+                key=lambda row: (row['reaction'] or '',
+                                 row['direction'] or ''))
+            nodes[emu_key] = {
+                'id': emu_key,
+                'metabolite': emu.metabolite,
+                'atoms': emu.atoms,
+                'mid': self._mid_values(target_mid),
+                'boundary': (emu.metabolite in boundary_metabolites
+                             or not source_rows),
+                'sources': source_rows
+            }
+
+        return {
+            'targets': [{
+                'id': self._emu_key(emu),
+                'metabolite': emu.metabolite,
+                'atoms': emu.atoms
+            } for emu in target_emus],
+            'nodes': nodes
+        }
+
     def generate_emus(self):
         self._initialize_target_emus()
         self._decompose_emus()
@@ -328,7 +449,7 @@ class Simulation():
                         continue
 
                     source_atoms.sort()
-                    emu_id = reaction.name
+                    emu_id = f'{reaction.name}::{direction}'
                     source_emu = source_metabolite.get_emu(source_atoms)
                     source_emu_len = len(source_emu)
                     self.generated_emus.setdefault(source_emu_len, {})
@@ -336,6 +457,8 @@ class Simulation():
                     emu.sources.setdefault(emu_id, {})
                     emu.sources[emu_id].setdefault('flux', flux)
                     emu.sources[emu_id].setdefault('emus', [])
+                    emu.sources[emu_id].setdefault('reaction', reaction.name)
+                    emu.sources[emu_id].setdefault('direction', direction)
                     if source_emu not in emu.sources[emu_id]['emus']:
                         emu.sources[emu_id]['emus'].append(source_emu)
                     elif not sym:
@@ -531,14 +654,19 @@ class Simulation():
                         print(emu, reaction, source_emus)
                     elif source_emus[0] not in self.substrate_emus:
                         if len(source_emus) == 1:
+                            reaction['source_mode'] = 'direct'
                             adj_matrix[index][emu_names.index(
                                 source_emus[0])] += flux
 
                         elif len(source_emus) > 1:
+                            reaction['source_mode'] = 'average'
                             for source_emu in source_emus:
                                 adj_matrix[index][emu_names.index(
                                     source_emu)] += flux / len(source_emus)
                     else:
+                        reaction['source_mode'] = (
+                            'convolution'
+                            if len(source_emus) > 1 else 'direct')
                         if source_emus not in seen_emus:
                             seen_emus.append(source_emus)
                             sub_matrix = np.append(sub_matrix,

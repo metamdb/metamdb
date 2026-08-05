@@ -3,10 +3,11 @@ import { MainContext } from "../../contexts/MainContext";
 import { Link } from "react-router-dom";
 import LabelingData from "./LabelingData";
 import LabelingVisualization from "./LabelingVisualization";
+import EmuTraceExplorer from "./EmuTraceExplorer";
 import { Tabs, Tab } from "react-bootstrap";
 
 const LabelingFeed = (props) => {
-  const { dispatch } = useContext(MainContext);
+  const { contextState, dispatch } = useContext(MainContext);
 
   const goBack = () => {
     dispatch({
@@ -47,6 +48,9 @@ const LabelingFeed = (props) => {
         </Tab>
         <Tab eventKey="data" title="Data">
           <LabelingData />
+        </Tab>
+        <Tab eventKey="emu-trace" title="EMU Trace">
+          <EmuTraceExplorer trace={contextState.emuTrace} />
         </Tab>
       </Tabs>
     </div>
