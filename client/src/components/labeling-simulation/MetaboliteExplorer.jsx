@@ -21,6 +21,20 @@ const filterRowsByAtoms = (rows, selectedAtoms, produced) => {
   return rows
     .map((row) => {
       const currentAtoms = produced ? row.target_atoms : row.source_atoms;
+      if (row.mapped === false) {
+        const matchingAtoms = currentAtoms.filter((atom) =>
+          selectedAtoms.includes(atom)
+        );
+        if (matchingAtoms.length === 0) {
+          return null;
+        }
+        return {
+          ...row,
+          source_atoms: produced ? [] : matchingAtoms,
+          target_atoms: produced ? matchingAtoms : [],
+        };
+      }
+
       const matchingIndexes = currentAtoms
         .map((atom, index) => (selectedAtoms.includes(atom) ? index : -1))
         .filter((index) => index !== -1);
@@ -42,7 +56,7 @@ const ReactionConnections = ({ title, rows, produced, onNavigate }) => (
   <div className="mt-3">
     <h3>{title}</h3>
     {rows.length === 0 ? (
-      <p className="text-muted">No mapped reactions for this carbon selection.</p>
+      <p className="text-muted">No reactions for this carbon selection.</p>
     ) : (
       <div className="table-responsive">
         <table className="table table-sm table-striped">
@@ -57,6 +71,7 @@ const ReactionConnections = ({ title, rows, produced, onNavigate }) => (
           </thead>
           <tbody>
             {rows.map((row, index) => {
+              const isMapped = row.mapped !== false;
               const connectedMetabolite = produced
                 ? row.source_metabolite
                 : row.target_metabolite;
@@ -66,9 +81,13 @@ const ReactionConnections = ({ title, rows, produced, onNavigate }) => (
 
               return (
                 <tr
-                  key={`${row.reaction}-${row.direction}-${connectedMetabolite}-${connectedAtoms.join(
-                    "-"
-                  )}-${index}`}
+                  key={[
+                    row.reaction,
+                    row.direction,
+                    connectedMetabolite || "unmapped",
+                    connectedAtoms.join("-"),
+                    index,
+                  ].join("-")}
                 >
                   <td>{row.reaction}</td>
                   <td>{row.direction}</td>
@@ -76,17 +95,48 @@ const ReactionConnections = ({ title, rows, produced, onNavigate }) => (
                     {formatFlux(row.flux)}
                   </td>
                   <td>
-                    {row.source_metabolite} {atomLabel(row.source_atoms)} →{" "}
-                    {row.target_metabolite} {atomLabel(row.target_atoms)}
+                    {isMapped ? (
+                      <>
+                        {row.source_metabolite} {atomLabel(row.source_atoms)} →{" "}
+                        {row.target_metabolite} {atomLabel(row.target_atoms)}
+                      </>
+                    ) : (
+                      <>
+                        {produced ? (
+                          <>
+                            <span className="text-muted">
+                              Mapping unavailable
+                            </span>{" "}
+                            → {row.target_metabolite}{" "}
+                            {atomLabel(row.target_atoms)}
+                          </>
+                        ) : (
+                          <>
+                            {row.source_metabolite}{" "}
+                            {atomLabel(row.source_atoms)} →{" "}
+                            <span className="text-muted">
+                              Mapping unavailable
+                            </span>
+                          </>
+                        )}
+                        {row.equation ? (
+                          <small className="d-block">{row.equation}</small>
+                        ) : null}
+                      </>
+                    )}
                   </td>
                   <td>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => onNavigate(row, produced)}
-                    >
-                      {connectedMetabolite} {atomLabel(connectedAtoms)}
-                    </button>
+                    {isMapped ? (
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-primary"
+                        onClick={() => onNavigate(row, produced)}
+                      >
+                        {connectedMetabolite} {atomLabel(connectedAtoms)}
+                      </button>
+                    ) : (
+                      <span className="text-muted">Endpoint</span>
+                    )}
                   </td>
                 </tr>
               );
@@ -199,8 +249,8 @@ const MetaboliteExplorer = ({ network }) => {
         <div>
           <h2>Metabolite and Carbon Explorer</h2>
           <p className="text-muted">
-            Inspect all mapped reactions or select carbon positions and follow
-            their atom-resolved path through the flux model.
+            Select carbon positions and follow their atom-resolved path.
+            Reactions without atom mappings are shown as endpoints.
           </p>
         </div>
         <button
@@ -225,30 +275,29 @@ const MetaboliteExplorer = ({ network }) => {
         <button
           type="button"
           className={`btn btn-sm mr-1 mb-1 ${
-            selectedAtoms.length === 0
-              ? "btn-primary"
-              : "btn-outline-primary"
+            selectedAtoms.length === 0 ? "btn-primary" : "btn-outline-primary"
           }`}
           onClick={() => setSelectedAtoms([])}
         >
           All
         </button>
-        {Array.from({ length: selected.atom_count }, (_, index) => index + 1).map(
-          (atom) => (
-            <button
-              type="button"
-              key={atom}
-              className={`btn btn-sm mr-1 mb-1 ${
-                selectedAtoms.includes(atom)
-                  ? "btn-primary"
-                  : "btn-outline-primary"
-              }`}
-              onClick={() => toggleAtom(atom)}
-            >
-              {atom}
-            </button>
-          )
-        )}
+        {Array.from(
+          { length: selected.atom_count },
+          (_, index) => index + 1
+        ).map((atom) => (
+          <button
+            type="button"
+            key={atom}
+            className={`btn btn-sm mr-1 mb-1 ${
+              selectedAtoms.includes(atom)
+                ? "btn-primary"
+                : "btn-outline-primary"
+            }`}
+            onClick={() => toggleAtom(atom)}
+          >
+            {atom}
+          </button>
+        ))}
       </div>
 
       {history.length > 0 && (

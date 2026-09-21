@@ -278,9 +278,31 @@ class Simulation():
                 reactions.values(),
                 key=lambda entry: (entry['reaction'], entry['direction']))
 
+        produced_by = collect(metabolite.prev, True)
+        consumed_by = collect(metabolite.next, False)
+
+        for target, direction, reaction in metabolite.unmapped_reactions:
+            produced = target == 'prev'
+            entry = {
+                'reaction': reaction.name,
+                'direction': direction,
+                'flux': getattr(reaction, direction),
+                'source_metabolite': None if produced else metabolite.name,
+                'source_atoms': [] if produced else atoms,
+                'target_metabolite': metabolite.name if produced else None,
+                'target_atoms': atoms if produced else [],
+                'mapped': False,
+                'equation': f'{reaction.left} {reaction.arrow} {reaction.right}'
+            }
+            (produced_by if produced else consumed_by).append(entry)
+
         return {
-            'produced_by': collect(metabolite.prev, True),
-            'consumed_by': collect(metabolite.next, False)
+            'produced_by': sorted(
+                produced_by,
+                key=lambda entry: (entry['reaction'], entry['direction'])),
+            'consumed_by': sorted(
+                consumed_by,
+                key=lambda entry: (entry['reaction'], entry['direction']))
         }
 
     def get_metabolite_network(self):

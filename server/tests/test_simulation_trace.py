@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.components.calculation.simulation import Simulation
-from src.components.upload.components import Metabolite
+from src.components.upload.components import Metabolite, Reaction
 from src.components.upload.model import AtomMappingModel
 
 
@@ -95,3 +95,73 @@ def test_emu_trace_convolves_condensation_source_emus():
     assert [source_emu['id'] for source_emu in row['source_emus']] == [
         'acetyl-CoA::1', 'oxaloacetate::1,2'
     ]
+
+
+def test_metabolite_network_includes_unmapped_consuming_endpoint():
+    model = AtomMappingModel()
+    glycine = Metabolite('glycine', 2)
+    biomass = Reaction('biomass', '→', 0, 'glycine', 'biomass')
+    biomass.forward = 3.5
+    biomass.reverse = 0
+
+    glycine.add_reaction(biomass, (glycine, None), 'substrate', [])
+    model.metabolites = {'glycine': glycine}
+    model.reactions = {'biomass': biomass}
+
+    network = Simulation(model).get_metabolite_network()
+    endpoint = network['glycine']['consumed_by'][0]
+
+    assert endpoint == {
+        'reaction': 'biomass',
+        'direction': 'forward',
+        'flux': 3.5,
+        'source_metabolite': 'glycine',
+        'source_atoms': [1, 2],
+        'target_metabolite': None,
+        'target_atoms': [],
+        'mapped': False,
+        'equation': 'glycine → biomass'
+    }
+
+
+def test_decode_retains_unmapped_secretion_before_mapped_reaction():
+    model = AtomMappingModel()._decode_metamdb([
+        {
+            'name': 'glycine secretion',
+            'arrow': '→',
+            'index': 0,
+            'left': 'glycine',
+            'right': '',
+            'mappings': []
+        },
+        {
+            'name': 'glycine synthesis',
+            'arrow': '→',
+            'index': 1,
+            'left': 'precursor (ab)',
+            'right': 'glycine (ab)',
+            'mappings': [[
+                {
+                    'name': 'precursor',
+                    'mapping': 'ab',
+                    'reactant': 'substrate'
+                },
+                {
+                    'name': 'glycine',
+                    'mapping': 'ab',
+                    'reactant': 'product'
+                }
+            ]]
+        }
+    ])
+    model.decode_flux(iter([
+        ['glycine secretion', '2.0', '0'],
+        ['glycine synthesis', '1.0', '0']
+    ]), 'FORWARD_REVERSE')
+
+    network = Simulation(model).get_metabolite_network()
+
+    assert set(model.reactions) == {'glycine secretion', 'glycine synthesis'}
+    assert network['glycine']['atom_count'] == 2
+    assert network['glycine']['consumed_by'][0]['reaction'] == (
+        'glycine secretion')

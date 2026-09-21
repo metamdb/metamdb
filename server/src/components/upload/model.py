@@ -54,13 +54,18 @@ class AtomMappingModel():
                                 user_reaction['index'], user_reaction['left'],
                                 user_reaction['right'])
 
+            mappings = user_reaction.get('mappings') or []
             try:
-                self._set_metamdb_metabolites(user_reaction['mappings'][0],
-                                              reaction)
+                if mappings and mappings[0]:
+                    self._set_metamdb_metabolites(mappings[0], reaction)
+                else:
+                    # Boundary, secretion, and biomass reactions commonly do
+                    # not have atom mappings.  They still need to be retained
+                    # so their flux can be shown as an untraceable endpoint.
+                    self._set_metabolites(user_reaction.get('left', ''),
+                                          user_reaction.get('right', ''),
+                                          reaction)
             except NameError as e:
-                if self._verbose:
-                    print(e)
-            except IndexError as e:
                 if self._verbose:
                     print(e)
             else:
@@ -129,6 +134,8 @@ class AtomMappingModel():
 
                 metabolite = Metabolite(name, atom_count)
                 self.metabolites.setdefault(name, metabolite)
+            else:
+                self._set_atom_count_from_mapping(metabolite, mapping)
 
             metabolites[reactant].append((metabolite, mapping))
 
@@ -151,7 +158,7 @@ class AtomMappingModel():
         else:
             substrates_products = [products, substrates]
         for index, reactant in enumerate(substrates_products):
-            if reactant is None:
+            if not reactant:
                 continue
 
             for element in reactant.split(' + '):
@@ -174,6 +181,8 @@ class AtomMappingModel():
 
                     metabolite = Metabolite(name, atom_count)
                     self.metabolites.setdefault(name, metabolite)
+                else:
+                    self._set_atom_count_from_mapping(metabolite, mapping)
 
                 metabolites[reactants[index]].append((metabolite, mapping))
 
@@ -183,6 +192,18 @@ class AtomMappingModel():
                     reaction, metabolite, reactant,
                     metabolites['substrate' if reactant ==
                                 'product' else 'product'])
+
+    @staticmethod
+    def _set_atom_count_from_mapping(metabolite: Metabolite,
+                                     mapping: Optional[str]):
+        """Fill a carbon count first encountered in an unmapped reaction."""
+        if metabolite.atom_count is not None or mapping is None:
+            return
+
+        metabolite.atom_count = (len(mapping.split('.'))
+                                 if '.' in mapping else len(mapping))
+        for atom_count in range(1, metabolite.atom_count + 1):
+            metabolite.emus.setdefault(atom_count, [])
 
 
 def read_csv_mapping_model(fp: TextIO) -> AtomMappingModel:

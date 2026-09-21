@@ -73,6 +73,11 @@ class Metabolite():
                                                bool]]] = {}
         self.next: Dict[Metabolite, List[Tuple[str, str, str, Reaction,
                                                bool]]] = {}
+        # Reaction directions in which this metabolite participates but no
+        # carbon transfer can be inferred.  Keeping these separately lets the
+        # explorer show boundary/biomass reactions without treating them as
+        # atom-resolved edges.
+        self.unmapped_reactions: List[Tuple[str, str, Reaction]] = []
 
         self.emus: Dict[int, List[EMU]] = {}
         if self.atom_count is not None:
@@ -125,6 +130,7 @@ class Metabolite():
                 })
 
         source_mapping = source[1]
+        mapping_added = False
         for metabolite in metabolites:
             target_mapping = metabolite[1]
             if source_mapping is not None and target_mapping is not None:
@@ -145,7 +151,13 @@ class Metabolite():
                                 to_add['target'], metabolite[0],
                                 target_mapping_new, source_mapping_new,
                                 to_add['direction'], reaction)
+                            mapping_added = True
                         break
+
+        if not mapping_added:
+            for to_add in mappings_to_add:
+                self.unmapped_reactions.append(
+                    (to_add['target'], to_add['direction'], reaction))
 
     def get_emu(self, atoms: List[int]) -> EMU:
         emu = self._search_emus(atoms)
